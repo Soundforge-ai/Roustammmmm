@@ -38,3 +38,6 @@ Thumbs.db
 !public/**/*.mp4
 .vercel
 .env*.local
+
+# Google OAuth credentials
+client_secret_*.json

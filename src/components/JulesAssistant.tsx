@@ -5,13 +5,16 @@ import {
   GitBranch,
   Info,
   History,
-  RefreshCw,
   Trash2,
   Clock,
   Copy,
   Check,
+  LogIn,
+  LogOut,
+  User,
 } from 'lucide-react';
 import { useJules, type JulesSessionHistoryItem } from '@/hooks/useJules';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface JulesAssistantProps {
   className?: string;
@@ -28,6 +31,7 @@ const EXAMPLE_PROMPTS = [
 
 const JulesAssistant: React.FC<JulesAssistantProps> = ({ className = '' }) => {
   const { getSessionHistory, clearSessionHistory } = useJules();
+  const { user, isLoggedIn, login, logout } = useAuth();
   const [sessionHistory, setSessionHistory] = useState<JulesSessionHistoryItem[]>([]);
   const [showHistory, setShowHistory] = useState(false);
   const [copiedPrompt, setCopiedPrompt] = useState<string | null>(null);
@@ -82,19 +86,52 @@ const JulesAssistant: React.FC<JulesAssistantProps> = ({ className = '' }) => {
               <p className="text-sm text-gray-500">AI-powered code generatie</p>
             </div>
           </div>
-          {sessionHistory.length > 0 && (
-            <button
-              onClick={() => setShowHistory(!showHistory)}
-              className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-600 hover:text-brand-accent hover:bg-gray-50 rounded-lg transition-colors"
-            >
-              <History size={16} />
-              <span>{sessionHistory.length}</span>
-            </button>
-          )}
+          <div className="flex items-center gap-2">
+            {isLoggedIn ? (
+              <div className="flex items-center gap-2">
+                <img
+                  src={user?.picture}
+                  alt={user?.name}
+                  className="w-8 h-8 rounded-full"
+                />
+                <button
+                  onClick={logout}
+                  className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                  title="Uitloggen"
+                >
+                  <LogOut size={18} />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={login}
+                className="flex items-center gap-2 px-3 py-1.5 text-sm bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 rounded-lg transition-colors"
+              >
+                <LogIn size={16} />
+                <span>Login met Google</span>
+              </button>
+            )}
+            {sessionHistory.length > 0 && (
+              <button
+                onClick={() => setShowHistory(!showHistory)}
+                className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-600 hover:text-brand-accent hover:bg-gray-50 rounded-lg transition-colors"
+              >
+                <History size={16} />
+                <span>{sessionHistory.length}</span>
+              </button>
+            )}
+          </div>
         </div>
         <div className="flex items-center gap-2 text-xs text-gray-500">
           <GitBranch size={14} />
           <span>Soundforge-ai/yannova</span>
+          {isLoggedIn && user && (
+            <>
+              <span className="mx-1">•</span>
+              <User size={14} />
+              <span>{user.email}</span>
+            </>
+          )}
         </div>
       </div>
 

@@ -1,4 +1,5 @@
 import { Message } from '../components/Chatbot';
+import * as supabaseChats from './supabase/chats';
 
 export interface ChatSession {
     id: string;
@@ -11,15 +12,15 @@ export interface ChatSession {
 }
 
 const STORAGE_KEY = 'yannova_chat_sessions';
+let useSupabase = true; // Try Supabase first
 
-export const chatStorage = {
-    // Get all sessions
+// Fallback naar localStorage
+const localStorageFallback = {
     getSessions: (): ChatSession[] => {
         try {
             const stored = localStorage.getItem(STORAGE_KEY);
             if (!stored) return [];
             const parsed = JSON.parse(stored);
-            // Convert string dates back to Date objects
             return parsed.map((session: any) => ({
                 ...session,
                 startTime: new Date(session.startTime),
@@ -30,35 +31,73 @@ export const chatStorage = {
                 }))
             })).sort((a: ChatSession, b: ChatSession) => b.lastMessageTime.getTime() - a.lastMessageTime.getTime());
         } catch (e) {
-            console.error('Error reading chat sessions', e);
+            console.error('Error reading chat sessions from localStorage', e);
             return [];
         }
     },
-
-    // Save or update a session
     saveSession: (session: ChatSession) => {
         try {
-            const sessions = chatStorage.getSessions();
+            const sessions = localStorageFallback.getSessions();
             const index = sessions.findIndex(s => s.id === session.id);
-
             if (index >= 0) {
                 sessions[index] = session;
             } else {
                 sessions.push(session);
             }
-
             localStorage.setItem(STORAGE_KEY, JSON.stringify(sessions));
-            // Dispatch event for real-time updates across tabs/components
             window.dispatchEvent(new Event('chat-storage-updated'));
         } catch (e) {
-            console.error('Error saving chat session', e);
+            console.error('Error saving chat session to localStorage', e);
         }
+    },
+    clearAll: () => {
+        localStorage.removeItem(STORAGE_KEY);
+        window.dispatchEvent(new Event('chat-storage-updated'));
+    }
+};
+
+export const chatStorage = {
+    // Get all sessions
+    getSessions: async (): Promise<ChatSession[]> => {
+        if (useSupabase) {
+            try {
+                return await supabaseChats.getChatSessions();
+            } catch (e) {
+                console.warn('Supabase not available, falling back to localStorage', e);
+                useSupabase = false;
+                return localStorageFallback.getSessions();
+            }
+        }
+        return localStorageFallback.getSessions();
+    },
+
+    // Save or update a session
+    saveSession: async (session: ChatSession): Promise<void> => {
+        if (useSupabase) {
+            try {
+                await supabaseChats.saveChatSession(session);
+                window.dispatchEvent(new Event('chat-storage-updated'));
+                return;
+            } catch (e) {
+                console.warn('Supabase not available, falling back to localStorage', e);
+                useSupabase = false;
+            }
+        }
+        localStorageFallback.saveSession(session);
     },
 
     // Helper to create a new session
-    createSession: (): ChatSession => {
+    createSession: async (): Promise<ChatSession> => {
+        if (useSupabase) {
+            try {
+                return await supabaseChats.createChatSession();
+            } catch (e) {
+                console.warn('Supabase not available, falling back to localStorage', e);
+                useSupabase = false;
+            }
+        }
         const id = Date.now().toString();
-        return {
+        const session: ChatSession = {
             id,
             startTime: new Date(),
             lastMessageTime: new Date(),
@@ -67,11 +106,22 @@ export const chatStorage = {
             status: 'active',
             tags: []
         };
+        localStorageFallback.saveSession(session);
+        return session;
     },
 
     // Clear all sessions (for debug/admin)
-    clearAll: () => {
-        localStorage.removeItem(STORAGE_KEY);
-        window.dispatchEvent(new Event('chat-storage-updated'));
+    clearAll: async (): Promise<void> => {
+        if (useSupabase) {
+            try {
+                await supabaseChats.clearAllChatSessions();
+                window.dispatchEvent(new Event('chat-storage-updated'));
+                return;
+            } catch (e) {
+                console.warn('Supabase not available, falling back to localStorage', e);
+                useSupabase = false;
+            }
+        }
+        localStorageFallback.clearAll();
     }
 };

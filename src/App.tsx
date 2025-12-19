@@ -1,9 +1,11 @@
-import React, { useState, lazy, Suspense } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import ErrorBoundary from './components/ErrorBoundary';
 import { I18nProvider } from './contexts/I18nContext';
+import { AuthProvider } from './contexts/AuthContext';
 import { Lead } from './types';
+import { getLeads, createLead, updateLeadStatus } from './lib/supabase/leads';
 
 // Lazy load components
 const Hero = lazy(() => import('./components/Hero'));
@@ -37,6 +39,7 @@ const EditorPage = lazy(() => import('./pages/dashboard/editor/EditorPageWrapper
 const SiteView = lazy(() => import('./pages/SiteView'));
 const JulesAssistantPage = lazy(() => import('./pages/JulesAssistant'));
 const DynamicPageRenderer = lazy(() => import('./components/DynamicPageRenderer'));
+const AuthCallback = lazy(() => import('./pages/AuthCallback'));
 
 const PageLoader: React.FC = () => (
   <div className="min-h-screen flex items-center justify-center bg-brand-light">
@@ -47,28 +50,49 @@ const PageLoader: React.FC = () => (
   </div>
 );
 
-const INITIAL_LEADS: Lead[] = [
-  { id: '1', name: 'Jan Peeters', email: 'jan.p@example.be', phone: '0478 12 34 56', project: 'Ramen vervangen', date: '2023-10-25', status: 'Nieuw' },
-  { id: '2', name: 'Sofie Dubois', email: 's.dubois@example.com', phone: '0486 98 76 54', project: 'Gevelrenovatie Crepi', date: '2023-10-24', status: 'Offerte Verzonden' },
-  { id: '3', name: 'Marc Vermeer', email: 'marc.vermeer@example.com', phone: '0495 55 66 77', project: 'Totaalrenovatie', date: '2023-10-22', status: 'Contact Gehad' },
-];
-
 const App: React.FC = () => {
   const [view, setView] = useState<'public' | 'admin'>('public');
-  const [leads, setLeads] = useState<Lead[]>(INITIAL_LEADS);
+  const [leads, setLeads] = useState<Lead[]>([]);
+  const [isLoadingLeads, setIsLoadingLeads] = useState(true);
 
-  const handleAddLead = (newLeadData: Omit<Lead, 'id' | 'date' | 'status'>) => {
-    const newLead: Lead = {
-      id: Math.random().toString(36).substr(2, 9),
-      date: new Date().toLocaleDateString('nl-BE'),
-      status: 'Nieuw',
-      ...newLeadData,
+  // Haal leads op bij het laden van de app
+  useEffect(() => {
+    const loadLeads = async () => {
+      try {
+        setIsLoadingLeads(true);
+        const fetchedLeads = await getLeads();
+        setLeads(fetchedLeads);
+      } catch (error) {
+        console.error('Error loading leads:', error);
+        // Fallback naar lege array bij fout
+        setLeads([]);
+      } finally {
+        setIsLoadingLeads(false);
+      }
     };
-    setLeads([newLead, ...leads]);
+
+    loadLeads();
+  }, []);
+
+  const handleAddLead = async (newLeadData: Omit<Lead, 'id' | 'date' | 'status'>) => {
+    try {
+      const newLead = await createLead(newLeadData);
+      setLeads([newLead, ...leads]);
+    } catch (error) {
+      console.error('Error creating lead:', error);
+      // Toon foutmelding aan gebruiker (kan later worden toegevoegd)
+      alert('Er is een fout opgetreden bij het opslaan van de lead. Probeer het opnieuw.');
+    }
   };
 
-  const handleUpdateStatus = (id: string, newStatus: Lead['status']) => {
-    setLeads(leads.map((lead) => (lead.id === id ? { ...lead, status: newStatus } : lead)));
+  const handleUpdateStatus = async (id: string, newStatus: Lead['status']) => {
+    try {
+      const updatedLead = await updateLeadStatus(id, newStatus);
+      setLeads(leads.map((lead) => (lead.id === id ? updatedLead : lead)));
+    } catch (error) {
+      console.error('Error updating lead status:', error);
+      alert('Er is een fout opgetreden bij het updaten van de lead. Probeer het opnieuw.');
+    }
   };
 
   // Admin route component wrapper
@@ -86,8 +110,9 @@ const App: React.FC = () => {
 
   return (
     <ErrorBoundary>
-      <I18nProvider>
-        <Router>
+      <AuthProvider>
+        <I18nProvider>
+          <Router>
           <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-orange-200 selection:text-orange-900">
             <Suspense fallback={<PageLoader />}>
               <Routes>
@@ -187,6 +212,16 @@ const App: React.FC = () => {
                     >
                       <Contact />
                     </Layout>
+                  }
+                />
+
+                {/* Auth Callback */}
+                <Route
+                  path="/auth/callback"
+                  element={
+                    <Suspense fallback={<PageLoader />}>
+                      <AuthCallback />
+                    </Suspense>
                   }
                 />
 
@@ -343,7 +378,8 @@ const App: React.FC = () => {
             </Suspense>
           </div>
         </Router>
-      </I18nProvider>
+        </I18nProvider>
+      </AuthProvider>
     </ErrorBoundary>
   );
 };

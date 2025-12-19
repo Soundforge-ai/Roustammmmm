@@ -60,6 +60,18 @@ import { chatService } from '../lib/chatService';
 import { Lead } from '../types';
 import { Link, useNavigate } from 'react-router-dom';
 import { COMPANY_NAME } from '../constants';
+import { GoogleOAuthProvider, GoogleLogin, CredentialResponse } from '@react-oauth/google';
+import { jwtDecode } from 'jwt-decode';
+
+const GOOGLE_CLIENT_ID = (import.meta as any).env.VITE_GOOGLE_CLIENT_ID;
+
+// VOEG HIER JOUW EMAILADRES TOE OM IN TE KUNNEN LOGGEN
+const ALLOWED_ADMIN_EMAILS = [
+  'innovar.labs7@gmail.com',
+  'windowpro.be@gmail.com',
+  'info@yannova.be',
+  'roustamyandiev00@gmail.com'
+];
 
 interface AdminDashboardProps {
   leads: Lead[];
@@ -132,36 +144,49 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
   // Load data
   useEffect(() => {
-    const loadData = () => {
-      setChatSessions(chatStorage.getSessions());
-      setSettings(settingsStorage.getSettings());
-      setPages(pageStorage.getPages());
-      setMediaItems(mediaStorage.getMedia());
+    const loadData = async () => {
+      try {
+        const [sessions, settingsData, pagesData, mediaData] = await Promise.all([
+          chatStorage.getSessions(),
+          settingsStorage.getSettings(),
+          pageStorage.getPages(),
+          mediaStorage.getMedia()
+        ]);
+        setChatSessions(sessions);
+        setSettings(settingsData);
+        setPages(pagesData);
+        setMediaItems(mediaData);
+      } catch (error) {
+        console.error('Error loading data:', error);
+      }
     };
 
     loadData();
-    window.addEventListener('chat-storage-updated', loadData);
-    window.addEventListener('settings-updated', loadData);
-    window.addEventListener('pages-updated', loadData);
-    window.addEventListener('media-updated', loadData);
+    const handleStorageUpdate = () => loadData();
+    window.addEventListener('chat-storage-updated', handleStorageUpdate);
+    window.addEventListener('settings-updated', handleStorageUpdate);
+    window.addEventListener('pages-updated', handleStorageUpdate);
+    window.addEventListener('media-updated', handleStorageUpdate);
 
     return () => {
-      window.removeEventListener('chat-storage-updated', loadData);
-      window.removeEventListener('settings-updated', loadData);
-      window.removeEventListener('pages-updated', loadData);
-      window.removeEventListener('media-updated', loadData);
+      window.removeEventListener('chat-storage-updated', handleStorageUpdate);
+      window.removeEventListener('settings-updated', handleStorageUpdate);
+      window.removeEventListener('pages-updated', handleStorageUpdate);
+      window.removeEventListener('media-updated', handleStorageUpdate);
     };
   }, []);
 
-  const handleSaveSettings = () => {
+  const handleSaveSettings = async () => {
     setIsSavingSettings(true);
-    settingsStorage.saveSettings(settings); // This saves API key, name and knowledge base
-
-    // Simulate slight delay for UX
-    setTimeout(() => {
+    try {
+      await settingsStorage.saveSettings(settings); // This saves API key, name and knowledge base
       setIsSavingSettings(false);
       // Show success notification logic could go here
-    }, 800);
+    } catch (error) {
+      console.error('Error saving settings:', error);
+      setIsSavingSettings(false);
+      alert('Er is een fout opgetreden bij het opslaan van de instellingen.');
+    }
   };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -171,7 +196,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
     const file = files[0];
     const reader = new FileReader();
 
-    reader.onload = (event) => {
+    reader.onload = async (event) => {
       const content = event.target?.result as string;
 
       const newDoc: KnowledgeDocument = {
@@ -188,7 +213,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
       };
 
       setSettings(updatedSettings);
-      settingsStorage.saveSettings(updatedSettings); // Auto save after upload
+      await settingsStorage.saveSettings(updatedSettings); // Auto save after upload
     };
 
     // Read as text (works for txt, md, json, csv, etc.)
@@ -199,16 +224,16 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
-  const handleDeleteDocument = (id: string) => {
+  const handleDeleteDocument = async (id: string) => {
     const updatedSettings = {
       ...settings,
       knowledgeBase: settings.knowledgeBase.filter(doc => doc.id !== id)
     };
     setSettings(updatedSettings);
-    settingsStorage.saveSettings(updatedSettings);
+    await settingsStorage.saveSettings(updatedSettings);
   };
 
-  const handleCreatePage = (e: React.FormEvent) => {
+  const handleCreatePage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newPageTitle || !newPageSlug) return;
 
@@ -229,7 +254,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
       parentId: newPageParentId || undefined
     };
 
-    pageStorage.savePage(newPage);
+    await pageStorage.savePage(newPage);
     setIsCreatingPage(false);
     setNewPageTitle('');
     setNewPageSlug('');
@@ -280,9 +305,9 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
     }
   };
 
-  const handleDeletePage = (id: string) => {
+  const handleDeletePage = async (id: string) => {
     if (confirm('Weet u zeker dat u deze pagina wilt verwijderen?')) {
-      pageStorage.deletePage(id);
+      await pageStorage.deletePage(id);
     }
   };
 
@@ -295,12 +320,12 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
     });
   };
 
-  const handleSaveSEO = () => {
+  const handleSaveSEO = async () => {
     if (!editingSEOPageId) return;
     const page = pages.find(p => p.id === editingSEOPageId);
     if (!page) return;
 
-    pageStorage.savePage({
+    await pageStorage.savePage({
       ...page,
       seo: seoData
     });
@@ -344,7 +369,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
     setIsGeneratingImage(false);
   };
 
-  const handleCreatePageFromAd = () => {
+  const handleCreatePageFromAd = async () => {
     if (!generatedAd) return;
 
     const title = prompt('Naam voor de nieuwe pagina:', marketingTopic || 'Nieuwe Campagne');
@@ -378,7 +403,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
       }
     };
 
-    pageStorage.savePage(newPage);
+    await pageStorage.savePage(newPage);
 
     // Navigate to editor
     navigate(`/dashboard/editor/${newId}`);
@@ -647,6 +672,44 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
               >
                 <Phone size={18} /> Bellen
               </a>
+            </div>
+
+            <div className="relative my-6">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-200"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-gray-500">Of ga verder met</span>
+              </div>
+            </div>
+
+            <div className="flex justify-center">
+              <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+                <GoogleLogin
+                  onSuccess={credentialResponse => {
+                    try {
+                      if (credentialResponse.credential) {
+                        const decoded: any = jwtDecode(credentialResponse.credential);
+
+                        if (ALLOWED_ADMIN_EMAILS.includes(decoded.email)) {
+                          setIsAuthenticated(true);
+                          setUsername(decoded.name || decoded.email);
+                        } else {
+                          alert(`Toegang geweigerd. Het emailadres ${decoded.email} heeft geen admin rechten.`);
+                          console.warn('Unauthorized login attempt:', decoded.email);
+                        }
+                      }
+                    } catch (e) {
+                      console.error('Google login error', e);
+                    }
+                  }}
+                  onError={() => {
+                    console.log('Login Failed');
+                    alert('Google login mislukt.');
+                  }}
+                  useOneTap
+                />
+              </GoogleOAuthProvider>
             </div>
           </div>
         </div>

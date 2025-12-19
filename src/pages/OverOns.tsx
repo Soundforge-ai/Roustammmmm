@@ -51,8 +51,8 @@ const OverOns: React.FC = () => {
           <div className="grid md:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
             <div>
               <img
-                src="/images/yannova-team.jpg"
-                alt="Het Yannova team"
+                src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200&auto=format&fit=crop"
+                alt="Modern gerenoveerde woning met nieuwe ramen en gevelbekleding"
                 className="rounded-xl shadow-2xl w-full"
                 loading="lazy"
               />

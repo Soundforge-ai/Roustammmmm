@@ -6,13 +6,13 @@ const About: React.FC = () => {
     <section id="about" className="py-20 bg-white">
       <div className="container mx-auto px-6">
         <div className="flex flex-col lg:flex-row items-center gap-16">
-          
+
           {/* Image Side */}
           <div className="w-full lg:w-1/2 relative">
             <div className="relative rounded-xl overflow-hidden shadow-2xl">
               <img
-                src="/images/yannova-team.jpg"
-                alt="Het Yannova team aan het werk op een bouwproject in België"
+                src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200&auto=format&fit=crop"
+                alt="Modern gerenoveerde woning met nieuwe ramen en gevelbekleding"
                 className="w-full h-full object-cover min-h-[400px]"
                 loading="lazy"
               />
@@ -37,7 +37,7 @@ const About: React.FC = () => {
             <p className="text-gray-600 text-lg leading-relaxed mb-8">
               Of het nu gaat om het plaatsen van nieuwe ramen, gevelisolatie of een totaalrenovatie: wij werken elk detail af met de grootste zorg.
             </p>
-            
+
             <ul className="space-y-4">
               {[
                 "Persoonlijke begeleiding van A tot Z",

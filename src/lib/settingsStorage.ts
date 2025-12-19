@@ -108,31 +108,63 @@ const mergeDefaults = (saved: any): AppSettings => {
     return base;
 };
 
-export const settingsStorage = {
+import * as supabaseSettings from './supabase/settings';
+
+let useSupabase = true; // Try Supabase first
+
+// Fallback naar localStorage
+const localStorageFallback = {
     getSettings: (): AppSettings => {
         try {
             const stored = localStorage.getItem(SETTINGS_KEY);
             if (!stored) return defaultSettings;
-
             const parsed = JSON.parse(stored);
             return mergeDefaults(parsed);
         } catch (e) {
-            console.error('Error reading settings', e);
+            console.error('Error reading settings from localStorage', e);
             return defaultSettings;
         }
     },
-
     saveSettings: (settings: AppSettings) => {
         try {
             localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
             window.dispatchEvent(new Event('settings-updated'));
         } catch (e) {
-            console.error('Error saving settings', e);
+            console.error('Error saving settings to localStorage', e);
         }
+    }
+};
+
+export const settingsStorage = {
+    getSettings: async (): Promise<AppSettings> => {
+        if (useSupabase) {
+            try {
+                return await supabaseSettings.getSettings();
+            } catch (e) {
+                console.warn('Supabase not available, falling back to localStorage', e);
+                useSupabase = false;
+                return localStorageFallback.getSettings();
+            }
+        }
+        return localStorageFallback.getSettings();
     },
 
-    getFullSystemPrompt: (): string => {
-        const settings = settingsStorage.getSettings();
+    saveSettings: async (settings: AppSettings): Promise<void> => {
+        if (useSupabase) {
+            try {
+                await supabaseSettings.saveSettings(settings);
+                window.dispatchEvent(new Event('settings-updated'));
+                return;
+            } catch (e) {
+                console.warn('Supabase not available, falling back to localStorage', e);
+                useSupabase = false;
+            }
+        }
+        localStorageFallback.saveSettings(settings);
+    },
+
+    getFullSystemPrompt: async (): Promise<string> => {
+        const settings = await settingsStorage.getSettings();
         let prompt = settings.systemPrompt;
 
         if (settings.knowledgeBase.length > 0) {
