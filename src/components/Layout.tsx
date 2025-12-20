@@ -9,6 +9,7 @@ import Chatbot from './Chatbot';
 import StructuredData from './StructuredData';
 import SEO from './SEO';
 import { Lead } from '../types';
+import AdminEditButton from './AdminEditButton';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -19,6 +20,7 @@ interface LayoutProps {
     title?: string;
     description?: string;
     keywords?: string;
+    canonicalUrl?: string;
   };
 }
 
@@ -33,21 +35,24 @@ const ScrollToTop: React.FC = () => {
   return null;
 };
 
-const Layout: React.FC<LayoutProps> = ({ 
-  children, 
-  onSubmitLead, 
+const Layout: React.FC<LayoutProps> = ({
+  children,
+  onSubmitLead,
   onAdminClick,
   showContactCTA = true,
   seo
 }) => {
+  const location = useLocation();
+  const canonicalUrl = seo?.canonicalUrl || `https://www.yannova.be${location.pathname}`;
+
   return (
     <>
-      <SEO {...seo} />
+      <SEO {...seo} canonicalUrl={canonicalUrl} />
       <StructuredData />
       <ScrollToTop />
       {/* Skip to content link for accessibility */}
-      <a 
-        href="#main-content" 
+      <a
+        href="#main-content"
         className="skip-link sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:bg-brand-accent focus:text-white focus:px-4 focus:py-2 focus:rounded-md"
       >
         Ga naar hoofdinhoud
@@ -57,6 +62,8 @@ const Layout: React.FC<LayoutProps> = ({
       {showContactCTA && <ContactCTA onSubmitLead={onSubmitLead} />}
       <Footer onAdminClick={onAdminClick} />
       <Chatbot />
+      <WhatsAppButton />
+      <AdminEditButton />
       <CookieConsent />
     </>
   );

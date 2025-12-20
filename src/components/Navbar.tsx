@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Phone, ChevronDown } from 'lucide-react';
-import { NAV_ITEMS, COMPANY_NAME } from '../constants';
+import { NAV_ITEMS, COMPANY_NAME, ADMIN_TOOLS } from '../constants';
 import LanguageSwitcher from './LanguageSwitcher';
+import { Settings } from 'lucide-react';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isGevelOpen, setIsGevelOpen] = useState(false);
+  const [isAdminOpen, setIsAdminOpen] = useState(false);
   const location = useLocation();
   const navRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -233,6 +235,37 @@ const Navbar: React.FC = () => {
             );
           })}
           <LanguageSwitcher />
+          
+          {/* Admin Tools Dropdown */}
+          <div
+            className="relative"
+            onMouseEnter={() => setIsAdminOpen(true)}
+            onMouseLeave={() => setIsAdminOpen(false)}
+          >
+            <button
+              className={`p-2 rounded-lg hover:bg-gray-100 transition-colors ${isScrolled || !isHomePage ? 'text-gray-700' : 'text-gray-200 hover:text-white'}`}
+              aria-label="Admin Tools"
+            >
+              <Settings size={20} />
+            </button>
+            <div
+              className={`absolute top-full right-0 pt-2 w-48 transition-all duration-200 ${isAdminOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}`}
+            >
+              <div className="bg-white rounded-lg shadow-xl border border-gray-100 py-2">
+                {ADMIN_TOOLS.map((tool) => (
+                  <Link
+                    key={tool.href}
+                    to={tool.href}
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-brand-accent transition-colors"
+                    onClick={() => setIsAdminOpen(false)}
+                  >
+                    {tool.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+
           <a
             href={isHomePage ? "#contact" : "/#contact"}
             className="bg-brand-accent hover:bg-orange-700 text-white px-5 py-2.5 rounded-md text-sm font-semibold transition-colors flex items-center gap-2"

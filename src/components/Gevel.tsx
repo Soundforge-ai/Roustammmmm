@@ -10,7 +10,7 @@ const Gevel: React.FC = () => {
       description: 'Moderne crepi en pleisterwerk voor een strakke, duurzame gevelafwerking die uw woning beschermt en verfraait.',
       icon: Palette,
       href: '/gevel/gevelbepleistering',
-      image: 'https://www.yannovabouw.be/lovable-uploads/003a3c82-53d0-4c81-8d96-4ae5ad333f15.png',
+      image: '/images/downloads/crepi-1.jpg',
       subcategories: ['Crepi', 'Pleisterwerk', 'Gefactureerde pleister', 'Kleurrijke pleister']
     },
     {
@@ -19,7 +19,7 @@ const Gevel: React.FC = () => {
       description: 'Bescherm uw gevel tegen weersinvloeden, vocht en schade met onze professionele beschermingsbehandelingen.',
       icon: Shield,
       href: '/gevel/gevelbescherming',
-      image: 'https://www.yannovabouw.be/lovable-uploads/c67c2ffe-a42b-477f-a67d-10100999c4f0.png',
+      image: '/images/downloads/crepi-2.jpg',
       subcategories: ['Hydrofoberende behandeling', 'Impregnatie', 'Reiniging en behandeling', 'Onderhoudsbehandelingen']
     },
     {
@@ -28,7 +28,7 @@ const Gevel: React.FC = () => {
       description: 'Isolatie langs buiten of binnen voor maximale energiebesparing en comfort. Verlaag uw energiekosten aanzienlijk.',
       icon: ThermometerSun,
       href: '/gevel/gevelisolatie',
-      image: 'https://www.yannovabouw.be/lovable-uploads/9678ebf6-952f-45fd-a507-50b06b6a2a06.png',
+      image: '/images/downloads/isolatie-1.jpg',
       subcategories: ['Isolatie langs buiten', 'Isolatie langs binnen', 'Voorzetwanden', 'Isolatieplaten']
     },
     {
@@ -37,7 +37,7 @@ const Gevel: React.FC = () => {
       description: 'Authentieke baksteenlook met uitstekende isolatie-eigenschappen. Perfect voor renovatie en nieuwbouw.',
       icon: Layers,
       href: '/gevel/steenstrips',
-      image: 'https://www.yannovabouw.be/lovable-uploads/16676485-bd4d-49a4-a5a6-89e07254fa23.png',
+      image: '/images/16676485-bd4d-49a4-a5a6-89e07254fa23.png',
       subcategories: ['Renovatie gevels', 'Nieuwbouw', 'Combinatie met isolatie', 'Verschillende steensoorten']
     },
     {
@@ -46,7 +46,7 @@ const Gevel: React.FC = () => {
       description: 'Complete gevelrenovatie van ruwbouw tot afwerking. Uw gevel wordt weer als nieuw met garantie.',
       icon: Home,
       href: '/gevel/gevelrenovatie',
-      image: 'https://www.yannovabouw.be/lovable-uploads/c042e299-3e07-4212-b6a2-5c6297e61d69.png',
+      image: '/images/c042e299-3e07-4212-b6a2-5c6297e61d69.png',
       subcategories: ['Herstel van schade', 'Isolatie toevoegen', 'Nieuwe afwerking', 'Complete transformatie']
     }
   ];

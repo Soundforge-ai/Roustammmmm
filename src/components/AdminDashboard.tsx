@@ -98,6 +98,38 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState<FilterStatus>('all');
   const [currentPage, setCurrentPage] = useState(1);
+
+  // Check for existing admin session on mount
+  useEffect(() => {
+    const session = localStorage.getItem('yannova_admin_session');
+    if (session) {
+      try {
+        const { email, expires } = JSON.parse(session);
+        if (new Date(expires) > new Date()) {
+          setIsAuthenticated(true);
+          setUsername(email);
+        } else {
+          localStorage.removeItem('yannova_admin_session');
+        }
+      } catch (e) {
+        localStorage.removeItem('yannova_admin_session');
+      }
+    }
+  }, []);
+
+  const saveAdminSession = (email: string) => {
+    const expires = new Date();
+    expires.setDate(expires.getDate() + 7); // 7 days valid
+    localStorage.setItem('yannova_admin_session', JSON.stringify({
+      email,
+      expires: expires.toISOString()
+    }));
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('yannova_admin_session');
+    onLogout();
+  };
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
   const [notifications, setNotifications] = useState([
@@ -123,6 +155,25 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [newPageTitle, setNewPageTitle] = useState('');
   const [newPageSlug, setNewPageSlug] = useState('');
   const [newPageParentId, setNewPageParentId] = useState<string>('');
+
+  // Statische pagina's van de website
+  const staticPages = [
+    { id: 'home', title: 'Home', slug: '', path: '/', type: 'static' as const },
+    { id: 'over-ons', title: 'Over Ons', slug: 'over-ons', path: '/over-ons', type: 'static' as const },
+    { id: 'diensten', title: 'Diensten', slug: 'diensten', path: '/diensten', type: 'static' as const },
+    { id: 'crepi-info', title: 'Crepi Info', slug: 'crepi-info', path: '/crepi-info', type: 'static' as const },
+    { id: 'aanpak', title: 'Aanpak', slug: 'aanpak', path: '/aanpak', type: 'static' as const },
+    { id: 'partners', title: 'Partners', slug: 'partners', path: '/partners', type: 'static' as const },
+    { id: 'contact', title: 'Contact', slug: 'contact', path: '/contact', type: 'static' as const },
+    { id: 'jules', title: 'Jules Assistant', slug: 'jules', path: '/jules', type: 'static' as const },
+    { id: 'posts', title: 'Posts', slug: 'posts', path: '/posts', type: 'static' as const },
+    { id: 'gevel', title: 'Gevel', slug: 'gevel', path: '/gevel', type: 'static' as const },
+    { id: 'gevelbepleistering', title: 'Gevelbepleistering', slug: 'gevel/gevelbepleistering', path: '/gevel/gevelbepleistering', type: 'static' as const },
+    { id: 'gevelbescherming', title: 'Gevelbescherming', slug: 'gevel/gevelbescherming', path: '/gevel/gevelbescherming', type: 'static' as const },
+    { id: 'gevelisolatie', title: 'Gevelisolatie', slug: 'gevel/gevelisolatie', path: '/gevel/gevelisolatie', type: 'static' as const },
+    { id: 'steenstrips', title: 'Steenstrips', slug: 'gevel/steenstrips', path: '/gevel/steenstrips', type: 'static' as const },
+    { id: 'gevelrenovatie', title: 'Gevelrenovatie', slug: 'gevel/gevelrenovatie', path: '/gevel/gevelrenovatie', type: 'static' as const },
+  ];
 
   // Media state
   const [mediaItems, setMediaItems] = useState<MediaItem[]>([]);
@@ -302,7 +353,69 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const handleDeleteMedia = (id: string) => {
     if (confirm('Verwijderen?')) {
       mediaStorage.deleteMedia(id);
+      setMediaItems(mediaStorage.getMedia());
     }
+  };
+
+  const handleImportGCSPhotos = async () => {
+    try {
+      // Laad upload results van het script (uit public folder)
+      const response = await fetch('/upload-results.json');
+      if (!response.ok) {
+        throw new Error('Upload results niet gevonden. Run eerst: npm run upload-photos');
+      }
+
+      const results = await response.json();
+      const successfulUploads = results.filter((r: any) => r.success && r.url);
+
+      if (successfulUploads.length === 0) {
+        alert('Geen succesvolle uploads gevonden in upload-results.json');
+        return;
+      }
+
+      // Importeer elke foto in de media library
+      let imported = 0;
+      for (const upload of successfulUploads) {
+        try {
+          mediaStorage.addGCSMedia(
+            upload.url,
+            upload.fileName,
+            upload.size || 0
+          );
+          imported++;
+        } catch (error) {
+          console.error(`Error importing ${upload.fileName}:`, error);
+        }
+      }
+
+      // Refresh media items
+      setMediaItems(mediaStorage.getMedia());
+      alert(`✅ ${imported} foto's geïmporteerd uit Google Cloud Storage!`);
+    } catch (error: any) {
+      console.error('Error importing GCS photos:', error);
+      alert(`Fout bij importeren: ${error.message}\n\nZorg dat je eerst het upload script hebt gedraaid: npm run upload-photos`);
+    }
+  };
+
+  const handleImportGCSFromURLs = () => {
+    const urls = prompt('Plak hier de Google Cloud Storage URLs (één per regel):');
+    if (!urls) return;
+
+    const urlList = urls.split('\n').filter(url => url.trim());
+    let imported = 0;
+
+    for (const url of urlList) {
+      try {
+        const fileName = url.split('/').pop() || `image-${Date.now()}.png`;
+        mediaStorage.addGCSMedia(url.trim(), fileName, 0);
+        imported++;
+      } catch (error) {
+        console.error(`Error importing ${url}:`, error);
+      }
+    }
+
+    setMediaItems(mediaStorage.getMedia());
+    alert(`✅ ${imported} foto's geïmporteerd!`);
   };
 
   const handleDeletePage = async (id: string) => {
@@ -424,28 +537,14 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
     if (trimmedUsername === 'admin' && trimmedPassword === 'admin123') {
       setIsAuthenticated(true);
+      saveAdminSession('admin');
       setLoginError('');
-      // Store authentication in sessionStorage to persist across page refreshes
-      sessionStorage.setItem('admin_authenticated', 'true');
     } else {
-      setLoginError('Ongeldige gebruikersnaam of wachtwoord');
+      setLoginError('Ongeldige inloggegevens');
     }
   };
 
-  // Check if already authenticated on mount
-  useEffect(() => {
-    const isAuth = sessionStorage.getItem('admin_authenticated');
-    if (isAuth === 'true') {
-      setIsAuthenticated(true);
-    }
-  }, [setIsAuthenticated]);
 
-  // Handle logout with sessionStorage cleanup
-  const handleLogout = () => {
-    sessionStorage.removeItem('admin_authenticated');
-    setIsAuthenticated(false);
-    onLogout();
-  };
 
   // Filtered and searched leads
   const filteredLeads = useMemo(() => {
@@ -573,10 +672,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
             </div>
           </form>
 
-          <div className="mt-6 p-4 bg-gray-50 rounded-lg text-sm text-gray-500">
-            <p className="font-medium text-gray-700 mb-1">Demo credentials:</p>
-            <p>Gebruiker: admin | Wachtwoord: admin123</p>
-          </div>
+
         </div>
       </div>
     );
@@ -694,6 +790,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         if (ALLOWED_ADMIN_EMAILS.includes(decoded.email)) {
                           setIsAuthenticated(true);
                           setUsername(decoded.name || decoded.email);
+                          saveAdminSession(decoded.email);
                         } else {
                           alert(`Toegang geweigerd. Het emailadres ${decoded.email} heeft geen admin rechten.`);
                           console.warn('Unauthorized login attempt:', decoded.email);
@@ -1232,7 +1329,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
             {/* List */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-              {pages.length === 0 ? (
+              {pages.length === 0 && staticPages.length === 0 ? (
                 <div className="text-center py-12">
                   <FileText size={48} className="mx-auto text-gray-300 mb-3" />
                   <p className="text-gray-500">Nog geen pagina's aangemaakt</p>
@@ -1243,12 +1340,52 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     <thead className="bg-gray-50 text-gray-500 text-sm uppercase">
                       <tr>
                         <th className="px-6 py-4 font-medium">Pagina Naam</th>
+                        <th className="px-6 py-4 font-medium">Type</th>
                         <th className="px-6 py-4 font-medium">URL</th>
                         <th className="px-6 py-4 font-medium">SEO Status</th>
                         <th className="px-6 py-4 font-medium text-right">Acties</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100">
+                      {/* Statische pagina's */}
+                      {staticPages.map(staticPage => (
+                        <tr key={staticPage.id} className="hover:bg-gray-50 transition-colors">
+                          <td className="px-6 py-4">
+                            <div className="flex items-center gap-2">
+                              <div>
+                                <div className="font-bold text-gray-800">{staticPage.title}</div>
+                                <div className="text-xs text-gray-500">Statische pagina</div>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className="inline-block px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-medium">
+                              Statisch
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-500">
+                            <a href={staticPage.path} target="_blank" className="hover:text-brand-accent flex items-center gap-1 group">
+                              {staticPage.path} <ExternalLink size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                            </a>
+                          </td>
+                          <td className="px-6 py-4 text-sm">
+                            <span className="text-gray-400">Niet bewerkbaar</span>
+                          </td>
+                          <td className="px-6 py-4 text-right">
+                            <div className="flex items-center justify-end gap-2">
+                              <a
+                                href={staticPage.path}
+                                target="_blank"
+                                className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                title="Bekijk pagina"
+                              >
+                                <Eye size={18} />
+                              </a>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                      {/* Dynamische pagina's */}
                       {pages.map(page => {
                         const parent = pages.find(p => p.id === page.parentId);
                         return (
@@ -1261,6 +1398,11 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                                   <div className="text-xs text-brand-accent uppercase font-bold tracking-wider">{page.status}</div>
                                 </div>
                               </div>
+                            </td>
+                            <td className="px-6 py-4">
+                              <span className="inline-block px-2 py-1 bg-orange-100 text-orange-700 rounded text-xs font-medium">
+                                Dynamisch
+                              </span>
                             </td>
                             <td className="px-6 py-4 text-sm text-gray-500">
                               <a href={`/p/${page.slug}`} target="_blank" className="hover:text-brand-accent flex items-center gap-1 group">
@@ -1387,7 +1529,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 <h3 className="text-lg font-bold text-gray-800">Media Bibliotheek</h3>
                 <p className="text-gray-500 text-sm">Upload en beheer afbeeldingen voor uw website</p>
               </div>
-              <div>
+              <div className="flex gap-2">
                 <input
                   type="file"
                   ref={mediaInputRef}
@@ -1402,6 +1544,22 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 >
                   {isUploadingMedia ? <Loader2 size={18} className="animate-spin" /> : <ImageIcon size={18} />}
                   Foto Uploaden
+                </button>
+                <button
+                  onClick={handleImportGCSPhotos}
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+                  title="Importeer foto's van Google Cloud Storage"
+                >
+                  <Server size={18} />
+                  Importeer GCS
+                </button>
+                <button
+                  onClick={handleImportGCSFromURLs}
+                  className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+                  title="Importeer foto's via URLs"
+                >
+                  <ExternalLink size={18} />
+                  Importeer URLs
                 </button>
               </div>
             </div>

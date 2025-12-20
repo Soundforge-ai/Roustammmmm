@@ -54,7 +54,7 @@ const Gevelbepleistering: React.FC = () => {
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div>
                 <img
-                  src="https://www.yannovabouw.be/lovable-uploads/003a3c82-53d0-4c81-8d96-4ae5ad333f15.png"
+                  src="/images/downloads/crepi-1.jpg"
                   alt="Professionele gevelbepleistering met crepi afwerking door Yannova"
                   className="w-full h-auto rounded-lg shadow-lg"
                   loading="lazy"

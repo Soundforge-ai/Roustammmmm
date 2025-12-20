@@ -52,7 +52,7 @@ const Gevelrenovatie: React.FC = () => {
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div>
                 <img
-                  src="https://www.yannovabouw.be/lovable-uploads/c042e299-3e07-4212-b6a2-5c6297e61d69.png"
+                  src="/images/c042e299-3e07-4212-b6a2-5c6297e61d69.png"
                   alt="Complete gevelrenovatie van ruwbouw tot afwerking door Yannova"
                   className="w-full h-auto rounded-lg shadow-lg"
                   loading="lazy"

@@ -31,7 +31,7 @@ const CrepiInfo: React.FC = () => {
               loading="lazy"
               onError={(e) => {
                 (e.target as HTMLImageElement).src =
-                  'https://www.yannovabouw.be/lovable-uploads/003a3c82-53d0-4c81-8d96-4ae5ad333f15.png';
+                  '/images/downloads/crepi-1.jpg';
               }}
             />
           </div>

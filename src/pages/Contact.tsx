@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
 import { Phone, Mail, MapPin, Clock, CheckCircle, AlertCircle, Send } from 'lucide-react';
+import GoogleMap from '../components/GoogleMap';
+
+// Company location
+const COMPANY_ADDRESS = 'Bouwstraat 123, 1000 Brussel, België';
+const COMPANY_COORDINATES = { lat: 50.8503, lng: 4.3517 }; // Brussels coordinates
 
 interface FormErrors {
   name?: string;
@@ -137,10 +142,12 @@ const Contact: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Map placeholder */}
-                <div className="bg-gray-100 rounded-xl h-64 flex items-center justify-center">
-                  <p className="text-gray-500">Google Maps</p>
-                </div>
+                {/* Map */}
+                <GoogleMap
+                  address={COMPANY_ADDRESS}
+                  coordinates={COMPANY_COORDINATES}
+                  className="h-64"
+                />
               </div>
 
               {/* Contact Form */}

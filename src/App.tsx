@@ -5,7 +5,8 @@ import ErrorBoundary from './components/ErrorBoundary';
 import { I18nProvider } from './contexts/I18nContext';
 import { AuthProvider } from './contexts/AuthContext';
 import { Lead } from './types';
-import { getLeads, createLead, updateLeadStatus } from './lib/supabase/leads';
+import { TESTIMONIALS } from './constants';
+import { getLeads, createLead, updateLeadStatus, deleteLead } from './lib/supabase/leads';
 
 // Lazy load components
 const Hero = lazy(() => import('./components/Hero'));
@@ -13,6 +14,8 @@ const About = lazy(() => import('./components/About'));
 const Services = lazy(() => import('./components/Services'));
 const Approach = lazy(() => import('./components/Approach'));
 const WhyUs = lazy(() => import('./components/WhyUs'));
+const TestimonialsCarousel = lazy(() => import('./components/TestimonialsCarousel'));
+const QuoteCalculator = lazy(() => import('./components/QuoteCalculator'));
 const AdminDashboard = lazy(() => import('./components/AdminDashboard'));
 const NotFound = lazy(() => import('./components/NotFound'));
 
@@ -25,6 +28,7 @@ const Partners = lazy(() => import('./pages/Partners'));
 const Contact = lazy(() => import('./pages/Contact'));
 const Posts = lazy(() => import('./pages/Posts'));
 const Post = lazy(() => import('./pages/Post'));
+const Portfolio = lazy(() => import('./pages/Portfolio'));
 
 // Lazy load gevel pages
 const Gevel = lazy(() => import('./components/Gevel'));
@@ -40,6 +44,7 @@ const SiteView = lazy(() => import('./pages/SiteView'));
 const JulesAssistantPage = lazy(() => import('./pages/JulesAssistant'));
 const DynamicPageRenderer = lazy(() => import('./components/DynamicPageRenderer'));
 const AuthCallback = lazy(() => import('./pages/AuthCallback'));
+const SEODashboardPage = lazy(() => import('./pages/SEODashboard'));
 
 const PageLoader: React.FC = () => (
   <div className="min-h-screen flex items-center justify-center bg-brand-light">
@@ -95,15 +100,25 @@ const App: React.FC = () => {
     }
   };
 
+  const handleDeleteLead = async (id: string) => {
+    try {
+      await deleteLead(id);
+      setLeads(leads.filter((lead) => lead.id !== id));
+    } catch (error) {
+      console.error('Error deleting lead:', error);
+      alert('Er is een fout opgetreden bij het verwijderen van de lead. Probeer het opnieuw.');
+    }
+  };
+
   // Admin route component wrapper
   const AdminRoute: React.FC = () => (
-    <AdminDashboard leads={leads} onUpdateStatus={handleUpdateStatus} onLogout={() => window.location.href = '/'} />
+    <AdminDashboard leads={leads} onUpdateStatus={handleUpdateStatus} onDeleteLead={handleDeleteLead} onLogout={() => window.location.href = '/'} />
   );
 
   if (view === 'admin') {
     return (
       <Suspense fallback={<PageLoader />}>
-        <AdminDashboard leads={leads} onUpdateStatus={handleUpdateStatus} onLogout={() => setView('public')} />
+        <AdminDashboard leads={leads} onUpdateStatus={handleUpdateStatus} onDeleteLead={handleDeleteLead} onLogout={() => setView('public')} />
       </Suspense>
     );
   }
@@ -134,8 +149,10 @@ const App: React.FC = () => {
                       <Hero />
                       <About />
                       <Services />
+                      <QuoteCalculator />
                       <Approach />
                       <WhyUs />
+                      <TestimonialsCarousel testimonials={TESTIMONIALS} />
                     </Layout>
                   }
                 />
@@ -147,7 +164,11 @@ const App: React.FC = () => {
                     <Layout
                       onSubmitLead={handleAddLead}
                       onAdminClick={() => window.location.href = '/admin'}
-                      seo={{ title: 'Over Ons', description: 'Leer meer over Yannova, uw betrouwbare partner voor bouw en renovatie in België.' }}
+                      seo={{ 
+                        title: 'Over Ons - Bouwbedrijf Keerbergen, Mechelen, Zoersel', 
+                        description: 'Leer meer over Yannova Bouw, uw betrouwbare partner voor ramen en deuren, renovatie en crepi in Keerbergen, Mechelen, Zoersel en omgeving. 15+ jaar ervaring.',
+                        keywords: 'Yannova Bouw, bouwbedrijf Keerbergen, aannemer Mechelen, renovatie Zoersel, over ons'
+                      }}
                     >
                       <OverOns />
                     </Layout>
@@ -159,7 +180,11 @@ const App: React.FC = () => {
                     <Layout
                       onSubmitLead={handleAddLead}
                       onAdminClick={() => window.location.href = '/admin'}
-                      seo={{ title: 'Diensten', description: 'Ontdek onze diensten: ramen en deuren, renovatie, isolatie en gevelwerken.' }}
+                      seo={{ 
+                        title: 'Diensten - Ramen en Deuren, Renovatie, Isolatie, Crepi', 
+                        description: 'Ontdek onze diensten: ramen en deuren plaatsen, totaalrenovatie, isolatiewerken en crepi gevelafwerking in Keerbergen, Mechelen, Zoersel, Putte en omgeving.',
+                        keywords: 'ramen en deuren Keerbergen, renovatie Mechelen, isolatie Zoersel, crepi Putte, diensten bouwbedrijf'
+                      }}
                     >
                       <Diensten />
                     </Layout>
@@ -171,7 +196,11 @@ const App: React.FC = () => {
                     <Layout
                       onSubmitLead={handleAddLead}
                       onAdminClick={() => window.location.href = '/admin'}
-                      seo={{ title: 'Crepi Info', description: 'Alles over crepi met ingebouwde patronen voor uw gevel.' }}
+                      seo={{ 
+                        title: 'Crepi Info - Gevelbepleistering Keerbergen, Mechelen', 
+                        description: 'Alles over crepi en gevelbepleistering. Professionele crepi afwerking in Keerbergen, Mechelen, Zoersel en omgeving. Vraag gratis advies aan.',
+                        keywords: 'crepi Keerbergen, crepi Mechelen, gevelbepleistering Zoersel, crepi info, crepi patronen'
+                      }}
                     >
                       <CrepiInfoPage />
                     </Layout>
@@ -183,7 +212,11 @@ const App: React.FC = () => {
                     <Layout
                       onSubmitLead={handleAddLead}
                       onAdminClick={() => window.location.href = '/admin'}
-                      seo={{ title: 'Onze Aanpak', description: 'Van eerste contact tot oplevering: ontdek onze werkwijze.' }}
+                      seo={{ 
+                        title: 'Onze Aanpak - Van Offerte tot Oplevering', 
+                        description: 'Van eerste contact tot oplevering: ontdek de werkwijze van Yannova Bouw. Transparante communicatie en vakkundige uitvoering in Keerbergen en omgeving.',
+                        keywords: 'werkwijze bouwbedrijf, aanpak renovatie, offerte aanvragen, Yannova aanpak'
+                      }}
                     >
                       <Aanpak />
                     </Layout>
@@ -195,7 +228,11 @@ const App: React.FC = () => {
                     <Layout
                       onSubmitLead={handleAddLead}
                       onAdminClick={() => window.location.href = '/admin'}
-                      seo={{ title: 'Partners', description: 'Onze partners en leveranciers voor kwaliteitsmaterialen.' }}
+                      seo={{ 
+                        title: 'Partners - Kwaliteitsleveranciers Ramen en Materialen', 
+                        description: 'Onze partners en leveranciers voor hoogwaardige ramen, deuren en bouwmaterialen. Yannova werkt alleen met de beste merken.',
+                        keywords: 'partners bouwbedrijf, leveranciers ramen, kwaliteitsmaterialen, Yannova partners'
+                      }}
                     >
                       <Partners />
                     </Layout>
@@ -208,9 +245,31 @@ const App: React.FC = () => {
                       onSubmitLead={handleAddLead}
                       onAdminClick={() => window.location.href = '/admin'}
                       showContactCTA={false}
-                      seo={{ title: 'Contact', description: 'Neem contact op met Yannova voor een gratis offerte.' }}
+                      seo={{ 
+                        title: 'Contact - Gratis Offerte Aanvragen Keerbergen, Mechelen', 
+                        description: 'Neem contact op met Yannova Bouw voor een gratis offerte. Actief in Keerbergen, Mechelen, Zoersel, Putte en heel de provincie Antwerpen. Bel of mail ons!',
+                        keywords: 'contact Yannova, gratis offerte, offerte ramen en deuren, contact bouwbedrijf Keerbergen'
+                      }}
                     >
                       <Contact />
+                    </Layout>
+                  }
+                />
+
+                {/* Portfolio */}
+                <Route
+                  path="/portfolio"
+                  element={
+                    <Layout
+                      onSubmitLead={handleAddLead}
+                      onAdminClick={() => window.location.href = '/admin'}
+                      seo={{ 
+                        title: 'Portfolio - Projecten Ramen, Renovatie, Crepi', 
+                        description: 'Bekijk onze afgeronde projecten: ramen en deuren, renovaties en crepi gevelwerken in Keerbergen, Mechelen, Zoersel en omgeving.',
+                        keywords: 'portfolio bouwbedrijf, projecten ramen en deuren, renovatie projecten, crepi voorbeelden'
+                      }}
+                    >
+                      <Portfolio />
                     </Layout>
                   }
                 />
@@ -235,6 +294,20 @@ const App: React.FC = () => {
                       seo={{ title: 'Jules AI Assistant', description: 'AI-powered code generatie en automatisering met Jules.' }}
                     >
                       <JulesAssistantPage />
+                    </Layout>
+                  }
+                />
+
+                {/* SEO Dashboard */}
+                <Route
+                  path="/seo"
+                  element={
+                    <Layout
+                      onSubmitLead={handleAddLead}
+                      onAdminClick={() => window.location.href = '/admin'}
+                      seo={{ title: 'SEO Dashboard', description: 'AI-powered SEO optimalisatie voor uw website.' }}
+                    >
+                      <SEODashboardPage />
                     </Layout>
                   }
                 />
@@ -272,7 +345,11 @@ const App: React.FC = () => {
                     <Layout
                       onSubmitLead={handleAddLead}
                       onAdminClick={() => window.location.href = '/admin'}
-                      seo={{ title: 'Gevelwerken', description: 'Professionele gevelwerken in België.' }}
+                      seo={{ 
+                        title: 'Gevelwerken Keerbergen, Mechelen, Zoersel', 
+                        description: 'Professionele gevelwerken in Keerbergen, Mechelen, Zoersel en omgeving. Gevelbepleistering, gevelisolatie, crepi en steenstrips. Gratis offerte!',
+                        keywords: 'gevelwerken Keerbergen, gevel Mechelen, gevelrenovatie Zoersel, crepi gevel, gevelisolatie'
+                      }}
                     >
                       <Gevel />
                     </Layout>
@@ -284,7 +361,11 @@ const App: React.FC = () => {
                     <Layout
                       onSubmitLead={handleAddLead}
                       onAdminClick={() => window.location.href = '/admin'}
-                      seo={{ title: 'Gevelbepleistering', description: 'Professionele gevelbepleistering en crepi afwerking.' }}
+                      seo={{ 
+                        title: 'Gevelbepleistering Keerbergen, Mechelen - Crepi Specialist', 
+                        description: 'Professionele gevelbepleistering en crepi afwerking in Keerbergen, Mechelen, Zoersel en omgeving. Diverse structuren en kleuren. Vraag gratis offerte aan.',
+                        keywords: 'gevelbepleistering Keerbergen, crepi Mechelen, gevelpleister Zoersel, crepi afwerking, gevelbepleistering prijs'
+                      }}
                     >
                       <Gevelbepleistering />
                     </Layout>
@@ -296,7 +377,11 @@ const App: React.FC = () => {
                     <Layout
                       onSubmitLead={handleAddLead}
                       onAdminClick={() => window.location.href = '/admin'}
-                      seo={{ title: 'Gevelbescherming', description: 'Bescherm uw gevel tegen weersinvloeden.' }}
+                      seo={{ 
+                        title: 'Gevelbescherming Keerbergen, Mechelen - Vochtwerend', 
+                        description: 'Bescherm uw gevel tegen vocht en weersinvloeden. Gevelbescherming in Keerbergen, Mechelen, Zoersel. Hydrofuge behandeling en coating.',
+                        keywords: 'gevelbescherming Keerbergen, gevel impregneren Mechelen, vochtbestrijding gevel, hydrofuge behandeling'
+                      }}
                     >
                       <Gevelbescherming />
                     </Layout>
@@ -308,7 +393,11 @@ const App: React.FC = () => {
                     <Layout
                       onSubmitLead={handleAddLead}
                       onAdminClick={() => window.location.href = '/admin'}
-                      seo={{ title: 'Gevelisolatie', description: 'Bespaar energie met professionele gevelisolatie.' }}
+                      seo={{ 
+                        title: 'Gevelisolatie Keerbergen, Mechelen - Bespaar Energie', 
+                        description: 'Bespaar energie met professionele gevelisolatie in Keerbergen, Mechelen, Zoersel. Buitengevelisolatie met EPS en crepi afwerking. Tot 30% energiebesparing.',
+                        keywords: 'gevelisolatie Keerbergen, buitenisolatie Mechelen, EPS isolatie gevel, gevelisolatie prijs, energiebesparing'
+                      }}
                     >
                       <Gevelisolatie />
                     </Layout>
@@ -320,7 +409,11 @@ const App: React.FC = () => {
                     <Layout
                       onSubmitLead={handleAddLead}
                       onAdminClick={() => window.location.href = '/admin'}
-                      seo={{ title: 'Steenstrips', description: 'Authentieke baksteenlook met steenstrips.' }}
+                      seo={{ 
+                        title: 'Steenstrips Keerbergen, Mechelen - Baksteenlook Gevel', 
+                        description: 'Authentieke baksteenlook met steenstrips in Keerbergen, Mechelen, Zoersel. Diverse kleuren en structuren. Duurzaam en onderhoudsvriendelijk.',
+                        keywords: 'steenstrips Keerbergen, steenstrips gevel Mechelen, baksteenstrips, gevelbekleden steenstrips'
+                      }}
                     >
                       <Steenstrips />
                     </Layout>
@@ -332,7 +425,11 @@ const App: React.FC = () => {
                     <Layout
                       onSubmitLead={handleAddLead}
                       onAdminClick={() => window.location.href = '/admin'}
-                      seo={{ title: 'Gevelrenovatie', description: 'Complete gevelrenovatie van A tot Z.' }}
+                      seo={{ 
+                        title: 'Gevelrenovatie Keerbergen, Mechelen - Complete Renovatie', 
+                        description: 'Complete gevelrenovatie van A tot Z in Keerbergen, Mechelen, Zoersel en omgeving. Van vochtbehandeling tot nieuwe crepi afwerking.',
+                        keywords: 'gevelrenovatie Keerbergen, gevel renoveren Mechelen, gevel opknappen, gevelrenovatie prijs'
+                      }}
                     >
                       <Gevelrenovatie />
                     </Layout>

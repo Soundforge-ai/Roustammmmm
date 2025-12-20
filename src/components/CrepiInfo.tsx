@@ -24,7 +24,7 @@ const CrepiInfo: React.FC = () => {
               alt="Crepi gevel met ingebouwde patronen"
               className="w-full h-full object-cover max-h-[500px]"
               onError={(e) => {
-                (e.target as HTMLImageElement).src = "https://www.yannovabouw.be/lovable-uploads/003a3c82-53d0-4c81-8d96-4ae5ad333f15.png";
+                (e.target as HTMLImageElement).src = "/images/downloads/crepi-1.jpg";
               }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>

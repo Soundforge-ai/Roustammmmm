@@ -26,8 +26,8 @@ export default async function handler(
 
   if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
     return res.status(500).json({ 
-      error: 'OAuth credentials not configured',
-      message: 'VITE_GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET must be set in environment variables'
+      error: 'OAuth configuration error',
+      message: 'OAuth credentials not configured'
     });
   }
 
@@ -93,4 +93,3 @@ export default async function handler(
     });
   }
 }
-

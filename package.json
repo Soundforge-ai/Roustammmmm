@@ -9,15 +9,18 @@
     "preview": "vite preview",
     "test": "vitest",
     "test:run": "vitest run",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "upload-photos": "node scripts/upload-photos-to-gcs.mjs"
   },
   "dependencies": {
+    "@google-cloud/storage": "^7.18.0",
     "@measured/puck": "^0.20.2",
     "@portabletext/react": "^3.0.18",
     "@react-oauth/google": "^0.13.0",
     "@sanity/client": "^6.17.0",
     "@sanity/image-url": "^1.0.2",
     "@supabase/supabase-js": "^2.89.0",
+    "googleapis": "^169.0.0",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.561.0",
     "react": "^19.2.3",

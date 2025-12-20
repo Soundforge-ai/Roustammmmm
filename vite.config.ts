@@ -8,7 +8,7 @@ export default defineConfig(({ mode }) => {
     server: {
       port: 3002,
       host: '0.0.0.0',
-      strictPort: false, // Als poort bezet is, probeer volgende beschikbare poort
+      strictPort: false,
     },
     plugins: [react()],
     define: {
@@ -21,6 +21,15 @@ export default defineConfig(({ mode }) => {
       alias: {
         '@': path.resolve(__dirname, 'src'),
       }
-    }
+    },
+    test: {
+      globals: true,
+      environment: 'jsdom',
+      setupFiles: ['./test/setup.ts'],
+      include: ['**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+      coverage: {
+        reporter: ['text', 'json', 'html'],
+      },
+    },
   };
 });

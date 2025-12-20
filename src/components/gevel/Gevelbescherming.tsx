@@ -53,7 +53,7 @@ const Gevelbescherming: React.FC = () => {
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div>
                 <img
-                  src="https://www.yannovabouw.be/lovable-uploads/c67c2ffe-a42b-477f-a67d-10100999c4f0.png"
+                  src="/images/downloads/crepi-2.jpg"
                   alt="Professionele gevelbescherming tegen weersinvloeden door Yannova"
                   className="w-full h-auto rounded-lg shadow-lg"
                   loading="lazy"

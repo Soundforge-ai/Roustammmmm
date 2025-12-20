@@ -2,6 +2,19 @@
 
 Dit document beschrijft hoe je Google OAuth 2.0 configureert voor het Yannova project.
 
+## ⚠️ SECURITY WARNING
+
+**KRITIEK**: Als je dit project hebt gekloond of toegang hebt tot de repository geschiedenis, en er zijn OAuth credentials gecommit geweest, moet je **onmiddellijk** de client secret roteren in Google Cloud Console:
+
+1. Ga naar [Google Cloud Console](https://console.cloud.google.com/)
+2. Selecteer project: `gen-lang-client-0141118397`
+3. Navigeer naar **APIs & Services** → **Credentials**
+4. Klik op je OAuth 2.0 Client ID
+5. Klik op **Reset Secret** of maak een nieuwe client secret aan
+6. Update de `GOOGLE_CLIENT_SECRET` environment variable in Vercel met de nieuwe secret
+
+**Nooit** commit OAuth client secrets naar source control. Ze moeten altijd via environment variables worden geconfigureerd.
+
 ## Credentials
 
 De Google OAuth credentials moeten worden geconfigureerd via environment variables. 

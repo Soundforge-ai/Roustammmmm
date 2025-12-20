@@ -10,7 +10,15 @@ import {
 import { ServiceItem, StepItem, BenefitItem, NavItem } from './types';
 
 export const COMPANY_NAME = 'Yannova';
-export const COMPANY_TAGLINE = 'Bouw, Ramen & Deuren, Renovatie, Isolatie & Crepi';
+export const COMPANY_TAGLINE = 'Ramen en Deuren, Renovatie, Isolatie & Crepi in Keerbergen, Mechelen, Zoersel';
+
+// Werkgebieden voor lokale SEO
+export const SERVICE_AREAS = [
+  'Keerbergen', 'Mechelen', 'Zoersel', 'Putte', 'Heist-op-den-Berg',
+  'Bonheiden', 'Tremelo', 'Haacht', 'Lier', 'Nijlen', 'Ranst',
+  'Zandhoven', 'Malle', 'Schilde', 'Wijnegem', 'Wommelgem',
+  'Boechout', 'Lint', 'Duffel', 'Berlaar'
+];
 
 export const NAV_ITEMS: NavItem[] = [
   { label: 'Home', href: '/' },
@@ -22,11 +30,18 @@ export const NAV_ITEMS: NavItem[] = [
   { label: 'Contact', href: '/contact' },
 ];
 
+// Admin tools - alleen zichtbaar voor admins
+export const ADMIN_TOOLS: NavItem[] = [
+  { label: 'SEO Dashboard', href: '/seo' },
+  { label: 'Jules AI', href: '/jules' },
+  { label: 'Admin Panel', href: '/admin' },
+];
+
 export const HERO_CONTENT = {
-  title: 'Kwaliteit, Energie-efficiëntie en een Feilloze Afwerking',
-  subtitle: 'Uw betrouwbare partner voor nieuwbouw en renovatie in heel België.',
+  title: 'Ramen en Deuren, Renovatie & Crepi in Keerbergen en Omgeving',
+  subtitle: 'Uw betrouwbare partner voor nieuwbouw en renovatie in Keerbergen, Mechelen, Zoersel, Putte en heel de provincie Antwerpen.',
   cta: 'Vraag uw gratis offerte aan',
-  image: 'https://www.yannovabouw.be/lovable-uploads/c67c2ffe-a42b-477f-a67d-10100999c4f0.png',
+  image: '/images/c67c2ffe-a42b-477f-a67d-10100999c4f0.png',
 };
 
 export const SERVICES: ServiceItem[] = [
@@ -35,7 +50,7 @@ export const SERVICES: ServiceItem[] = [
     title: 'Ramen en Deuren',
     description:
       'Hoogwaardige PVC en aluminium profielen. Isolerend, duurzaam en onderhoudsvriendelijk voor maximale energiebesparing.',
-    image: 'https://www.yannovabouw.be/lovable-uploads/c042e299-3e07-4212-b6a2-5c6297e61d69.png',
+    image: '/images/c042e299-3e07-4212-b6a2-5c6297e61d69.png',
     icon: Maximize2,
   },
   {
@@ -43,7 +58,7 @@ export const SERVICES: ServiceItem[] = [
     title: 'Renovatie',
     description:
       'Totaalrenovaties van ruwbouw tot afwerking. Wij zijn uw enige aanspreekpunt voor een zorgeloos traject.',
-    image: 'https://www.yannovabouw.be/lovable-uploads/16676485-bd4d-49a4-a5a6-89e07254fa23.png',
+    image: '/images/16676485-bd4d-49a4-a5a6-89e07254fa23.png',
     icon: Hammer,
   },
   {
@@ -51,7 +66,7 @@ export const SERVICES: ServiceItem[] = [
     title: 'Isolatiewerken',
     description:
       'Dak-, muur- en gevelisolatie. Verlaag uw energiekosten en verhoog uw wooncomfort direct.',
-    image: 'https://www.yannovabouw.be/lovable-uploads/9678ebf6-952f-45fd-a507-50b06b6a2a06.png',
+    image: '/images/downloads/isolatie-1.jpg',
     icon: ThermometerSun,
   },
   {
@@ -59,7 +74,7 @@ export const SERVICES: ServiceItem[] = [
     title: 'Crepi Gevelafwerking',
     description:
       'Strakke en duurzame gevelafwerking die uw woning beschermt en verfraait. Ideaal voor nieuwbouw en renovatie.',
-    image: 'https://www.yannovabouw.be/lovable-uploads/003a3c82-53d0-4c81-8d96-4ae5ad333f15.png',
+    image: '/images/downloads/crepi-1.jpg',
     icon: PaintBucket,
   },
 ];
@@ -110,8 +125,8 @@ export const PROJECTS: Project[] = [
     description: 'Volledige gevelrenovatie met crepi afwerking en nieuwe isolatie. De woning kreeg een moderne uitstraling met behoud van het oorspronkelijke karakter.',
     type: 'gevelwerken',
     images: [
-      'https://www.yannovabouw.be/lovable-uploads/003a3c82-53d0-4c81-8d96-4ae5ad333f15.png',
-      'https://www.yannovabouw.be/lovable-uploads/c67c2ffe-a42b-477f-a67d-10100999c4f0.png',
+      '/images/downloads/crepi-1.jpg',
+      '/images/downloads/crepi-2.jpg',
     ],
     completedDate: '2024-09',
     location: 'Brasschaat',
@@ -122,7 +137,7 @@ export const PROJECTS: Project[] = [
     description: 'Complete renovatie van een rijwoning inclusief nieuwe ramen, isolatie en gevelwerken. Van ruwbouw tot afwerking in één traject.',
     type: 'renovatie',
     images: [
-      'https://www.yannovabouw.be/lovable-uploads/16676485-bd4d-49a4-a5a6-89e07254fa23.png',
+      '/images/16676485-bd4d-49a4-a5a6-89e07254fa23.png',
     ],
     completedDate: '2024-07',
     location: 'Antwerpen',
@@ -133,7 +148,9 @@ export const PROJECTS: Project[] = [
     description: 'Buitengevelisolatie met EPS en crepi afwerking. Energiebesparing van meer dan 30% gerealiseerd.',
     type: 'isolatie',
     images: [
-      'https://www.yannovabouw.be/lovable-uploads/9678ebf6-952f-45fd-a507-50b06b6a2a06.png',
+      '/images/downloads/isolatie-1.jpg',
+      '/images/downloads/isolatie-2.jpg',
+      '/images/downloads/isolatie-3.jpg',
     ],
     completedDate: '2024-05',
     location: 'Gent',
@@ -144,7 +161,7 @@ export const PROJECTS: Project[] = [
     description: 'Plaatsing van hoogwaardige PVC ramen en deuren met drievoudige beglazing voor optimale isolatie.',
     type: 'ramen-deuren',
     images: [
-      'https://www.yannovabouw.be/lovable-uploads/c042e299-3e07-4212-b6a2-5c6297e61d69.png',
+      '/images/c042e299-3e07-4212-b6a2-5c6297e61d69.png',
     ],
     completedDate: '2024-03',
     location: 'Mechelen',
@@ -155,7 +172,7 @@ export const PROJECTS: Project[] = [
     description: 'Vernieuwing van bestaande crepi met moderne structuur en kleur. Inclusief vochtbehandeling.',
     type: 'gevelwerken',
     images: [
-      'https://www.yannovabouw.be/lovable-uploads/003a3c82-53d0-4c81-8d96-4ae5ad333f15.png',
+      '/images/downloads/crepi-3.jpg',
     ],
     completedDate: '2024-01',
     location: 'Leuven',

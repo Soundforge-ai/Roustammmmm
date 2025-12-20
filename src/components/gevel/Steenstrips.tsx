@@ -53,7 +53,7 @@ const Steenstrips: React.FC = () => {
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div>
                 <img
-                  src="https://www.yannovabouw.be/lovable-uploads/16676485-bd4d-49a4-a5a6-89e07254fa23.png"
+                  src="/images/16676485-bd4d-49a4-a5a6-89e07254fa23.png"
                   alt="Steenstrips gevelafwerking met authentieke baksteenlook door Yannova"
                   className="w-full h-auto rounded-lg shadow-lg"
                   loading="lazy"

@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 interface SEOProps {
   title?: string;
@@ -6,26 +7,32 @@ interface SEOProps {
   keywords?: string;
   canonicalUrl?: string;
   ogImage?: string;
+  noindex?: boolean;
 }
 
-const DEFAULT_TITLE = 'Yannova | Ramen, Deuren, Renovatie & Crepi België';
-const DEFAULT_DESCRIPTION = 'Yannova is uw expert in België voor PVC & aluminium ramen en deuren, totaalrenovaties, isolatiewerken en crepi gevelafwerking. Vraag nu uw gratis offerte aan.';
-const DEFAULT_KEYWORDS = 'Yannova, ramen en deuren, PVC ramen, aluminium ramen, totaalrenovatie, isolatiewerken, gevelisolatie, crepi gevel, gevelbepleistering, renovatie, nieuwbouw, bouwbedrijf België';
+const BASE_URL = 'https://www.yannova.be';
+const DEFAULT_TITLE = 'Yannova Bouw | Ramen en Deuren, Renovatie & Crepi | Keerbergen, Mechelen, Zoersel';
+const DEFAULT_DESCRIPTION = 'Yannova Bouw - Specialist in ramen en deuren, renovatie, isolatie en crepi gevelafwerking in Keerbergen, Mechelen, Zoersel, Putte en omgeving. ✓ Gratis offerte ✓ 15+ jaar ervaring ✓ Vakkundige plaatsing';
+const DEFAULT_KEYWORDS = 'Yannova, Yannova Bouw, yannova ramen en deuren, ramen en deuren, ramen en deuren Keerbergen, ramen en deuren Mechelen, ramen en deuren Zoersel, ramen en deuren Putte, PVC ramen, aluminium ramen, renovatie Keerbergen, renovatie Mechelen, renovatie Zoersel, bouwbedrijf Keerbergen, bouwbedrijf Mechelen, crepi gevel, gevelisolatie, gevelbepleistering, isolatiewerken, ramen plaatsen Antwerpen, deuren plaatsen, gevelrenovatie, energiezuinige ramen, ramen Heist-op-den-Berg, ramen Bonheiden, ramen Lier, ramen Nijlen, renovatie Putte, renovatie Heist-op-den-Berg, bouwbedrijf Antwerpen provincie, ramen Tremelo, ramen Haacht, renovatie Bonheiden, crepi Keerbergen, crepi Mechelen, gevel Zoersel';
 
 const SEO: React.FC<SEOProps> = ({
   title,
   description = DEFAULT_DESCRIPTION,
   keywords = DEFAULT_KEYWORDS,
   canonicalUrl,
-  ogImage = '/images/yannova-team.jpg'
+  ogImage = `${BASE_URL}/images/yannova-team.jpg`,
+  noindex = false
 }) => {
+  const location = useLocation();
   const fullTitle = title ? `${title} | Yannova` : DEFAULT_TITLE;
+  const currentUrl = canonicalUrl || `${BASE_URL}${location.pathname}`;
+  const fullOgImage = ogImage.startsWith('http') ? ogImage : `${BASE_URL}${ogImage}`;
 
   useEffect(() => {
     // Update document title
     document.title = fullTitle;
 
-    // Update meta tags
+    // Update meta tags helper
     const updateMeta = (name: string, content: string, isProperty = false) => {
       const attr = isProperty ? 'property' : 'name';
       let element = document.querySelector(`meta[${attr}="${name}"]`);
@@ -37,31 +44,61 @@ const SEO: React.FC<SEOProps> = ({
       element.setAttribute('content', content);
     };
 
+    // Remove meta tag helper
+    const removeMeta = (name: string, isProperty = false) => {
+      const attr = isProperty ? 'property' : 'name';
+      const element = document.querySelector(`meta[${attr}="${name}"]`);
+      if (element) element.remove();
+    };
+
+    // Robots meta tag
+    if (noindex) {
+      updateMeta('robots', 'noindex, nofollow');
+    } else {
+      updateMeta('robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
+    }
+
+    // Basic meta tags
     updateMeta('description', description);
     updateMeta('keywords', keywords);
+    updateMeta('author', 'Yannova Bouw');
+    updateMeta('language', 'Dutch');
+    updateMeta('geo.region', 'BE-VAN');
+    updateMeta('geo.placename', 'Keerbergen, Antwerpen, België');
+    updateMeta('geo.position', '51.0000;4.6333');
+    updateMeta('ICBM', '51.0000, 4.6333');
     
     // Open Graph tags
     updateMeta('og:title', fullTitle, true);
     updateMeta('og:description', description, true);
     updateMeta('og:type', 'website', true);
-    updateMeta('og:image', ogImage, true);
+    updateMeta('og:url', currentUrl, true);
+    updateMeta('og:image', fullOgImage, true);
+    updateMeta('og:image:width', '1200', true);
+    updateMeta('og:image:height', '630', true);
+    updateMeta('og:image:alt', fullTitle, true);
+    updateMeta('og:locale', 'nl_BE', true);
+    updateMeta('og:site_name', 'Yannova', true);
     
     // Twitter Card tags
     updateMeta('twitter:card', 'summary_large_image');
     updateMeta('twitter:title', fullTitle);
     updateMeta('twitter:description', description);
+    updateMeta('twitter:image', fullOgImage);
 
     // Canonical URL
-    if (canonicalUrl) {
-      let link = document.querySelector('link[rel="canonical"]') as HTMLLinkElement;
-      if (!link) {
-        link = document.createElement('link');
-        link.rel = 'canonical';
-        document.head.appendChild(link);
-      }
-      link.href = canonicalUrl;
+    let canonicalLink = document.querySelector('link[rel="canonical"]') as HTMLLinkElement;
+    if (!canonicalLink) {
+      canonicalLink = document.createElement('link');
+      canonicalLink.rel = 'canonical';
+      document.head.appendChild(canonicalLink);
     }
-  }, [fullTitle, description, keywords, canonicalUrl, ogImage]);
+    canonicalLink.href = currentUrl;
+
+    // Alternate language links (if needed in future)
+    // updateMeta('alternate', 'fr', true, 'hreflang');
+    
+  }, [fullTitle, description, keywords, currentUrl, fullOgImage, noindex]);
 
   return null;
 };
