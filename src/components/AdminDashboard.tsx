@@ -98,38 +98,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState<FilterStatus>('all');
   const [currentPage, setCurrentPage] = useState(1);
-
-  // Check for existing admin session on mount
-  useEffect(() => {
-    const session = localStorage.getItem('yannova_admin_session');
-    if (session) {
-      try {
-        const { email, expires } = JSON.parse(session);
-        if (new Date(expires) > new Date()) {
-          setIsAuthenticated(true);
-          setUsername(email);
-        } else {
-          localStorage.removeItem('yannova_admin_session');
-        }
-      } catch (e) {
-        localStorage.removeItem('yannova_admin_session');
-      }
-    }
-  }, []);
-
-  const saveAdminSession = (email: string) => {
-    const expires = new Date();
-    expires.setDate(expires.getDate() + 7); // 7 days valid
-    localStorage.setItem('yannova_admin_session', JSON.stringify({
-      email,
-      expires: expires.toISOString()
-    }));
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem('yannova_admin_session');
-    onLogout();
-  };
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
   const [notifications, setNotifications] = useState([
@@ -537,14 +505,28 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
     if (trimmedUsername === 'admin' && trimmedPassword === 'admin123') {
       setIsAuthenticated(true);
-      saveAdminSession('admin');
       setLoginError('');
+      // Store authentication in sessionStorage to persist across page refreshes
+      sessionStorage.setItem('admin_authenticated', 'true');
     } else {
-      setLoginError('Ongeldige inloggegevens');
+      setLoginError('Ongeldige gebruikersnaam of wachtwoord');
     }
   };
 
+  // Check if already authenticated on mount
+  useEffect(() => {
+    const isAuth = sessionStorage.getItem('admin_authenticated');
+    if (isAuth === 'true') {
+      setIsAuthenticated(true);
+    }
+  }, [setIsAuthenticated]);
 
+  // Handle logout with sessionStorage cleanup
+  const handleLogout = () => {
+    sessionStorage.removeItem('admin_authenticated');
+    setIsAuthenticated(false);
+    onLogout();
+  };
 
   // Filtered and searched leads
   const filteredLeads = useMemo(() => {
@@ -672,7 +654,10 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
             </div>
           </form>
 
-
+          <div className="mt-6 p-4 bg-gray-50 rounded-lg text-sm text-gray-500">
+            <p className="font-medium text-gray-700 mb-1">Demo credentials:</p>
+            <p>Gebruiker: admin | Wachtwoord: admin123</p>
+          </div>
         </div>
       </div>
     );
@@ -790,7 +775,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         if (ALLOWED_ADMIN_EMAILS.includes(decoded.email)) {
                           setIsAuthenticated(true);
                           setUsername(decoded.name || decoded.email);
-                          saveAdminSession(decoded.email);
                         } else {
                           alert(`Toegang geweigerd. Het emailadres ${decoded.email} heeft geen admin rechten.`);
                           console.warn('Unauthorized login attempt:', decoded.email);
