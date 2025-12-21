@@ -13,6 +13,8 @@
     "upload-photos": "node scripts/upload-photos-to-gcs.mjs"
   },
   "dependencies": {
+    "@ai-sdk/gateway": "^2.0.23",
+    "@ai-sdk/openai": "^2.0.88",
     "@google-cloud/storage": "^7.18.0",
     "@google/model-viewer": "^4.1.0",
     "@measured/puck": "^0.20.2",
@@ -21,6 +23,8 @@
     "@sanity/client": "^6.17.0",
     "@sanity/image-url": "^1.0.2",
     "@supabase/supabase-js": "^2.89.0",
+    "ai": "^5.0.116",
+    "dotenv": "^17.2.3",
     "googleapis": "^169.0.0",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.561.0",
@@ -40,6 +44,7 @@
     "@vitejs/plugin-react": "^5.0.0",
     "fast-check": "^4.4.0",
     "jsdom": "^27.3.0",
+    "tsx": "^4.21.0",
     "typescript": "~5.8.2",
     "vite": "^6.2.0",
     "vitest": "^4.0.16"

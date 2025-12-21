@@ -1,0 +1,24 @@
+{
+  "name": "mcp-showroom-crawler",
+  "version": "0.1.0",
+  "description": "MCP server for crawling showroom content including images, PDFs, and media",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [
+    "mcp",
+    "crawler",
+    "showroom",
+    "scraper"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.6.0",
+    "cheerio": "^1.0.0-rc.12",
+    "axios": "^1.6.2",
+    "mime-types": "^2.1.35"
+  }
+}
