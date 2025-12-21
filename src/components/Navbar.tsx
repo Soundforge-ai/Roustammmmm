@@ -4,15 +4,30 @@ import { Menu, X, Phone, ChevronDown } from 'lucide-react';
 import { NAV_ITEMS, COMPANY_NAME, ADMIN_TOOLS } from '../constants';
 import LanguageSwitcher from './LanguageSwitcher';
 import { Settings } from 'lucide-react';
+import { getStoredPages, PageItem } from './admin/PageManager';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isGevelOpen, setIsGevelOpen] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
+  const [navPages, setNavPages] = useState<PageItem[]>([]);
   const location = useLocation();
   const navRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Load dynamic navigation pages
+  useEffect(() => {
+    const loadPages = () => {
+      const pages = getStoredPages().filter(p => p.visible).sort((a, b) => a.order - b.order);
+      setNavPages(pages);
+    };
+    loadPages();
+    
+    // Listen for page updates
+    window.addEventListener('nav-pages-updated', loadPages);
+    return () => window.removeEventListener('nav-pages-updated', loadPages);
+  }, []);
 
   // Throttle function implementation
   const throttle = <T extends (...args: any[]) => any>(func: T, delay: number): T => {
@@ -75,16 +90,16 @@ const Navbar: React.FC = () => {
   const textColor = isScrolled || !isHomePage ? 'text-gray-700' : 'text-gray-200';
 
   return (	
-    <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled || !isHomePage ? 'bg-white shadow-md py-4' : 'bg-transparent py-6'}`}>
-      <div className="container mx-auto px-6 flex justify-between items-center">
+    <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled || !isHomePage ? 'bg-white shadow-md py-2' : 'bg-transparent py-4'}`}>
+      <div className="container mx-auto px-4 flex justify-between items-center">
         {/* Logo */}
-        <Link to="/" className={`text-2xl font-bold tracking-tight ${isScrolled || !isHomePage ? 'text-brand-dark' : 'text-white'}`}>
+        <Link to="/" className={`text-xl font-bold tracking-tight flex-shrink-0 ${isScrolled || !isHomePage ? 'text-brand-dark' : 'text-white'}`}>
           {COMPANY_NAME}<span className="text-brand-accent">.</span>
         </Link>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center space-x-8">
-          {NAV_ITEMS.map((item) => {
+        <div className="hidden lg:flex items-center space-x-1 xl:space-x-3 flex-1 justify-center max-w-4xl">
+          {(navPages.length > 0 ? navPages : NAV_ITEMS).map((item) => {
             const isActive = location.pathname === item.href || (item.href.startsWith('/#') && location.pathname === '/');
 
             // Special handling for Gevel dropdown
@@ -109,7 +124,7 @@ const Navbar: React.FC = () => {
                 >
                   <Link
                     to={item.href}
-                    className={`text-sm font-medium hover:text-brand-accent transition-colors flex items-center gap-1 ${isScrolled || !isHomePage ? 'text-gray-700' : 'text-gray-200'} ${isGevelActive ? 'text-brand-accent' : ''}`}
+                    className={`text-xs font-medium hover:text-brand-accent transition-colors flex items-center gap-0.5 whitespace-nowrap px-2 py-1 rounded ${isScrolled || !isHomePage ? 'text-gray-700' : 'text-gray-200'} ${isGevelActive ? 'text-brand-accent' : ''}`}
                     onClick={() => setIsGevelOpen(!isGevelOpen)}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' || e.key === ' ') {
@@ -122,7 +137,7 @@ const Navbar: React.FC = () => {
                   >
                     {item.label}
                     <ChevronDown 
-                      size={16} 
+                      size={14} 
                       className={`transition-transform duration-200 ${isGevelOpen ? 'rotate-180' : ''}`} 
                       aria-hidden="true"
                     />
@@ -204,7 +219,7 @@ const Navbar: React.FC = () => {
                   <a
                     key={item.label}
                     href={anchorId}
-                    className={`text-sm font-medium hover:text-brand-accent transition-colors ${textColor}`}
+                    className={`text-xs font-medium hover:text-brand-accent transition-colors whitespace-nowrap px-2 py-1 ${textColor}`}
                   >
                     {item.label}
                   </a>
@@ -214,7 +229,7 @@ const Navbar: React.FC = () => {
                 return (
                     <Link
                       to={item.href}
-                      className="px-6 py-3 text-gray-700 hover:bg-gray-50 hover:text-brand-accent font-medium block transition-colors duration-200"
+                      className="px-2 py-1 text-xs text-gray-700 hover:text-brand-accent font-medium whitespace-nowrap transition-colors duration-200"
                       onClick={() => setIsOpen(false)}
                     >
                       {item.label}
@@ -228,12 +243,16 @@ const Navbar: React.FC = () => {
               <Link
                 key={item.label}
                 to={item.href}
-                className={`text-sm font-medium hover:text-brand-accent transition-colors ${textColor} ${isActive ? 'text-brand-accent' : ''}`}
+                className={`text-xs font-medium hover:text-brand-accent transition-colors whitespace-nowrap px-2 py-1 ${textColor} ${isActive ? 'text-brand-accent' : ''}`}
               >
                 {item.label}
               </Link>
             );
           })}
+        </div>
+
+        {/* Right side actions */}
+        <div className="hidden lg:flex items-center space-x-2 flex-shrink-0">
           <LanguageSwitcher />
           
           {/* Admin Tools Dropdown */}
@@ -243,10 +262,10 @@ const Navbar: React.FC = () => {
             onMouseLeave={() => setIsAdminOpen(false)}
           >
             <button
-              className={`p-2 rounded-lg hover:bg-gray-100 transition-colors ${isScrolled || !isHomePage ? 'text-gray-700' : 'text-gray-200 hover:text-white'}`}
+              className={`p-1.5 rounded-lg hover:bg-gray-100 transition-colors ${isScrolled || !isHomePage ? 'text-gray-700' : 'text-gray-200 hover:text-white'}`}
               aria-label="Admin Tools"
             >
-              <Settings size={20} />
+              <Settings size={18} />
             </button>
             <div
               className={`absolute top-full right-0 pt-2 w-48 transition-all duration-200 ${isAdminOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}`}
@@ -268,16 +287,16 @@ const Navbar: React.FC = () => {
 
           <a
             href={isHomePage ? "#contact" : "/#contact"}
-            className="bg-brand-accent hover:bg-orange-700 text-white px-5 py-2.5 rounded-md text-sm font-semibold transition-colors flex items-center gap-2"
+            className="bg-brand-accent hover:bg-orange-700 text-white px-3 py-1.5 rounded-md text-xs font-semibold transition-colors flex items-center gap-1.5 whitespace-nowrap"
           >
-            <Phone size={16} />
-            Offerte Aanvragen
+            <Phone size={14} />
+            Offerte
           </a>
         </div>
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden focus:outline-none focus:ring-2 focus:ring-brand-accent rounded-md p-1"
+          className="lg:hidden focus:outline-none focus:ring-2 focus:ring-brand-accent rounded-md p-1"
           onClick={() => setIsOpen(!isOpen)}
           aria-expanded={isOpen}
           aria-controls="mobile-menu"
@@ -295,12 +314,12 @@ const Navbar: React.FC = () => {
       {isOpen && (
         <div 
           id="mobile-menu"
-          className="md:hidden bg-white absolute top-full left-0 w-full shadow-lg border-t border-gray-100 max-h-[80vh] overflow-y-auto"
+          className="lg:hidden bg-white absolute top-full left-0 w-full shadow-lg border-t border-gray-100 max-h-[80vh] overflow-y-auto"
           role="navigation"
           aria-label="Mobiel menu"
         >
           <div className="flex flex-col py-4">
-            {NAV_ITEMS.map((item) => {
+            {(navPages.length > 0 ? navPages : NAV_ITEMS).map((item) => {
               if (item.label === 'Gevel') {
                 return (
                   <div key={item.label}>

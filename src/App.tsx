@@ -45,6 +45,7 @@ const JulesAssistantPage = lazy(() => import('./pages/JulesAssistant'));
 const DynamicPageRenderer = lazy(() => import('./components/DynamicPageRenderer'));
 const AuthCallback = lazy(() => import('./pages/AuthCallback'));
 const SEODashboardPage = lazy(() => import('./pages/SEODashboard'));
+const PageManagerPage = lazy(() => import('./pages/admin/PageManagerPage'));
 
 const PageLoader: React.FC = () => (
   <div className="min-h-screen flex items-center justify-center bg-brand-light">
@@ -137,6 +138,16 @@ const App: React.FC = () => {
                   element={
                     <Suspense fallback={<PageLoader />}>
                       <AdminRoute />
+                    </Suspense>
+                  }
+                />
+
+                {/* Admin Pages Route */}
+                <Route
+                  path="/admin/pages"
+                  element={
+                    <Suspense fallback={<PageLoader />}>
+                      <PageManagerPage />
                     </Suspense>
                   }
                 />

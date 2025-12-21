@@ -42,7 +42,7 @@ const Hero: React.FC = () => {
           <p className="text-lg md:text-xl text-gray-200 mb-10 max-w-xl leading-relaxed">
             {HERO_CONTENT.subtitle}
           </p>
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col sm:flex-row gap-4 flex-wrap">
             <a
               href="#contact"
               className="bg-brand-accent hover:bg-orange-700 text-white px-8 py-4 rounded-md font-bold text-lg transition-all transform hover:scale-105 shadow-lg flex items-center justify-center gap-2"
@@ -55,6 +55,13 @@ const Hero: React.FC = () => {
               className="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/30 text-white px-8 py-4 rounded-md font-bold text-lg transition-all flex items-center justify-center"
             >
               Ontdek onze diensten
+            </a>
+            <a
+              href="#showroom"
+              className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white px-8 py-4 rounded-md font-bold text-lg transition-all transform hover:scale-105 shadow-lg flex items-center justify-center gap-2 border-2 border-amber-400/50 animate-pulse hover:animate-none"
+            >
+              🏠 SHOWROOM
+              <ArrowRight size={20} />
             </a>
           </div>
         </div>

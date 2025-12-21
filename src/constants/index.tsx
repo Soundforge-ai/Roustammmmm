@@ -32,6 +32,7 @@ export const NAV_ITEMS: NavItem[] = [
 
 // Admin tools - alleen zichtbaar voor admins
 export const ADMIN_TOOLS: NavItem[] = [
+  { label: 'Pagina Beheer', href: '/admin/pages' },
   { label: 'SEO Dashboard', href: '/seo' },
   { label: 'Jules AI', href: '/jules' },
   { label: 'Admin Panel', href: '/admin' },
