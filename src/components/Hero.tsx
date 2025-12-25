@@ -4,8 +4,8 @@ import { HERO_CONTENT } from '../constants';
 
 const Hero: React.FC = () => {
   return (
-    <section 
-      id="hero" 
+    <section
+      id="hero"
       className="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden"
       aria-label="Welkom bij Yannova"
     >
@@ -19,7 +19,7 @@ const Hero: React.FC = () => {
           className="w-full h-full object-cover"
           aria-hidden="true"
         >
-          <source src="/hero-video.mp4" type="video/mp4" />
+          <source src="/videos/hero-video.mp4" type="video/mp4" />
           {/* Fallback image if video doesn't load */}
           <img
             src={HERO_CONTENT.image}

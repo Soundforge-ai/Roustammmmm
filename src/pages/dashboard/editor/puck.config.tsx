@@ -27,7 +27,7 @@ const config: Config = {
         level: '1',
       },
       render: ({ text, level }) => {
-        const Tag = `h${level}` as keyof JSX.IntrinsicElements;
+        const Tag = `h${level}` as unknown as React.ElementType;
         return <Tag>{text}</Tag>;
       },
     },

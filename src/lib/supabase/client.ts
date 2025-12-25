@@ -45,12 +45,38 @@ function createMockClient() {
       }
       if (prop === 'from') {
         return () => ({
-          select: () => ({ data: [], error: null }),
-          insert: () => ({ data: null, error: null }),
-          update: () => ({ data: null, error: null }),
-          delete: () => ({ data: null, error: null }),
-          upload: () => ({ data: null, error: null }),
-          getPublicUrl: () => ({ data: { publicUrl: '' } }),
+          select: () => ({ 
+            data: [], 
+            error: null,
+            order: () => ({ data: [], error: null }),
+            eq: () => ({ 
+              data: null, 
+              error: null,
+              single: () => ({ data: null, error: null })
+            }),
+            single: () => ({ data: null, error: null }),
+          }),
+          insert: () => ({ 
+            data: null, 
+            error: null,
+            select: () => ({ data: null, error: null, single: () => ({ data: null, error: null }) })
+          }),
+          update: () => ({ 
+            data: null, 
+            error: null,
+            eq: () => ({ data: null, error: null })
+          }),
+          upsert: () => ({ 
+            data: null, 
+            error: null,
+            select: () => ({ data: null, error: null, single: () => ({ data: null, error: null }) })
+          }),
+          delete: () => ({ 
+            data: null, 
+            error: null,
+            eq: () => ({ data: null, error: null }),
+            neq: () => ({ data: null, error: null })
+          }),
         });
       }
       if (prop === 'storage') {

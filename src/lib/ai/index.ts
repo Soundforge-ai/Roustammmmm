@@ -50,7 +50,7 @@ export async function chat(
     system,
     messages,
     temperature,
-    maxTokens,
+    // maxTokens,
   });
 
   return result;
@@ -84,12 +84,14 @@ export async function generate(
     system,
     prompt,
     temperature,
-    maxTokens,
+
+    // maxTokens,
   });
 
   return result;
 }
 
 // Export alles
-export { models, modelInfo, getAvailableModels, ModelId } from './models';
+export { models, modelInfo, getAvailableModels } from './models';
+export type { ModelId } from './models';
 export { vectorStore, getRelevantContext } from './embeddings';

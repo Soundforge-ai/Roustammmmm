@@ -36,7 +36,7 @@ export interface Lead {
   notes?: string[];
 }
 
-export type ProjectType = 'gevelwerken' | 'renovatie' | 'isolatie' | 'ramen-deuren';
+export type ProjectType = 'gevelwerken' | 'renovatie' | 'isolatie' | 'ramen-deuren' | 'tuinaanleg';
 
 export interface Project {
   id: string;

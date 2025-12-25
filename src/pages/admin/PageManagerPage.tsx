@@ -6,12 +6,12 @@ import { Link } from 'react-router-dom';
 
 const PageManagerPage: React.FC = () => {
   return (
-    <Layout>
+    <Layout onSubmitLead={() => { }} onAdminClick={() => { }}>
       <div className="min-h-screen bg-gray-100 pt-24 pb-12">
         <div className="container mx-auto px-4">
           <div className="mb-6">
-            <Link 
-              to="/admin" 
+            <Link
+              to="/admin"
               className="inline-flex items-center text-gray-600 hover:text-brand-accent transition-colors"
             >
               <ArrowLeft size={20} className="mr-2" />

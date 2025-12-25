@@ -38,8 +38,8 @@ const Chatbot: React.FC = () => {
 
   // Load settings specifically for bot name and updates
   useEffect(() => {
-    const loadSettings = () => {
-      const settings = settingsStorage.getSettings();
+    const loadSettings = async () => {
+      const settings = await settingsStorage.getSettings();
       setBotName(settings.botName);
     };
     loadSettings();
@@ -52,31 +52,35 @@ const Chatbot: React.FC = () => {
 
   // Initialize session
   useEffect(() => {
-    // Check for existing active session or create new one
-    // For simplicity in this demo, we create a new session on page load
-    // In a real app, you might check localStorage for an active session ID first
-    const newSession = chatStorage.createSession();
-    setSessionId(newSession.id);
+    const initSession = async () => {
+      // Check for existing active session or create new one
+      // For simplicity in this demo, we create a new session on page load
+      // In a real app, you might check localStorage for an active session ID first
+      const newSession = await chatStorage.createSession();
+      setSessionId(newSession.id);
 
-    const settings = settingsStorage.getSettings(); // Get current name for greeting if needed, though greeting is hardcoded usually
+      const settings = await settingsStorage.getSettings(); // Get current name for greeting if needed, though greeting is hardcoded usually
 
-    // Add initial greeting to the session
-    const initialMessage: Message = {
-      id: '1',
-      role: 'assistant',
-      content: `Hallo! 👋 Ik ben ${settings.botName}. Hoe kan ik u helpen met uw bouw- of renovatieproject?`,
-      timestamp: new Date(),
+      // Add initial greeting to the session
+      const initialMessage: Message = {
+        id: '1',
+        role: 'assistant',
+        content: `Hallo! 👋 Ik ben ${settings.botName}. Hoe kan ik u helpen met uw bouw- of renovatieproject?`,
+        timestamp: new Date(),
+      };
+
+      const sessionWithGreeting = {
+        ...newSession,
+        messages: [initialMessage],
+        lastMessageTime: new Date()
+      };
+
+      // Initial save
+      await chatStorage.saveSession(sessionWithGreeting);
+      setIsLoading(false); // Ensure loading is false
     };
 
-    const sessionWithGreeting = {
-      ...newSession,
-      messages: [initialMessage],
-      lastMessageTime: new Date()
-    };
-
-    // Initial save
-    chatStorage.saveSession(sessionWithGreeting);
-    setIsLoading(false); // Ensure loading is false
+    initSession();
   }, []);
 
   const [messages, setMessages] = useState<Message[]>([

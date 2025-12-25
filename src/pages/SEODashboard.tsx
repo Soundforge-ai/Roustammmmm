@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 
-const SEODashboard = React.lazy(() => import('@/components/admin/SEODashboard'));
+// Update import to point to the correct file and handle named export for lazy loading
+const SEODashboard = React.lazy(() => import('@/components/admin/SEOManager').then(module => ({ default: module.SEOManager })));
 
 const SEODashboardPage: React.FC = () => {
   return (

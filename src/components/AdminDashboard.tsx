@@ -333,11 +333,11 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
     }
 
     const reader = new FileReader();
-    reader.onload = (event) => {
+    reader.onload = async (event) => {
       const base64 = event.target?.result as string;
 
       try {
-        mediaStorage.saveMedia({
+        await mediaStorage.saveMedia({
           id: Date.now().toString(),
           name: file.name,
           url: base64,
@@ -354,10 +354,10 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
     if (mediaInputRef.current) mediaInputRef.current.value = '';
   };
 
-  const handleDeleteMedia = (id: string) => {
+  const handleDeleteMedia = async (id: string) => {
     if (confirm('Verwijderen?')) {
-      mediaStorage.deleteMedia(id);
-      setMediaItems(mediaStorage.getMedia());
+      await mediaStorage.deleteMedia(id);
+      setMediaItems(await mediaStorage.getMedia());
     }
   };
 
@@ -381,7 +381,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
       let imported = 0;
       for (const upload of successfulUploads) {
         try {
-          mediaStorage.addGCSMedia(
+          await mediaStorage.addGCSMedia(
             upload.url,
             upload.fileName,
             upload.size || 0
@@ -393,7 +393,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
       }
 
       // Refresh media items
-      setMediaItems(mediaStorage.getMedia());
+      setMediaItems(await mediaStorage.getMedia());
       alert(`✅ ${imported} foto's geïmporteerd uit Google Cloud Storage!`);
     } catch (error: any) {
       console.error('Error importing GCS photos:', error);
@@ -401,7 +401,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
     }
   };
 
-  const handleImportGCSFromURLs = () => {
+  const handleImportGCSFromURLs = async () => {
     const urls = prompt('Plak hier de Google Cloud Storage URLs (één per regel):');
     if (!urls) return;
 
@@ -411,14 +411,14 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
     for (const url of urlList) {
       try {
         const fileName = url.split('/').pop() || `image-${Date.now()}.png`;
-        mediaStorage.addGCSMedia(url.trim(), fileName, 0);
+        await mediaStorage.addGCSMedia(url.trim(), fileName, 0);
         imported++;
       } catch (error) {
         console.error(`Error importing ${url}:`, error);
       }
     }
 
-    setMediaItems(mediaStorage.getMedia());
+    setMediaItems(await mediaStorage.getMedia());
     alert(`✅ ${imported} foto's geïmporteerd!`);
   };
 

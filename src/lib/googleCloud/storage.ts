@@ -44,14 +44,14 @@ class GoogleCloudStorageService {
       });
 
       this.storage = new Storage({
-        auth,
+        // auth,
         projectId: config.projectId,
       });
 
       // Test of bucket bestaat
       const bucket = this.storage.bucket(config.bucketName);
       const [exists] = await bucket.exists();
-      
+
       if (!exists) {
         console.warn(`Bucket ${config.bucketName} bestaat niet. Maak deze aan in Google Cloud Console.`);
       }

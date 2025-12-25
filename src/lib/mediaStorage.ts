@@ -26,7 +26,7 @@ export const mediaStorage = {
     /**
      * Haal alle media items op
      */
-    getMedia: (): MediaItem[] => {
+    getMedia: async (): Promise<MediaItem[]> => {
         try {
             const stored = localStorage.getItem(MEDIA_KEY);
             if (!stored) return [];
@@ -45,9 +45,9 @@ export const mediaStorage = {
     /**
      * Sla een media item op (lokaal of Google Cloud)
      */
-    saveMedia: (item: MediaItem) => {
+    saveMedia: async (item: MediaItem) => {
         try {
-            const current = mediaStorage.getMedia();
+            const current = await mediaStorage.getMedia();
             const updated = [item, ...current];
 
             // Check for quota exceed risk (alleen voor lokale Base64 opslag)
@@ -70,7 +70,7 @@ export const mediaStorage = {
      * Verwijder een media item
      */
     deleteMedia: async (id: string) => {
-        const current = mediaStorage.getMedia();
+        const current = await mediaStorage.getMedia();
         const item = current.find(m => m.id === id);
         
         if (item?.source === 'gcs' && item.gcsPath) {
@@ -122,7 +122,7 @@ export const mediaStorage = {
     /**
      * Voeg een Google Cloud Storage URL toe aan de media library
      */
-    addGCSMedia: (url: string, name: string, size: number = 0): MediaItem => {
+    addGCSMedia: async (url: string, name: string, size: number = 0): Promise<MediaItem> => {
         const item: MediaItem = {
             id: Date.now().toString(),
             name,
@@ -134,7 +134,7 @@ export const mediaStorage = {
             gcsPath: url.replace(GCS_CONFIG.baseUrl + '/', ''),
         };
 
-        mediaStorage.saveMedia(item);
+        await mediaStorage.saveMedia(item);
         return item;
     },
 

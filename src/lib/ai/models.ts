@@ -6,7 +6,7 @@ import { anthropic } from '@ai-sdk/anthropic';
 const siliconflow = createOpenAI({
   baseURL: process.env.SILICONFLOW_BASE_URL || 'https://api.siliconflow.com/v1',
   apiKey: process.env.SILICONFLOW_API_KEY,
-  compatibility: 'compatible',
+  // compatibility: 'compatible',
 });
 
 // Beschikbare modellen configuratie
@@ -15,17 +15,17 @@ export const models = {
   'gemini-2.5-flash-lite': () => google('gemini-2.5-flash-lite'),
   'gemini-2.0-flash': () => google('gemini-2.0-flash'),
   'gemini-1.5-flash': () => google('gemini-1.5-flash'),
-  
+
   // OpenAI
   'gpt-4o': () => openai('gpt-4o'),
   'gpt-4o-mini': () => openai('gpt-4o-mini'),
   'gpt-4-turbo': () => openai('gpt-4-turbo'),
-  
+
   // Anthropic Claude
   'claude-3-5-sonnet': () => anthropic('claude-3-5-sonnet-20241022'),
   'claude-3-5-haiku': () => anthropic('claude-3-5-haiku-20241022'),
   'claude-3-opus': () => anthropic('claude-3-opus-20240229'),
-  
+
   // SiliconFlow / DeepSeek
   'deepseek-v3-nex': () => siliconflow.chat('nex-agi/DeepSeek-V3.1-Nex-N1'),
   'deepseek-v3': () => siliconflow.chat('deepseek-ai/DeepSeek-V3'),
