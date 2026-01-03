@@ -23,27 +23,27 @@ const Footer: React.FC<FooterProps> = ({ onAdminClick }) => {
               Uw lokale bouwpartner in België. Gespecialiseerd in ramen en deuren, totaalrenovaties, isolatiewerken en crepi gevelafwerking.
             </p>
             <div className="flex gap-3 mt-6">
-              <a 
-                href="https://facebook.com" 
-                target="_blank" 
+              <a
+                href="https://facebook.com"
+                target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Volg ons op Facebook"
                 className="w-10 h-10 bg-slate-700 rounded-full hover:bg-brand-accent transition-colors flex items-center justify-center"
               >
                 <Facebook size={18} />
               </a>
-              <a 
-                href="https://instagram.com" 
-                target="_blank" 
+              <a
+                href="https://instagram.com"
+                target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Volg ons op Instagram"
                 className="w-10 h-10 bg-slate-700 rounded-full hover:bg-brand-accent transition-colors flex items-center justify-center"
               >
                 <Instagram size={18} />
               </a>
-              <a 
-                href="https://linkedin.com" 
-                target="_blank" 
+              <a
+                href="https://linkedin.com"
+                target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Volg ons op LinkedIn"
                 className="w-10 h-10 bg-slate-700 rounded-full hover:bg-brand-accent transition-colors flex items-center justify-center"
@@ -84,9 +84,22 @@ const Footer: React.FC<FooterProps> = ({ onAdminClick }) => {
             <ul className="space-y-2 text-sm">
               <li><a href="tel:+32489960001" className="hover:text-brand-accent transition-colors">+32 489 96 00 01</a></li>
               <li><a href="mailto:info@yannova.be" className="hover:text-brand-accent transition-colors">info@yannova.be</a></li>
+              <li className="text-slate-400">Keerbergen<br />3140 Keerbergen, België</li>
             </ul>
-            <h4 className="text-white font-semibold mb-2 mt-6">Dienstenregio</h4>
-            <p className="text-sm">Actief in heel Vlaanderen en Brussel.</p>
+            <h4 className="text-white font-semibold mb-2 mt-6">Werkregio</h4>
+            <div className="flex flex-wrap gap-2 text-xs text-slate-400">
+              <Link to="/regio/antwerpen" className="hover:text-brand-accent transition-colors">Antwerpen</Link>
+              <span className="text-slate-600">•</span>
+              <Link to="/regio/mechelen" className="hover:text-brand-accent transition-colors">Mechelen</Link>
+              <span className="text-slate-600">•</span>
+              <Link to="/regio/zoersel" className="hover:text-brand-accent transition-colors">Zoersel</Link>
+              <span className="text-slate-600">•</span>
+              <Link to="/regio/putte" className="hover:text-brand-accent transition-colors">Putte</Link>
+              <span className="text-slate-600">•</span>
+              <Link to="/regio/heist-op-den-berg" className="hover:text-brand-accent transition-colors">Heist-op-den-Berg</Link>
+              <span className="text-slate-600">•</span>
+              <Link to="/regio/lier" className="hover:text-brand-accent transition-colors">Lier</Link>
+            </div>
           </div>
         </div>
 
@@ -95,7 +108,7 @@ const Footer: React.FC<FooterProps> = ({ onAdminClick }) => {
           <div className="flex items-center gap-4 mt-4 md:mt-0">
             <a href="/privacy" className="hover:text-brand-accent transition-colors">Privacybeleid</a>
             <a href="/cookies" className="hover:text-brand-accent transition-colors">Cookiebeleid</a>
-            <button 
+            <button
               onClick={onAdminClick}
               className="flex items-center gap-1 opacity-50 hover:opacity-100 hover:text-brand-accent transition-all"
               aria-label="Admin login"

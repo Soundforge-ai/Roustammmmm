@@ -1,8 +1,12 @@
-# Google Cloud Setup - numeric-zoo-481517-s3
+# Google Cloud Setup - ⚠️ VEROUDERD
 
-## Project Informatie
+> **LET OP**: Dit document verwijst naar verouderd project `numeric-zoo-481517-s3`.  
+> Huidig project: `gen-lang-client-0141118397`  
+> Zie `docs/google/GOOGLE_CLOUD_STORAGE_SETUP.md` voor actuele instructies.
 
-- **Project ID**: `numeric-zoo-481517-s3`
+## Project Informatie (VEROUDERD)
+
+- **Project ID**: `numeric-zoo-481517-s3` ⚠️ **VEROUDERD**
 - **Client ID**: `[REDACTED]`
 - **Client Secret**: `[REDACTED]`
 

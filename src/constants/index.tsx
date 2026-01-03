@@ -14,7 +14,7 @@ export const COMPANY_TAGLINE = 'Ramen en Deuren, Renovatie, Isolatie & Crepi in 
 
 // Werkgebieden voor lokale SEO
 export const SERVICE_AREAS = [
-  'Keerbergen', 'Mechelen', 'Zoersel', 'Putte', 'Heist-op-den-Berg',
+  'Antwerpen', 'Keerbergen', 'Mechelen', 'Zoersel', 'Putte', 'Heist-op-den-Berg',
   'Bonheiden', 'Tremelo', 'Haacht', 'Lier', 'Nijlen', 'Ranst',
   'Zandhoven', 'Malle', 'Schilde', 'Wijnegem', 'Wommelgem',
   'Boechout', 'Lint', 'Duffel', 'Berlaar'
@@ -22,11 +22,9 @@ export const SERVICE_AREAS = [
 
 export const NAV_ITEMS: NavItem[] = [
   { label: 'Home', href: '/' },
-  { label: 'Aanpak', href: '/aanpak' },
-
-
-  { label: 'Showroom', href: '/showroom' },
-  { label: 'Over Ons', href: '/over-ons' },
+  { label: 'Onze Diensten', href: '/diensten' },
+  { label: 'Werkregio', href: '/#werkgebied' },
+  { label: 'Projecten', href: '/portfolio' },
   { label: 'Contact', href: '/contact' },
 ];
 

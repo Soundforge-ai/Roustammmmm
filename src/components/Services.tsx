@@ -7,10 +7,10 @@ const Services: React.FC = () => {
     <section id="services" className="py-20 bg-brand-light">
       <div className="container mx-auto px-6">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-brand-accent font-semibold tracking-wider uppercase text-sm mb-3">Onze Diensten</h2>
-          <h3 className="text-3xl md:text-4xl font-bold text-brand-dark mb-4">
+          <span className="block text-brand-accent font-semibold tracking-wider uppercase text-sm mb-3">Onze Diensten</span>
+          <h2 className="text-3xl md:text-4xl font-bold text-brand-dark mb-4">
             Alles voor uw woning onder één dak
-          </h3>
+          </h2>
           <p className="text-gray-600">
             Van kleine aanpassingen tot grote renovaties. Wij leveren kwaliteit in elk aspect van uw bouwproject.
           </p>
@@ -22,7 +22,9 @@ const Services: React.FC = () => {
               <div className="h-48 overflow-hidden relative">
                 <img
                   src={service.image}
-                  alt={`${service.title} - ${service.description.substring(0, 50)}...`}
+                  alt={`${service.title} - Voorbeeld door Yannova Bouw`}
+                  width="400"
+                  height="300"
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   loading="lazy"
                 />

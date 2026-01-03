@@ -210,7 +210,7 @@ const ContactCTA: React.FC<ContactCTAProps> = ({ onSubmitLead }) => {
                   <MapPin className="text-brand-accent mt-1 flex-shrink-0" />
                   <div>
                     <p className="font-semibold">Hoofdkantoor</p>
-                    <p className="text-gray-300">De Beemdekens 39<br />2980 Zoersel, België</p>
+                    <p className="text-gray-300">Keerbergen<br />3140 Keerbergen, België</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">

@@ -1,6 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Palette, Shield, ThermometerSun, Layers, Home, CheckCircle } from 'lucide-react';
+import { ArrowRight, Palette, Shield, ThermometerSun, Layers, Home, CheckCircle, ChevronDown } from 'lucide-react';
+
+// FAQ data voor SEO
+const FAQ_ITEMS = [
+    {
+        question: "Hoeveel kost crepi per m² in België?",
+        answer: "De prijs voor crepi varieert tussen €40 en €80 per m², afhankelijk van het type crepi, de ondergrond en eventuele voorbereidende werken. Met gevelisolatie erbij komt u op €80-€150 per m². Vraag een gratis offerte aan voor een exacte prijsberekening."
+    },
+    {
+        question: "Wat is het verschil tussen crepi en gevelbepleistering?",
+        answer: "Crepi is een type gevelbepleistering met een specifieke textuur (korrel). Gevelbepleistering is de overkoepelende term voor alle soorten pleisterwerk op gevels, waaronder glad pleisterwerk, structuurpleister en crepi."
+    },
+    {
+        question: "Hoe lang gaat crepi mee?",
+        answer: "Kwalitatief aangebrachte crepi gaat 25 tot 40 jaar mee. De levensduur hangt af van de kwaliteit van de materialen, de vakkundige uitvoering en de blootstelling aan weersinvloeden. Wij gebruiken alleen A-merken voor maximale duurzaamheid."
+    },
+    {
+        question: "Kan ik premies krijgen voor gevelisolatie?",
+        answer: "Ja, voor gevelisolatie kunt u premies krijgen van de Vlaamse overheid en uw netbeheerder. De premie kan oplopen tot €35 per m² afhankelijk van de isolatiewaarde. Wij helpen u graag met de aanvraag."
+    },
+    {
+        question: "Werkt Yannova ook in Keerbergen, Mechelen en Zoersel?",
+        answer: "Ja, Yannova is actief in heel de provincie Antwerpen en Vlaams-Brabant. We voeren gevelwerken uit in Keerbergen, Mechelen, Zoersel, Putte, Heist-op-den-Berg, Bonheiden, Lier en alle omliggende gemeenten."
+    },
+    {
+        question: "Hoelang duurt een gevelrenovatie met crepi?",
+        answer: "Een gemiddelde gevelrenovatie met crepi duurt 1-2 weken voor een vrijstaande woning. Bij gevelisolatie met crepi rekent u op 2-3 weken. De exacte duur hangt af van de grootte, de staat van de gevel en de weersomstandigheden."
+    }
+];
 
 const Gevel: React.FC = () => {
   const gevelServices = [
@@ -204,6 +232,9 @@ const Gevel: React.FC = () => {
         </div>
       </section>
 
+      {/* FAQ Section */}
+      <FAQSection />
+
       {/* CTA Section */}
       <section className="py-20 bg-brand-dark text-white">
         <div className="container mx-auto px-6">
@@ -237,6 +268,60 @@ const Gevel: React.FC = () => {
       </section>
     </div>
   );
+};
+
+// FAQ Accordion Component
+const FAQSection: React.FC = () => {
+    const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+    return (
+        <section className="py-20 bg-gray-50">
+            <div className="container mx-auto px-6">
+                <div className="max-w-4xl mx-auto">
+                    <h2 className="text-3xl md:text-4xl font-bold text-brand-dark mb-4 text-center">
+                        Veelgestelde Vragen over Gevelwerken en Crepi
+                    </h2>
+                    <p className="text-gray-600 text-center mb-12">
+                        Antwoorden op de meest gestelde vragen over crepi, gevelisolatie en gevelrenovatie in Keerbergen, Mechelen en omgeving.
+                    </p>
+                    
+                    <div className="space-y-4">
+                        {FAQ_ITEMS.map((item, index) => (
+                            <div 
+                                key={index}
+                                className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden"
+                            >
+                                <button
+                                    onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                                    className="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+                                    aria-expanded={openIndex === index}
+                                >
+                                    <h3 className="text-lg font-semibold text-gray-900 pr-4">
+                                        {item.question}
+                                    </h3>
+                                    <ChevronDown 
+                                        className={`flex-shrink-0 text-brand-accent transition-transform duration-300 ${
+                                            openIndex === index ? 'rotate-180' : ''
+                                        }`} 
+                                        size={24} 
+                                    />
+                                </button>
+                                <div 
+                                    className={`overflow-hidden transition-all duration-300 ${
+                                        openIndex === index ? 'max-h-96' : 'max-h-0'
+                                    }`}
+                                >
+                                    <p className="px-6 pb-5 text-gray-600 leading-relaxed">
+                                        {item.answer}
+                                    </p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
 };
 
 export default Gevel;

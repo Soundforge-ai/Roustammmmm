@@ -7,6 +7,7 @@
   "nav.partners": "Partners",
   "nav.contact": "Contact",
   "nav.portfolio": "Portfolio",
+  "nav.kiesProduct": "Kies Product",
   
   "hero.tagline": "Uw Partner in Bouw & Renovatie",
   "hero.title": "Kwaliteit, Energie-efficiëntie en een Feilloze Afwerking",
@@ -113,5 +114,35 @@
   
   "common.loading": "Laden...",
   "common.error": "Er is een fout opgetreden",
-  "common.retry": "Opnieuw proberen"
+  "common.retry": "Opnieuw proberen",
+  
+  "productSelect.title": "Kies uw product",
+  "productSelect.subtitle": "Selecteer een productcategorie om meer informatie te bekijken en uw configuratie te starten",
+  "productSelect.viewMore": "Bekijk meer",
+  "productSelect.popular": "Populair",
+  "productSelect.cta.title": "Heeft u vragen over onze producten?",
+  "productSelect.cta.description": "Ons team staat klaar om u te helpen bij het maken van de juiste keuze voor uw project.",
+  "productSelect.cta.contact": "Neem contact op",
+  "productSelect.cta.approach": "Onze aanpak",
+  
+  "configurator.title": "Voordeur Configurator",
+  "configurator.subtitle": "Configureer uw ideale voordeur op maat",
+  "configurator.material": "Materiaal",
+  "configurator.class": "Klasse Producten",
+  "configurator.dimensions": "Afmetingen",
+  "configurator.width": "Breedte",
+  "configurator.height": "Hoogte",
+  "configurator.color": "Kleur",
+  "configurator.pattern": "Patroon",
+  "configurator.price": "Voorlopige Prijs",
+  "configurator.priceNote": "Gebaseerd op gemiddelde waarden voor uw markt.",
+  "configurator.save": "Opslaan & Offerte Aanvragen",
+  "configurator.viewAR": "Bekijk in AR",
+  "configurator.summary": "Uw Configuratie",
+  "configurator.classes.economic": "Economisch",
+  "configurator.classes.economicDesc": "Compromis tussen prijs en kwaliteit",
+  "configurator.classes.standard": "Standaard",
+  "configurator.classes.standardDesc": "Bewezen oplossing",
+  "configurator.classes.premium": "Premium",
+  "configurator.classes.premiumDesc": "Voor veeleisende klanten"
 }

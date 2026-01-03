@@ -29,7 +29,7 @@ const DEFAULT_CONFIG: RobotsConfig = {
     '/gevel/*',
     '/posts/*',
   ],
-  sitemapUrl: 'https://yannova.be/sitemap.xml',
+  sitemapUrl: 'https://www.yannova.be/sitemap.xml',
 };
 
 /**

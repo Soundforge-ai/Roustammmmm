@@ -13,14 +13,14 @@ interface SEOProps {
 const BASE_URL = 'https://www.yannova.be';
 const DEFAULT_TITLE = 'Yannova Bouw | Ramen en Deuren, Renovatie & Crepi | Keerbergen, Mechelen, Zoersel';
 const DEFAULT_DESCRIPTION = 'Yannova Bouw - Specialist in ramen en deuren, renovatie, isolatie en crepi gevelafwerking in Keerbergen, Mechelen, Zoersel, Putte en omgeving. ✓ Gratis offerte ✓ 15+ jaar ervaring ✓ Vakkundige plaatsing';
-const DEFAULT_KEYWORDS = 'Yannova, Yannova Bouw, yannova ramen en deuren, ramen en deuren, ramen en deuren Keerbergen, ramen en deuren Mechelen, ramen en deuren Zoersel, ramen en deuren Putte, PVC ramen, aluminium ramen, renovatie Keerbergen, renovatie Mechelen, renovatie Zoersel, bouwbedrijf Keerbergen, bouwbedrijf Mechelen, crepi gevel, gevelisolatie, gevelbepleistering, isolatiewerken, ramen plaatsen Antwerpen, deuren plaatsen, gevelrenovatie, energiezuinige ramen, ramen Heist-op-den-Berg, ramen Bonheiden, ramen Lier, ramen Nijlen, renovatie Putte, renovatie Heist-op-den-Berg, bouwbedrijf Antwerpen provincie, ramen Tremelo, ramen Haacht, renovatie Bonheiden, crepi Keerbergen, crepi Mechelen, gevel Zoersel';
+const DEFAULT_KEYWORDS = 'Yannova, Yannova Bouw, yannova ramen en deuren, ramen en deuren Antwerpen, ramen en deuren Keerbergen, ramen en deuren Mechelen, ramen en deuren Zoersel, ramen en deuren Putte, PVC ramen Antwerpen, aluminium ramen Antwerpen, renovatie Antwerpen, renovatie Keerbergen, renovatie Mechelen, renovatie Zoersel, bouwbedrijf Antwerpen, bouwbedrijf Keerbergen, bouwbedrijf Mechelen, crepi gevel Antwerpen, gevelisolatie, gevelbepleistering Antwerpen, isolatiewerken, ramen plaatsen Antwerpen, deuren plaatsen Antwerpen, gevelrenovatie Antwerpen, energiezuinige ramen, ramen Heist-op-den-Berg, ramen Bonheiden, ramen Lier, ramen Nijlen, renovatie Putte, renovatie Heist-op-den-Berg, bouwbedrijf Antwerpen provincie, ramen Tremelo, ramen Haacht, renovatie Bonheiden, crepi Keerbergen, crepi Mechelen, gevel Zoersel, aannemer Antwerpen, aannemer Keerbergen, aannemer Zoersel, ramen en deuren rondom Antwerpen, ramen en deuren rondom Keerbergen, ramen en deuren rondom Zoersel';
 
 const SEO: React.FC<SEOProps> = ({
   title,
   description = DEFAULT_DESCRIPTION,
   keywords = DEFAULT_KEYWORDS,
   canonicalUrl,
-  ogImage = `${BASE_URL}/images/yannova-team.jpg`,
+  ogImage = 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&q=80',
   noindex = false
 }) => {
   const location = useLocation();
@@ -67,7 +67,7 @@ const SEO: React.FC<SEOProps> = ({
     updateMeta('geo.placename', 'Zoersel, Antwerpen, België');
     updateMeta('geo.position', '51.2667;4.6167');
     updateMeta('ICBM', '51.2667, 4.6167');
-    
+
     // Open Graph tags
     updateMeta('og:title', fullTitle, true);
     updateMeta('og:description', description, true);
@@ -79,7 +79,7 @@ const SEO: React.FC<SEOProps> = ({
     updateMeta('og:image:alt', fullTitle, true);
     updateMeta('og:locale', 'nl_BE', true);
     updateMeta('og:site_name', 'Yannova', true);
-    
+
     // Twitter Card tags
     updateMeta('twitter:card', 'summary_large_image');
     updateMeta('twitter:title', fullTitle);
@@ -97,7 +97,7 @@ const SEO: React.FC<SEOProps> = ({
 
     // Alternate language links (if needed in future)
     // updateMeta('alternate', 'fr', true, 'hreflang');
-    
+
   }, [fullTitle, description, keywords, currentUrl, fullOgImage, noindex]);
 
   return null;

@@ -2,7 +2,7 @@ import React from 'react';
 import { MessageCircle } from 'lucide-react';
 
 const WhatsAppButton: React.FC = () => {
-  const phoneNumber = '32412345678'; // Vervang met echt nummer
+  const phoneNumber = '32489960001'; // Yannova telefoonnummer: +32 489 96 00 01
   const message = encodeURIComponent('Hallo, ik heb een vraag over jullie diensten.');
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
 

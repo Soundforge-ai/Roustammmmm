@@ -333,7 +333,7 @@ export function generateStructuredData(
         ...baseData,
         name: data.name || 'Yannova',
         description: data.description,
-        url: data.url || 'https://yannova.be',
+        url: data.url || 'https://www.yannova.be',
         telephone: data.phone || '+32 XXX XX XX XX',
         address: {
           '@type': 'PostalAddress',

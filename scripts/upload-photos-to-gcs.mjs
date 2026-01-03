@@ -21,22 +21,18 @@ const PUBLIC_IMAGES_DIR = join(__dirname, '..', 'public', 'images');
 const BUCKET_NAME = 'yannova-media'; // Pas aan naar jouw bucket naam
 const PROJECT_ID = 'gen-lang-client-0141118397';
 
-// Laad OAuth credentials
-const credentialsPath = join(__dirname, '..', 'client_secret_280989454844-sjqplbb5mkb3dver8hcrd8n5j0o8dso6.apps.googleusercontent.com.json');
-const credentials = JSON.parse(readFileSync(credentialsPath, 'utf8'));
-
 async function uploadPhotos() {
   try {
     console.log('🔐 Initialiseren Google Cloud Storage...');
     
     // Initialiseer authenticatie
+    // Gebruik Application Default Credentials (ADC) of environment variables
+    // Voor lokale ontwikkeling: gcloud auth application-default login
+    // Voor productie: gebruik service account via environment variable GOOGLE_APPLICATION_CREDENTIALS
     const auth = new GoogleAuth({
-      credentials: {
-        client_id: credentials.web.client_id,
-        client_secret: credentials.web.client_secret,
-        project_id: PROJECT_ID,
-      },
       scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+      // Als GOOGLE_APPLICATION_CREDENTIALS is ingesteld, wordt dit automatisch gebruikt
+      // Anders gebruikt het Application Default Credentials
     });
 
     const storage = new Storage({
@@ -63,6 +59,17 @@ async function uploadPhotos() {
     }
     
     console.log(`✅ Bucket ${BUCKET_NAME} gevonden`);
+    
+    // Controleer of bucket uniform bucket-level access heeft
+    const [metadata] = await bucket.getMetadata();
+    const uniformBucketLevelAccess = metadata.iamConfiguration?.uniformBucketLevelAccess?.enabled;
+    
+    if (uniformBucketLevelAccess) {
+      console.log(`ℹ️  Bucket heeft uniform bucket-level access ingeschakeld`);
+      console.log(`   Bestanden worden geüpload zonder legacy ACLs`);
+      console.log(`   Voor publieke toegang: gebruik IAM policies op bucket niveau`);
+      console.log(`   Zie: https://console.cloud.google.com/storage/browser/${BUCKET_NAME}?project=${PROJECT_ID}`);
+    }
 
     // Lees alle foto's uit beide mappen
     const allFiles = [];
@@ -116,17 +123,17 @@ async function uploadPhotos() {
         const gcsFileName = `images/${basename(fileName)}`;
         const file = bucket.file(gcsFileName);
 
-        // Upload met publieke toegang
+        // Upload bestand (zonder legacy ACL - bucket heeft uniform bucket-level access)
         await file.save(fileContent, {
           metadata: {
             contentType: getContentType(fileName),
             cacheControl: 'public, max-age=31536000',
           },
-          public: true,
+          // Geen 'public: true' - gebruik IAM policies in plaats van ACLs
         });
 
-        // Maak publiek toegankelijk
-        await file.makePublic();
+        // Met uniform bucket-level access hoef je geen makePublic() te gebruiken
+        // De bucket IAM policy bepaalt de toegang (zie instructies hieronder)
 
         const publicUrl = `https://storage.googleapis.com/${BUCKET_NAME}/${gcsFileName}`;
         results.push({
@@ -153,10 +160,24 @@ async function uploadPhotos() {
     console.log(`❌ Gefaald: ${results.filter(r => !r.success).length}`);
     
     if (results.filter(r => r.success).length > 0) {
-      console.log('\n🔗 Publieke URLs:');
+      console.log('\n🔗 URLs:');
       results
         .filter(r => r.success)
         .forEach(r => console.log(`  - ${r.fileName}: ${r.url}`));
+      
+      // Check if bucket is public
+      const [metadata] = await bucket.getMetadata();
+      const uniformBucketLevelAccess = metadata.iamConfiguration?.uniformBucketLevelAccess?.enabled;
+      
+      if (uniformBucketLevelAccess) {
+        console.log('\n⚠️  Let op: Bucket heeft uniform bucket-level access');
+        console.log('   Om bestanden publiek te maken, voeg IAM policy toe aan bucket:');
+        console.log(`   gcloud storage buckets add-iam-policy-binding gs://${BUCKET_NAME} \\`);
+        console.log(`     --member=allUsers --role=roles/storage.objectViewer`);
+        console.log('\n   Of via Google Cloud Console:');
+        console.log(`   https://console.cloud.google.com/storage/browser/${BUCKET_NAME}?project=${PROJECT_ID}`);
+        console.log('   → Permissions tab → GRANT ACCESS → allUsers → Storage Object Viewer');
+      }
     }
 
     // Sla resultaten op in JSON (zowel root als public folder)

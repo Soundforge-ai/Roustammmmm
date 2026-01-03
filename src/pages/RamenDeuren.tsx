@@ -1,6 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Maximize, Shield, Grid, Layers, Home, CheckCircle, Wind } from 'lucide-react';
+import { ArrowRight, Maximize, Shield, Grid, Layers, Home, CheckCircle, Wind, ChevronDown } from 'lucide-react';
+import OptimizedImage from '../components/OptimizedImage';
+
+// FAQ data voor SEO
+const FAQ_ITEMS = [
+    {
+        question: "Wat kost het om ramen te laten plaatsen in Keerbergen of Mechelen?",
+        answer: "De prijs hangt af van het type raam (PVC of aluminium), de afmetingen en het aantal. Gemiddeld kost PVC ramen €300-€600 per m², aluminium €400-€800 per m². Wij komen gratis langs voor een exacte opmeting en offerte op maat."
+    },
+    {
+        question: "Wat is het verschil tussen PVC en aluminium ramen?",
+        answer: "PVC ramen zijn goedkoper, zeer goed isolerend en onderhoudsvriendelijk. Aluminium ramen hebben slankere profielen, zijn sterker en ideaal voor grote glaspartijen. Beide zijn beschikbaar in vele kleuren en bieden uitstekende isolatie."
+    },
+    {
+        question: "Hoe lang duurt het plaatsen van nieuwe ramen?",
+        answer: "Voor een gemiddelde woning met 8-10 ramen rekent u op 2-3 werkdagen. Grotere projecten of volledige renovaties kunnen langer duren. Wij plannen altijd in overleg zodat u minimale hinder ondervindt."
+    },
+    {
+        question: "Welke garantie krijg ik op mijn nieuwe ramen en deuren?",
+        answer: "Wij bieden 10 jaar garantie op al onze ramen en deuren. Dit omvat zowel de materialen (profielen, beglazing, beslag) als de vakkundige plaatsing door onze eigen monteurs."
+    },
+    {
+        question: "Komen jullie ook in Zoersel, Putte en omgeving?",
+        answer: "Ja, Yannova is actief in heel de provincie Antwerpen en Vlaams-Brabant. We werken in Keerbergen, Mechelen, Zoersel, Putte, Heist-op-den-Berg, Bonheiden, Lier, Nijlen en alle omliggende gemeenten."
+    },
+    {
+        question: "Kan ik premies krijgen voor nieuwe ramen?",
+        answer: "Ja, voor energiezuinige ramen met een Uw-waarde ≤ 1.5 W/m²K kunt u in aanmerking komen voor premies van de Vlaamse overheid en uw netbeheerder. Wij adviseren u graag over de mogelijkheden en helpen met de aanvraag."
+    }
+];
 
 const RamenDeuren: React.FC = () => {
     const services = [
@@ -50,10 +79,12 @@ const RamenDeuren: React.FC = () => {
                 <div className="container mx-auto px-6 relative z-10">
                     <div className="max-w-4xl mx-auto text-center">
                         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-                            Ramen en Deuren op Maat
+                            Nieuwe Ramen en Deuren?
+                            <span className="block text-brand-accent mt-2">Kies voor Kwaliteit en Comfort.</span>
                         </h1>
                         <p className="text-lg md:text-xl text-gray-200 mb-8 leading-relaxed max-w-3xl mx-auto">
-                            Van strak aluminium tot tijdloos PVC. Yannova levert en plaatst ramen en deuren van topkwaliteit die uw woning isoleren, beveiligen en verfraaien.
+                            Bespaar direct op uw energiefactuur en verhoog de veiligheid van uw woning.
+                            Wij plaatsen hoogwaardige PVC en Aluminium ramen in regio Keerbergen, Mechelen & Zoersel.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <a
@@ -73,9 +104,9 @@ const RamenDeuren: React.FC = () => {
                 <div className="container mx-auto px-6">
                     <div className="max-w-4xl mx-auto text-center">
                         <p className="text-lg md:text-xl text-gray-700 leading-relaxed">
-                            <strong>Isolatie, veiligheid en design.</strong> Dat zijn de drie pijlers van onze ramen en deuren.
-                            Of u nu bouwt of renoveert, wij begeleiden u naar de juiste keuze voor uw woning en budget.
-                            Al onze plaatsingen gebeuren door ons eigen team van vakkundige monteurs.
+                            <strong>Een warm huis begint bij goede isolatie.</strong> Met onze ramen en deuren geniet u niet alleen van een
+                            prachtige uitstraling, maar ook van rust en veiligheid. Of u nu kiest voor de moderne look van aluminium
+                            of de warmte van PVC met houtlook: wij garanderen een perfecte plaatsing en afwerking tot in de kleinste details.
                         </p>
                     </div>
                 </div>
@@ -96,7 +127,7 @@ const RamenDeuren: React.FC = () => {
                                     className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 group"
                                 >
                                     <div className="relative h-64 overflow-hidden">
-                                        <img
+                                        <OptimizedImage
                                             src={service.image}
                                             alt={service.title}
                                             className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
@@ -149,7 +180,7 @@ const RamenDeuren: React.FC = () => {
                         </h2>
                         <div className="grid md:grid-cols-2 gap-8">
                             {[
-                                { title: "Topmerken & Kwaliteit", description: "Wij werken uitsluitend met Belgische en Duitse A-merken zoals Schüco, Reynaers en Deceuninck profielen." },
+                                { title: "Topmerken & Kwaliteit", description: "Wij werken uitsluitend met gerenommeerde A-merken zoals Aluplast, Schüco en Reynaers voor gegarandeerde kwaliteit." },
                                 { title: "Eigen Plaatsingsdienst", description: "Geen onderaannemers. Onze eigen vakmensen plaatsen uw ramen met oog voor detail en luchtdichtheid." },
                                 { title: "EPB-Conform", description: "Al onze ramen voldoen aan de strengste isolatienormen voor nieuwbouw en renovatie." },
                                 { title: "10 Jaar Garantie", description: "Zorgeloos genieten van uw nieuwe ramen en deuren dankzij onze uitgebreide waarborg." }
@@ -168,6 +199,9 @@ const RamenDeuren: React.FC = () => {
                     </div>
                 </div>
             </section>
+
+            {/* FAQ Section */}
+            <FAQSection />
 
             {/* CTA Section */}
             <section className="py-20 bg-brand-dark text-white">
@@ -190,6 +224,58 @@ const RamenDeuren: React.FC = () => {
                 </div>
             </section>
         </div>
+    );
+};
+
+// FAQ Accordion Component
+const FAQSection: React.FC = () => {
+    const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+    return (
+        <section className="py-20 bg-gray-50">
+            <div className="container mx-auto px-6">
+                <div className="max-w-4xl mx-auto">
+                    <h2 className="text-3xl md:text-4xl font-bold text-brand-dark mb-4 text-center">
+                        Veelgestelde Vragen over Ramen en Deuren
+                    </h2>
+                    <p className="text-gray-600 text-center mb-12">
+                        Antwoorden op de meest gestelde vragen over ramen en deuren plaatsen in Keerbergen, Mechelen en omgeving.
+                    </p>
+
+                    <div className="space-y-4">
+                        {FAQ_ITEMS.map((item, index) => (
+                            <div
+                                key={index}
+                                className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden"
+                            >
+                                <button
+                                    onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                                    className="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+                                    aria-expanded={openIndex === index}
+                                >
+                                    <h3 className="text-lg font-semibold text-gray-900 pr-4">
+                                        {item.question}
+                                    </h3>
+                                    <ChevronDown
+                                        className={`flex-shrink-0 text-brand-accent transition-transform duration-300 ${openIndex === index ? 'rotate-180' : ''
+                                            }`}
+                                        size={24}
+                                    />
+                                </button>
+                                <div
+                                    className={`overflow-hidden transition-all duration-300 ${openIndex === index ? 'max-h-96' : 'max-h-0'
+                                        }`}
+                                >
+                                    <p className="px-6 pb-5 text-gray-600 leading-relaxed">
+                                        {item.answer}
+                                    </p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </section>
     );
 };
 

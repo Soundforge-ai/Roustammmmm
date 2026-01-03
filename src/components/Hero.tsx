@@ -10,23 +10,32 @@ const Hero: React.FC = () => {
       aria-label="Welkom bij Yannova"
     >
       {/* Background Video with Overlay */}
-      <div className="absolute inset-0 z-0" aria-hidden="true">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="w-full h-full object-cover"
-          aria-hidden="true"
-        >
-          <source src="/videos/hero-video.mp4" type="video/mp4" />
-          {/* Fallback image if video doesn't load */}
+      {/* Background Media */}
+      <div className="absolute inset-0 z-0 bg-slate-900" aria-hidden="true">
+        {/* Mobile Image (shown on small screens) */}
+        <div className="block md:hidden w-full h-full">
           <img
             src={HERO_CONTENT.image}
-            alt=""
-            className="w-full h-full object-cover"
+            alt="Yannova Bouw Project"
+            className="w-full h-full object-cover opacity-60"
           />
-        </video>
+        </div>
+
+        {/* Desktop Video (shown on medium+ screens) */}
+        <div className="hidden md:block w-full h-full">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover opacity-80"
+            poster={HERO_CONTENT.image}
+            aria-hidden="true"
+          >
+            <source src="/videos/hero-video.mp4" type="video/mp4" />
+            {/* Fallback image inside video tag for very old browsers is fine, but poster handles most */}
+          </video>
+        </div>
         <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-900/60 to-transparent"></div>
       </div>
 

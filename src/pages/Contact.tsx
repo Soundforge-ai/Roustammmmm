@@ -3,8 +3,8 @@ import { Phone, Mail, MapPin, Clock, CheckCircle, AlertCircle, Send } from 'luci
 import GoogleMap from '../components/GoogleMap';
 
 // Company location
-const COMPANY_ADDRESS = 'De Beemdekens 39, 2980 Zoersel, België';
-const COMPANY_COORDINATES = { lat: 51.2667, lng: 4.6167 }; // Zoersel coordinates
+const COMPANY_ADDRESS = 'Keerbergen, België';
+const COMPANY_COORDINATES = { lat: 51.0031, lng: 4.6314 }; // Keerbergen coordinates
 
 interface FormErrors {
   name?: string;
@@ -105,7 +105,7 @@ const Contact: React.FC = () => {
                       </div>
                       <div>
                         <h3 className="font-semibold text-brand-dark">Adres</h3>
-                        <p className="text-gray-600">De Beemdekens 39<br />2980 Zoersel, België</p>
+                        <p className="text-gray-600">Keerbergen<br />3140 Keerbergen, België</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-4">

@@ -88,10 +88,21 @@ Na verificatie moeten de volgende DNS records correct zijn:
 **Voor www.yannova.be:**
 - CNAME: `a41093cb64c5c9a2.vercel-dns-017.com.` (of nieuwe Vercel waarde)
 
-### Stap 9: Redeploy
+### Stap 9: Redeploy (via CLI)
 
-Zodra het domein is geverifieerd, redeploy de website:
+Zodra het domein is geverifieerd, redeploy de website. Je kunt dit handmatig doen of het automatische script gebruiken:
 
+**Optie 1: Automatisch script (aanbevolen)**
+```bash
+./scripts/setup-vercel-domain-cli.sh
+```
+
+Dit script:
+- Controleert DNS verificatie status
+- Voegt het domein toe zodra het beschikbaar is
+- Build en deployt automatisch naar productie
+
+**Optie 2: Handmatig**
 ```bash
 npm run build
 vercel --prod
@@ -113,7 +124,19 @@ curl -I https://yannova.be
 
 Je zou `server: Vercel` moeten zien in de headers.
 
-### Gebruik het verificatie script:
+### Gebruik de verificatie scripts:
+
+**Status check (alleen controleren):**
+```bash
+./scripts/check-vercel-domain-status.sh
+```
+
+**Volledige setup (automatisch):**
+```bash
+./scripts/setup-vercel-domain-cli.sh
+```
+
+**DNS verificatie check:**
 ```bash
 ./scripts/verify-vercel-domain.sh
 ```
@@ -156,10 +179,26 @@ Je zou `server: Vercel` moeten zien in de headers.
 - Redeploy de website: `npm run build && vercel --prod`
 - Controleer in Vercel Dashboard welke deployment actief is
 
+## 🚀 CLI Alternatief
+
+Als je liever alles via de command line doet:
+
+1. **Check huidige status:**
+   ```bash
+   ./scripts/check-vercel-domain-status.sh
+   ```
+
+2. **Voeg domein toe en deploy (automatisch):**
+   ```bash
+   ./scripts/setup-vercel-domain-cli.sh
+   ```
+
+Het script controleert automatisch of het domein kan worden toegevoegd en deployt daarna automatisch.
+
 ## 📞 Hulp nodig?
 
 Als het na 30 minuten nog steeds niet werkt:
-1. Controleer de DNS records met het verificatie script
+1. Controleer de DNS records met: `./scripts/check-vercel-domain-status.sh`
 2. Neem contact op met Vercel support
 3. Controleer of er geen conflicterende records zijn in Cloudflare
 4. Verifieer dat het domein is gekoppeld aan het juiste Vercel project

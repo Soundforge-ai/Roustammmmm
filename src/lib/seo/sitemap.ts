@@ -9,7 +9,7 @@ export interface SitemapEntry {
   priority?: number;
 }
 
-const BASE_URL = 'https://yannova.be';
+const BASE_URL = 'https://www.yannova.be';
 
 // Standaard pagina's
 const DEFAULT_PAGES: SitemapEntry[] = [

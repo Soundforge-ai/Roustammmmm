@@ -22,6 +22,34 @@ export default defineConfig(({ mode }) => {
         '@': path.resolve(__dirname, 'src'),
       }
     },
+    build: {
+      // Minification voor productie
+      minify: 'terser',
+      terserOptions: {
+        compress: {
+          drop_console: true, // Verwijder console.log in productie
+          drop_debugger: true,
+        },
+      },
+      // Code splitting voor betere caching
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+            'ui-vendor': ['lucide-react'],
+            'three-vendor': ['three'],
+          },
+        },
+      },
+      // Chunk size warnings verhogen
+      chunkSizeWarningLimit: 1000,
+      // Source maps voor productie (optioneel, kan uit voor betere performance)
+      sourcemap: false,
+    },
+    // Performance optimalisaties
+    optimizeDeps: {
+      include: ['react', 'react-dom', 'react-router-dom'],
+    },
     test: {
       globals: true,
       environment: 'jsdom',

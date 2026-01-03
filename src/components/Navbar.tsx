@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Phone, ChevronDown } from 'lucide-react';
+import { Menu, X, Phone, ChevronDown, CheckCircle2 } from 'lucide-react';
 import { NAV_ITEMS, COMPANY_NAME, ADMIN_TOOLS } from '../constants';
 import LanguageSwitcher from './LanguageSwitcher';
 import { Settings } from 'lucide-react';
@@ -9,12 +9,14 @@ import { Settings } from 'lucide-react';
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isGevelOpen, setIsGevelOpen] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
-  const [isAanpakOpen, setIsAanpakOpen] = useState(false);
+
+  const [isServicesOpen, setIsServicesOpen] = useState(false);
+  const [isRegionOpen, setIsRegionOpen] = useState(false);
+
   const location = useLocation();
-  const navRef = useRef<HTMLDivElement>(null);
-  const aanpakRef = useRef<HTMLDivElement>(null);
+  const servicesRef = useRef<HTMLDivElement>(null);
+  const regionRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
 
@@ -67,11 +69,11 @@ const Navbar: React.FC = () => {
   // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (navRef.current && !navRef.current.contains(event.target as Node)) {
-        setIsGevelOpen(false);
+      if (servicesRef.current && !servicesRef.current.contains(event.target as Node)) {
+        setIsServicesOpen(false);
       }
-      if (aanpakRef.current && !aanpakRef.current.contains(event.target as Node)) {
-        setIsAanpakOpen(false);
+      if (regionRef.current && !regionRef.current.contains(event.target as Node)) {
+        setIsRegionOpen(false);
       }
     };
 
@@ -95,104 +97,91 @@ const Navbar: React.FC = () => {
           {NAV_ITEMS.map((item) => {
             const isActive = location.pathname === item.href || (item.href.startsWith('/#') && location.pathname === '/');
 
-            // Dropdown voor Aanpak
-            if (item.label === 'Aanpak') {
-              const isAanpakActive = location.pathname.startsWith('/aanpak') ||
+            // Onze Diensten Dropdown
+            if (item.label === 'Onze Diensten') {
+              const isServicesActive = location.pathname.startsWith('/diensten') ||
                 location.pathname === '/ramen-deuren' ||
-                location.pathname === '/renovatie';
+                location.pathname === '/renovatie' ||
+                location.pathname === '/tuinaanleg' ||
+                location.pathname.startsWith('/gevel');
+
               return (
                 <div
                   key={item.label}
                   className="relative"
-                  ref={aanpakRef}
+                  ref={servicesRef}
                   onMouseEnter={() => {
                     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-                    setIsAanpakOpen(true);
+                    setIsServicesOpen(true);
                   }}
                   onMouseLeave={() => {
                     timeoutRef.current = setTimeout(() => {
-                      setIsAanpakOpen(false);
+                      setIsServicesOpen(false);
                     }, 300);
                   }}
                 >
                   <Link
                     to={item.href}
-                    className={`text-xs font-medium hover:text-brand-accent transition-colors flex items-center gap-0.5 whitespace-nowrap px-2 py-1 rounded ${isScrolled || !isHomePage ? 'text-gray-700' : 'text-gray-200'} ${isAanpakActive ? 'text-brand-accent' : ''}`}
-                    onClick={() => setIsAanpakOpen(!isAanpakOpen)}
+                    className={`text-xs font-medium hover:text-brand-accent transition-colors flex items-center gap-0.5 whitespace-nowrap px-2 py-1 rounded ${isScrolled || !isHomePage ? 'text-gray-700' : 'text-gray-200'} ${isServicesActive ? 'text-brand-accent' : ''}`}
+                    onClick={() => setIsServicesOpen(!isServicesOpen)}
                   >
                     {item.label}
                     <ChevronDown
                       size={14}
-                      className={`transition-transform duration-200 ${isAanpakOpen ? 'rotate-180' : ''}`}
+                      className={`transition-transform duration-200 ${isServicesOpen ? 'rotate-180' : ''}`}
                       aria-hidden="true"
                     />
                   </Link>
 
-                  {/* Aanpak Dropdown Menu */}
+                  {/* Services Dropdown Menu */}
                   <div
-                    className={`absolute top-full left-0 pt-2 w-56 transition-all duration-200 ease-out ${isAanpakOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible pointer-events-none -translate-y-2'}`}
+                    className={`absolute top-full left-0 pt-2 w-64 transition-all duration-200 ease-out ${isServicesOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible pointer-events-none -translate-y-2'}`}
                     onMouseEnter={() => {
                       if (timeoutRef.current) clearTimeout(timeoutRef.current);
                     }}
-                    onMouseLeave={() => setIsAanpakOpen(false)}
+                    onMouseLeave={() => setIsServicesOpen(false)}
                     role="menu"
                   >
                     <div className="bg-white rounded-lg shadow-xl border border-gray-100 py-2 z-[100]">
                       <Link
                         to="/ramen-deuren"
                         className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-brand-accent transition-colors"
-                        onClick={() => setIsAanpakOpen(false)}
-                        role="menuitem"
+                        onClick={() => setIsServicesOpen(false)}
                       >
-                        Ramen en deuren
-
+                        <span className="font-semibold block">Ramen & Deuren</span>
+                        <span className="text-xs text-gray-500">Leveren en plaatsen</span>
                       </Link>
-
-                      {/* Gevel Items */}
-                      {/* Gevel Nested Dropdown */}
-                      <div className="relative group">
-                        <button
-                          className="w-full text-left flex items-center justify-between px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-brand-accent transition-colors"
-                          onClick={(e) => e.preventDefault()}
-                        >
-                          Gevel
-                          <ChevronDown size={14} className="transform -rotate-90 group-hover:rotate-0 transition-transform" />
-                        </button>
-
-                        {/* Sub-menu */}
-                        <div className="absolute left-full top-0 w-56 bg-white rounded-lg shadow-xl border border-gray-100 py-2 hidden group-hover:block ml-1">
-                          <Link to="/gevel/gevelbepleistering" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-brand-accent transition-colors" onClick={() => setIsAanpakOpen(false)}>Gevelbepleistering</Link>
-                          <Link to="/gevel/gevelbescherming" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-brand-accent transition-colors" onClick={() => setIsAanpakOpen(false)}>Gevelbescherming</Link>
-                          <Link to="/gevel/gevelisolatie" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-brand-accent transition-colors" onClick={() => setIsAanpakOpen(false)}>Gevelisolatie</Link>
-                          <Link to="/gevel/steenstrips" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-brand-accent transition-colors" onClick={() => setIsAanpakOpen(false)}>Steenstrips</Link>
-                          <Link to="/gevel/gevelrenovatie" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-brand-accent transition-colors" onClick={() => setIsAanpakOpen(false)}>Gevelrenovatie</Link>
-                          <Link to="/crepi-info" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-brand-accent transition-colors" onClick={() => setIsAanpakOpen(false)}>Crepi Info</Link>
-                        </div>
-                      </div>
-
                       <Link
-                        to="/renovatie"
+                        to="/gevel"
                         className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-brand-accent transition-colors"
-                        onClick={() => setIsAanpakOpen(false)}
-                        role="menuitem"
+                        onClick={() => setIsServicesOpen(false)}
                       >
-                        Badkamer & Keuken
+                        <span className="font-semibold block">Gevel & Isolatie</span>
+                        <span className="text-xs text-gray-500">Crepi, steenstrips en isolatie</span>
                       </Link>
                       <Link
                         to="/renovatie"
                         className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-brand-accent transition-colors"
-                        onClick={() => setIsAanpakOpen(false)}
-                        role="menuitem"
+                        onClick={() => setIsServicesOpen(false)}
                       >
-                        Renovatiewerken
+                        <span className="font-semibold block">Totaalrenovatie</span>
+                        <span className="text-xs text-gray-500">Algemene werken en afbraak</span>
+                      </Link>
+                      <Link
+                        to="/schilderwerken" // TODO: Create page
+                        className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-brand-accent transition-colors"
+                        onClick={() => setIsServicesOpen(false)}
+                      >
+                        <span className="font-semibold block">Schilderwerken</span>
+                        <span className="text-xs text-gray-500">Binnen en buiten</span>
                       </Link>
                       <Link
                         to="/tuinaanleg"
                         className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-brand-accent transition-colors rounded-b-lg"
-                        onClick={() => setIsAanpakOpen(false)}
-                        role="menuitem"
+                        onClick={() => setIsServicesOpen(false)}
                       >
-                        Tuinaanleg
+                        <span className="font-semibold block">Tuinaanleg</span>
+                        <span className="text-xs text-gray-500">Tuin en oprit</span>
                       </Link>
                     </div>
                   </div>
@@ -200,7 +189,82 @@ const Navbar: React.FC = () => {
               );
             }
 
+            // Werkregio Dropdown
+            if (item.label === 'Werkregio') {
+              return (
+                <div
+                  key={item.label}
+                  className="relative"
+                  ref={regionRef}
+                  onMouseEnter={() => {
+                    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+                    setIsRegionOpen(true);
+                  }}
+                  onMouseLeave={() => {
+                    timeoutRef.current = setTimeout(() => {
+                      setIsRegionOpen(false);
+                    }, 300);
+                  }}
+                >
+                  <a
+                    href={item.href}
+                    className={`text-xs font-medium hover:text-brand-accent transition-colors flex items-center gap-0.5 whitespace-nowrap px-2 py-1 rounded ${isScrolled || !isHomePage ? 'text-gray-700' : 'text-gray-200'}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsRegionOpen(!isRegionOpen);
+                    }}
+                  >
+                    {item.label}
+                    <ChevronDown
+                      size={14}
+                      className={`transition-transform duration-200 ${isRegionOpen ? 'rotate-180' : ''}`}
+                      aria-hidden="true"
+                    />
+                  </a>
 
+                  {/* Region Dropdown Menu */}
+                  <div
+                    className={`absolute top-full left-0 pt-2 w-48 transition-all duration-200 ease-out ${isRegionOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible pointer-events-none -translate-y-2'}`}
+                    onMouseEnter={() => {
+                      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+                    }}
+                    onMouseLeave={() => setIsRegionOpen(false)}
+                    role="menu"
+                  >
+                    <div className="bg-white rounded-lg shadow-xl border border-gray-100 py-2 z-[100]">
+                      <Link
+                        to="/regio/zoersel"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-brand-accent transition-colors"
+                        onClick={() => setIsRegionOpen(false)}
+                      >
+                        Zoersel
+                      </Link>
+                      <Link
+                        to="/regio/antwerpen"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-brand-accent transition-colors"
+                        onClick={() => setIsRegionOpen(false)}
+                      >
+                        Antwerpen
+                      </Link>
+                      <Link
+                        to="/regio/mechelen"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-brand-accent transition-colors"
+                        onClick={() => setIsRegionOpen(false)}
+                      >
+                        Mechelen
+                      </Link>
+                      <Link
+                        to="/regio/putte"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-brand-accent transition-colors"
+                        onClick={() => setIsRegionOpen(false)}
+                      >
+                        Putte
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              );
+            }
 
             // Handle Hash links
             if (item.href.startsWith('/#')) {
@@ -313,7 +377,7 @@ const Navbar: React.FC = () => {
           >
             <div className="flex flex-col py-4">
               {NAV_ITEMS.map((item) => {
-                if (item.label === 'Aanpak') {
+                if (item.label === 'Onze Diensten') {
                   return (
                     <div key={item.label}>
                       <div className="flex items-center justify-between px-6 py-3">
@@ -325,48 +389,50 @@ const Navbar: React.FC = () => {
                           {item.label}
                         </Link>
                         <button
-                          onClick={() => setIsAanpakOpen(!isAanpakOpen)}
+                          onClick={() => setIsServicesOpen(!isServicesOpen)}
                           className="p-2 focus:outline-none"
                         >
-                          <ChevronDown size={16} className={`transition-transform ${isAanpakOpen ? 'rotate-180' : ''}`} />
+                          <ChevronDown size={16} className={`transition-transform ${isServicesOpen ? 'rotate-180' : ''}`} />
                         </button>
                       </div>
-                      {isAanpakOpen && (
+                      {isServicesOpen && (
                         <div className="bg-gray-50 py-2">
-                          <Link to="/ramen-deuren" className="block px-10 py-2 text-sm text-gray-600 hover:text-brand-accent" onClick={() => { setIsOpen(false); setIsAanpakOpen(false); }}>Ramen en deuren</Link>
-
-                          {/* Gevel Items */}
-                          {/* Gevel Mobile Accordion */}
-                          <div>
-                            <button
-                              onClick={() => setIsGevelOpen(!isGevelOpen)}
-                              className="w-full flex items-center justify-between px-10 py-2 text-sm text-gray-600 hover:text-brand-accent focus:outline-none"
-                            >
-                              Gevel
-                              <ChevronDown size={14} className={`transition-transform ${isGevelOpen ? 'rotate-180' : ''}`} />
-                            </button>
-
-                            {isGevelOpen && (
-                              <div className="bg-gray-100 py-1">
-                                <Link to="/gevel/gevelbepleistering" className="block px-12 py-2 text-sm text-gray-600 hover:text-brand-accent" onClick={() => { setIsOpen(false); setIsAanpakOpen(false); }}>Gevelbepleistering</Link>
-                                <Link to="/gevel/gevelbescherming" className="block px-12 py-2 text-sm text-gray-600 hover:text-brand-accent" onClick={() => { setIsOpen(false); setIsAanpakOpen(false); }}>Gevelbescherming</Link>
-                                <Link to="/gevel/gevelisolatie" className="block px-12 py-2 text-sm text-gray-600 hover:text-brand-accent" onClick={() => { setIsOpen(false); setIsAanpakOpen(false); }}>Gevelisolatie</Link>
-                                <Link to="/gevel/steenstrips" className="block px-12 py-2 text-sm text-gray-600 hover:text-brand-accent" onClick={() => { setIsOpen(false); setIsAanpakOpen(false); }}>Steenstrips</Link>
-                                <Link to="/gevel/gevelrenovatie" className="block px-12 py-2 text-sm text-gray-600 hover:text-brand-accent" onClick={() => { setIsOpen(false); setIsAanpakOpen(false); }}>Gevelrenovatie</Link>
-                                <Link to="/crepi-info" className="block px-12 py-2 text-sm text-gray-600 hover:text-brand-accent" onClick={() => { setIsOpen(false); setIsAanpakOpen(false); }}>Crepi Info</Link>
-                              </div>
-                            )}
-                          </div>
-
-                          <Link to="/renovatie" className="block px-10 py-2 text-sm text-gray-600 hover:text-brand-accent" onClick={() => { setIsOpen(false); setIsAanpakOpen(false); }}>Badkamer & Keuken</Link>
-                          <Link to="/renovatie" className="block px-10 py-2 text-sm text-gray-600 hover:text-brand-accent" onClick={() => { setIsOpen(false); setIsAanpakOpen(false); }}>Renovatiewerken</Link>
-                          <Link to="/tuinaanleg" className="block px-10 py-2 text-sm text-gray-600 hover:text-brand-accent" onClick={() => { setIsOpen(false); setIsAanpakOpen(false); }}>Tuinaanleg</Link>
+                          <Link to="/ramen-deuren" className="block px-10 py-2 text-sm text-gray-600 hover:text-brand-accent" onClick={() => { setIsOpen(false); setIsServicesOpen(false); }}>Ramen & Deuren</Link>
+                          <Link to="/gevel" className="block px-10 py-2 text-sm text-gray-600 hover:text-brand-accent" onClick={() => { setIsOpen(false); setIsServicesOpen(false); }}>Gevel & Isolatie</Link>
+                          <Link to="/renovatie" className="block px-10 py-2 text-sm text-gray-600 hover:text-brand-accent" onClick={() => { setIsOpen(false); setIsServicesOpen(false); }}>Totaalrenovatie</Link>
+                          <Link to="/schilderwerken" className="block px-10 py-2 text-sm text-gray-600 hover:text-brand-accent" onClick={() => { setIsOpen(false); setIsServicesOpen(false); }}>Schilderwerken</Link>
+                          <Link to="/tuinaanleg" className="block px-10 py-2 text-sm text-gray-600 hover:text-brand-accent" onClick={() => { setIsOpen(false); setIsServicesOpen(false); }}>Tuinaanleg</Link>
                         </div>
                       )}
                     </div>
                   );
                 }
 
+                if (item.label === 'Werkregio') {
+                  return (
+                    <div key={item.label}>
+                      <div className="flex items-center justify-between px-6 py-3">
+                        <span className="font-medium text-gray-700">
+                          {item.label}
+                        </span>
+                        <button
+                          onClick={() => setIsRegionOpen(!isRegionOpen)}
+                          className="p-2 focus:outline-none"
+                        >
+                          <ChevronDown size={16} className={`transition-transform ${isRegionOpen ? 'rotate-180' : ''}`} />
+                        </button>
+                      </div>
+                      {isRegionOpen && (
+                        <div className="bg-gray-50 py-2">
+                          <Link to="/regio/zoersel" className="block px-10 py-2 text-sm text-gray-600 hover:text-brand-accent" onClick={() => { setIsOpen(false); setIsRegionOpen(false); }}>Zoersel</Link>
+                          <Link to="/regio/antwerpen" className="block px-10 py-2 text-sm text-gray-600 hover:text-brand-accent" onClick={() => { setIsOpen(false); setIsRegionOpen(false); }}>Antwerpen</Link>
+                          <Link to="/regio/mechelen" className="block px-10 py-2 text-sm text-gray-600 hover:text-brand-accent" onClick={() => { setIsOpen(false); setIsRegionOpen(false); }}>Mechelen</Link>
+                          <Link to="/regio/putte" className="block px-10 py-2 text-sm text-gray-600 hover:text-brand-accent" onClick={() => { setIsOpen(false); setIsRegionOpen(false); }}>Putte</Link>
+                        </div>
+                      )}
+                    </div>
+                  );
+                }
 
                 return (
                   <Link

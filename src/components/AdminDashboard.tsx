@@ -58,6 +58,7 @@ import { pageStorage, PageData } from '../lib/pageStorage';
 import { mediaStorage, MediaItem } from '../lib/mediaStorage';
 import { analyzeConversation, generateSEO, generateAdCopy } from '../lib/ai';
 import { chatService } from '../lib/chatService';
+import { migrateAll } from '../lib/migrateToSupabase';
 
 import { SEOManager } from './admin/SEOManager';
 import { Lead } from '../types';
@@ -172,6 +173,36 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [generatedImagePrompt, setGeneratedImagePrompt] = useState('');
   const [isGeneratingImage, setIsGeneratingImage] = useState(false);
 
+  // Auto-migrate localStorage data to Supabase on first load
+  useEffect(() => {
+    const attemptMigration = async () => {
+      const migrationKey = 'yannova_migration_completed';
+      const hasMigrated = localStorage.getItem(migrationKey);
+      
+      if (!hasMigrated) {
+        try {
+          console.log('🔄 Starting automatic migration to Supabase...');
+          const results = await migrateAll();
+          
+          if (results.chats > 0 || results.pages > 0 || results.settings) {
+            console.log('✅ Migration completed:', results);
+            localStorage.setItem(migrationKey, 'true');
+            // Reload data after migration
+            window.location.reload();
+          } else {
+            console.log('ℹ️ No data to migrate or Supabase not available');
+            localStorage.setItem(migrationKey, 'true'); // Mark as attempted
+          }
+        } catch (error) {
+          console.warn('⚠️ Migration failed (Supabase may not be configured yet):', error);
+          // Don't mark as completed if it failed - allow retry
+        }
+      }
+    };
+
+    attemptMigration();
+  }, []);
+
   // Load data
   useEffect(() => {
     const loadData = async () => {
@@ -209,13 +240,41 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const handleSaveSettings = async () => {
     setIsSavingSettings(true);
     try {
+      console.log('Saving settings...', {
+        activeProvider: settings.activeProvider,
+        providers: Object.keys(settings.providers),
+        hasApiKey: !!settings.providers[settings.activeProvider]?.apiKey,
+        apiKeyLength: settings.providers[settings.activeProvider]?.apiKey?.length || 0,
+        model: settings.providers[settings.activeProvider]?.model
+      });
+      
       await settingsStorage.saveSettings(settings); // This saves API key, name and knowledge base
       setIsSavingSettings(false);
-      // Show success notification logic could go here
-    } catch (error) {
+      alert('✅ Instellingen succesvol opgeslagen!');
+    } catch (error: any) {
       console.error('Error saving settings:', error);
+      console.error('Error details:', {
+        message: error.message,
+        code: error.code,
+        details: error.details,
+        hint: error.hint,
+        fullError: error
+      });
       setIsSavingSettings(false);
-      alert('Er is een fout opgetreden bij het opslaan van de instellingen.');
+      
+      // Show more detailed error message
+      let errorMessage = 'Er is een fout opgetreden bij het opslaan van de instellingen.';
+      if (error.message) {
+        errorMessage += `\n\nFout: ${error.message}`;
+      }
+      if (error.code === '42501' || error.message?.includes('permission') || error.message?.includes('policy')) {
+        errorMessage += '\n\n⚠️ Mogelijk probleem: Je bent niet ingelogd of hebt geen rechten. Controleer of je bent ingelogd in het Admin Dashboard.';
+      }
+      if (error.code === 'PGRST301' || error.message?.includes('JWT')) {
+        errorMessage += '\n\n⚠️ Authenticatie probleem: Controleer je Supabase configuratie.';
+      }
+      
+      alert(errorMessage);
     }
   };
 
@@ -1943,13 +2002,27 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Model (Read-only)</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Model {!settings.providers[settings.activeProvider]?.model && (
+                      <span className="text-red-500 text-xs">⚠️ Verplicht!</span>
+                    )}
+                  </label>
                   <input
                     type="text"
-                    value={settings.providers[settings.activeProvider]?.model || 'Default'}
+                    value={settings.providers[settings.activeProvider]?.model || ''}
                     disabled
-                    className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-500"
+                    className={`w-full px-4 py-3 border border-gray-300 rounded-lg ${
+                      !settings.providers[settings.activeProvider]?.model 
+                        ? 'bg-red-50 border-red-300 text-red-600' 
+                        : 'bg-gray-50 text-gray-500'
+                    }`}
+                    placeholder="Geen model ingesteld"
                   />
+                  {!settings.providers[settings.activeProvider]?.model && (
+                    <p className="text-xs text-red-500 mt-1">
+                      ⚠️ Stel een model in bij "AI Model Provider" hierboven
+                    </p>
+                  )}
                 </div>
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-gray-700 mb-2">Systeem Instructies (Prompt)</label>

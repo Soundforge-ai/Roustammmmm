@@ -40,9 +40,13 @@ const Steenstrips = lazy(() => import('./components/gevel/Steenstrips'));
 const Gevelrenovatie = lazy(() => import('./components/gevel/Gevelrenovatie'));
 
 // Nieuwe hoofdpagina's
+// Nieuwe hoofdpagina's
 const RamenDeuren = lazy(() => import('./pages/RamenDeuren'));
 const Tuinaanleg = lazy(() => import('./pages/Tuinaanleg'));
 const Renovatie = lazy(() => import('./pages/Renovatie'));
+const KiesProduct = lazy(() => import('./pages/KiesProduct'));
+const Schilderwerken = lazy(() => import('./pages/Schilderwerken'));
+const RegioPage = lazy(() => import('./pages/Regio'));
 
 // Lazy load dashboard pages
 const EditorPage = lazy(() => import('./pages/dashboard/editor/EditorPageWrapper'));
@@ -51,6 +55,7 @@ const JulesAssistantPage = lazy(() => import('./pages/JulesAssistant'));
 const DynamicPageRenderer = lazy(() => import('./components/DynamicPageRenderer'));
 const AuthCallback = lazy(() => import('./pages/AuthCallback'));
 const SEODashboardPage = lazy(() => import('./pages/SEODashboard'));
+const SEORankingMonitor = lazy(() => import('./components/SEORankingMonitor'));
 const PageManagerPage = lazy(() => import('./pages/admin/PageManagerPage'));
 
 const PageLoader: React.FC = () => (
@@ -162,7 +167,15 @@ const App: React.FC = () => {
                   <Route
                     path="/"
                     element={
-                      <Layout onSubmitLead={handleAddLead} onAdminClick={() => window.location.href = '/admin'}>
+                      <Layout
+                        onSubmitLead={handleAddLead}
+                        onAdminClick={() => window.location.href = '/admin'}
+                        seo={{
+                          title: 'Yannova Bouw | Ramen en Deuren, Renovatie & Crepi | Keerbergen, Mechelen, Zoersel',
+                          description: 'Yannova Bouw - Specialist in ramen en deuren, renovatie, isolatie en crepi gevelafwerking in Keerbergen, Mechelen, Zoersel, Putte en omgeving. ✓ Gratis offerte ✓ 15+ jaar ervaring ✓ Vakkundige plaatsing',
+                          keywords: 'Yannova, Yannova Bouw, ramen en deuren Keerbergen, ramen en deuren Mechelen, ramen en deuren Zoersel, ramen en deuren Putte, PVC ramen, aluminium ramen, renovatie Keerbergen, renovatie Mechelen, renovatie Zoersel, bouwbedrijf Keerbergen, bouwbedrijf Mechelen, crepi gevel, gevelisolatie, gevelbepleistering, isolatiewerken, ramen plaatsen Antwerpen, deuren plaatsen, gevelrenovatie, energiezuinige ramen, ramen Heist-op-den-Berg, ramen Bonheiden, ramen Lier, ramen Nijlen, renovatie Putte, renovatie Heist-op-den-Berg, bouwbedrijf Antwerpen provincie, ramen Tremelo, ramen Haacht, renovatie Bonheiden, crepi Keerbergen, crepi Mechelen, gevel Zoersel'
+                        }}
+                      >
                         <Hero />
                         <About />
                         <Services />
@@ -299,9 +312,9 @@ const App: React.FC = () => {
                         onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{
-                          title: 'Showroom - Bekijk Voordeuren in 3D met AR',
-                          description: 'Virtuele showroom met 3D voordeuren. Draai, zoom en bekijk elke deur vanuit alle hoeken. Gebruik AR om de deur in uw woning te projecteren.',
-                          keywords: 'voordeuren 3D, virtuele showroom, AR deuren bekijken, aluminium voordeur'
+                          title: 'Virtuele Showroom - 3D Voordeuren Bekijken | Keerbergen, Zoersel',
+                          description: 'Bekijk voordeuren in 3D met onze virtuele showroom. Draai, zoom en bekijk elke deur vanuit alle hoeken. Gebruik AR om de deur in uw woning te projecteren. Actief in Keerbergen, Mechelen, Zoersel en omgeving.',
+                          keywords: 'voordeuren 3D, virtuele showroom, AR deuren bekijken, aluminium voordeur, voordeuren Keerbergen, voordeuren Zoersel, 3D showroom ramen en deuren, deuren configurator'
                         }}
                       >
                         <Showroom />
@@ -343,6 +356,20 @@ const App: React.FC = () => {
                         seo={{ title: 'SEO Dashboard', description: 'AI-powered SEO optimalisatie voor uw website.' }}
                       >
                         <SEODashboardPage />
+                      </Layout>
+                    }
+                  />
+
+                  {/* SEO Ranking Monitor */}
+                  <Route
+                    path="/seo/rankings"
+                    element={
+                      <Layout
+                        onSubmitLead={handleAddLead}
+                        onAdminClick={() => window.location.href = '/admin'}
+                        seo={{ title: 'SEO Rankings Monitor | Yannova', description: 'Monitor je Google rankings voor belangrijke keywords. Track je positie en verbeter je SEO.' }}
+                      >
+                        <SEORankingMonitor />
                       </Layout>
                     }
                   />
@@ -471,6 +498,24 @@ const App: React.FC = () => {
                     }
                   />
 
+                  {/* Product Selectie Pagina */}
+                  <Route
+                    path="/kies-product"
+                    element={
+                      <Layout
+                        onSubmitLead={handleAddLead}
+                        onAdminClick={() => window.location.href = '/admin'}
+                        seo={{
+                          title: 'Kies uw Product - Yannova Bouw',
+                          description: 'Selecteer een productcategorie: ramen en deuren, gevelwerken, renovatie, tuinaanleg en meer. Bekijk onze producten en start uw configuratie.',
+                          keywords: 'producten Yannova, ramen en deuren, gevelwerken, renovatie, tuinaanleg, product selectie'
+                        }}
+                      >
+                        <KiesProduct />
+                      </Layout>
+                    }
+                  />
+
                   {/* Nieuwe Hoofdcategorieën */}
                   <Route
                     path="/ramen-deuren"
@@ -485,6 +530,22 @@ const App: React.FC = () => {
                         }}
                       >
                         <RamenDeuren />
+                      </Layout>
+                    }
+                  />
+                  <Route
+                    path="/schilderwerken"
+                    element={
+                      <Layout
+                        onSubmitLead={handleAddLead}
+                        onAdminClick={() => window.location.href = '/admin'}
+                        seo={{
+                          title: 'Schilderwerken Binnen & Buiten | Yannova',
+                          description: 'Professionele schilderwerken voor uw interieur en gevel. Kwalitatief schilderwerk, lakwerk en kleuradvies in Keerbergen, Mechelen en omgeving.',
+                          keywords: 'schilderwerken, huisschilder, binnenschilder, buitenschilder, gevel schilderen, ramen schilderen'
+                        }}
+                      >
+                        <Schilderwerken />
                       </Layout>
                     }
                   />
@@ -517,6 +578,24 @@ const App: React.FC = () => {
                         }}
                       >
                         <Renovatie />
+                      </Layout>
+                    }
+                  />
+
+                  {/* Regio Pagina's (Dynamisch) */}
+                  <Route
+                    path="/regio/:city"
+                    element={
+                      <Layout
+                        onSubmitLead={handleAddLead}
+                        onAdminClick={() => window.location.href = '/admin'}
+                        // SEO wordt hier dynamisch maar we geven een fallback
+                        seo={{
+                          title: 'Yannova Bouw - Uw Partner in de Regio',
+                          description: 'Bouw- en renovatiewerken in uw regio. Ramen, deuren, isolatie en gevelwerken door lokale vakmensen.',
+                        }}
+                      >
+                        <RegioPage />
                       </Layout>
                     }
                   />

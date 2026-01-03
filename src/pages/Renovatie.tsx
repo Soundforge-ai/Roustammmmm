@@ -1,6 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Hammer, PaintBucket, Ruler, Home, CheckCircle, Bath } from 'lucide-react';
+import { ArrowRight, Hammer, PaintBucket, Ruler, Home, CheckCircle, Bath, ChevronDown } from 'lucide-react';
+import OptimizedImage from '../components/OptimizedImage';
+
+// FAQ data voor SEO
+const FAQ_ITEMS = [
+    {
+        question: "Hoeveel kost een totaalrenovatie per m²?",
+        answer: "Een totaalrenovatie kost gemiddeld €800 tot €1.500 per m², afhankelijk van de staat van de woning, de gekozen materialen en de omvang van de werken. Wij maken altijd een gedetailleerde offerte op maat na een plaatsbezoek."
+    },
+    {
+        question: "Hoe lang duurt een volledige renovatie?",
+        answer: "Een totaalrenovatie van een gemiddelde woning duurt 3 tot 6 maanden. Een badkamerrenovatie duurt 2-3 weken, een zolderinrichting 2-4 weken. De exacte duur hangt af van de omvang en complexiteit van het project."
+    },
+    {
+        question: "Kan ik in mijn woning blijven wonen tijdens de renovatie?",
+        answer: "Bij kleinere renovaties zoals een badkamer of zolder is dat meestal mogelijk. Bij een totaalrenovatie raden we aan om tijdelijk elders te verblijven voor uw comfort en om de werken sneller te laten verlopen."
+    },
+    {
+        question: "Welke premies kan ik krijgen voor renovatie?",
+        answer: "Voor energiebesparende renovaties (isolatie, hoogrendementsbeglazing, warmtepomp) kunt u premies krijgen van de Vlaamse overheid en uw netbeheerder. Ook voor sloop en heropbouw bestaan er BTW-voordelen. Wij adviseren u graag over de mogelijkheden."
+    },
+    {
+        question: "Werkt Yannova ook in Keerbergen, Mechelen en Zoersel?",
+        answer: "Ja, Yannova voert renovatiewerken uit in heel de provincie Antwerpen en Vlaams-Brabant. We zijn actief in Keerbergen, Mechelen, Zoersel, Putte, Heist-op-den-Berg, Bonheiden, Lier en alle omliggende gemeenten."
+    },
+    {
+        question: "Verzorgt Yannova ook de vergunningen?",
+        answer: "Wij begeleiden u bij het aanvragen van de nodige vergunningen. Voor bepaalde werken is een omgevingsvergunning nodig. Wij werken samen met architecten en kunnen u doorverwijzen indien nodig."
+    }
+];
 
 const Renovatie: React.FC = () => {
     const services = [
@@ -46,7 +75,8 @@ const Renovatie: React.FC = () => {
                 <div className="container mx-auto px-6 relative z-10">
                     <div className="max-w-4xl mx-auto text-center">
                         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-                            Renoveren zonder Zorgen
+                            Totaalrenovatie & Verbouwingen
+                            <span className="block text-brand-accent mt-2">in Antwerpen & Mechelen</span>
                         </h1>
                         <p className="text-lg md:text-xl text-gray-300 mb-8 leading-relaxed max-w-3xl mx-auto">
                             Van badkamer tot totaalproject. Yannova coördineert en realiseert uw verbouwing met vakmensen en kwaliteitsmaterialen.
@@ -92,7 +122,7 @@ const Renovatie: React.FC = () => {
                                     className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 group"
                                 >
                                     <div className="relative h-64 overflow-hidden">
-                                        <img
+                                        <OptimizedImage
                                             src={service.image}
                                             alt={service.title}
                                             className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
@@ -165,6 +195,9 @@ const Renovatie: React.FC = () => {
                 </div>
             </section>
 
+            {/* FAQ Section */}
+            <FAQSection />
+
             {/* CTA Section */}
             <section className="py-20 bg-slate-900 text-white">
                 <div className="container mx-auto px-6 text-center">
@@ -186,6 +219,58 @@ const Renovatie: React.FC = () => {
                 </div>
             </section>
         </div>
+    );
+};
+
+// FAQ Accordion Component
+const FAQSection: React.FC = () => {
+    const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+    return (
+        <section className="py-20 bg-gray-50">
+            <div className="container mx-auto px-6">
+                <div className="max-w-4xl mx-auto">
+                    <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4 text-center">
+                        Veelgestelde Vragen over Renovatie
+                    </h2>
+                    <p className="text-gray-600 text-center mb-12">
+                        Antwoorden op de meest gestelde vragen over renoveren in Keerbergen, Mechelen en omgeving.
+                    </p>
+
+                    <div className="space-y-4">
+                        {FAQ_ITEMS.map((item, index) => (
+                            <div
+                                key={index}
+                                className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden"
+                            >
+                                <button
+                                    onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                                    className="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+                                    aria-expanded={openIndex === index}
+                                >
+                                    <h3 className="text-lg font-semibold text-gray-900 pr-4">
+                                        {item.question}
+                                    </h3>
+                                    <ChevronDown
+                                        className={`flex-shrink-0 text-brand-accent transition-transform duration-300 ${openIndex === index ? 'rotate-180' : ''
+                                            }`}
+                                        size={24}
+                                    />
+                                </button>
+                                <div
+                                    className={`overflow-hidden transition-all duration-300 ${openIndex === index ? 'max-h-96' : 'max-h-0'
+                                        }`}
+                                >
+                                    <p className="px-6 pb-5 text-gray-600 leading-relaxed">
+                                        {item.answer}
+                                    </p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </section>
     );
 };
 

@@ -1,0 +1,83 @@
+{
+  "raw_data": [
+    {
+      "name": "Aludec Quartz Grey",
+      "page": 12,
+      "line": "Aludec Quartz Grey",
+      "type": "special"
+    },
+    {
+      "name": "WOODEC SHEFFIELD OAK CONCRETE",
+      "page": 16,
+      "line": "WOODEC SHEFFIELD OAK CONCRETE",
+      "type": "special"
+    },
+    {
+      "name": "WOODEC TURNER OAK TOFFEE",
+      "page": 17,
+      "line": "WOODEC TURNER OAK TOFFEE",
+      "type": "special"
+    },
+    {
+      "name": "WOODEC TURNER OAK WALNUT",
+      "page": 27,
+      "line": "WOODEC TURNER OAK WALNUT",
+      "type": "special"
+    },
+    {
+      "name": "MATTEX TRAFFIC WHITE (ALUDEC)",
+      "page": 28,
+      "line": "MATTEX TRAFFIC WHITE (ALUDEC)",
+      "type": "special"
+    },
+    {
+      "name": "MATTEX WINDOW GREY (ALUDEC)",
+      "page": 29,
+      "line": "MATTEX WINDOW GREY (ALUDEC)",
+      "type": "special"
+    },
+    {
+      "name": "WOODEC TURNER OAK AMBER",
+      "page": 30,
+      "line": "WOODEC TURNER OAK AMBER",
+      "type": "special"
+    },
+    {
+      "name": "ALUMINIUM SZCZOTKOWANE / BRUSHED ALUMINUM",
+      "page": 41,
+      "line": "ALUMINIUM SZCZOTKOWANE / BRUSHED ALUMINUM",
+      "type": "special"
+    },
+    {
+      "name": "ALUMINIUM GEBÜRSTET / ALUMINIUM BROSSÉ",
+      "page": 41,
+      "line": "ALUMINIUM GEBÜRSTET / ALUMINIUM BROSSÉ",
+      "type": "special"
+    },
+    {
+      "name": "CIEMNOZIELONY WOODGRAIN / DARK GREEN WOODGRAIN",
+      "page": 61,
+      "line": "CIEMNOZIELONY WOODGRAIN / DARK GREEN WOODGRAIN",
+      "type": "special"
+    },
+    {
+      "name": "DUNKELGRÜN WOODGRAIN / GRAIN DE BOIS VERT FONCÉ",
+      "page": 61,
+      "line": "DUNKELGRÜN WOODGRAIN / GRAIN DE BOIS VERT FONCÉ",
+      "type": "special"
+    },
+    {
+      "name": "TMAVĚ ZELENÁ WOODGRAIN",
+      "page": 61,
+      "line": "TMAVĚ ZELENÁ WOODGRAIN",
+      "type": "special"
+    },
+    {
+      "name": "CIEMNY GRAFITOWY STRUKTURALNY / DARK GRAPHITE WOODGRAIN",
+      "page": 64,
+      "line": "CIEMNY GRAFITOWY STRUKTURALNY / DARK GRAPHITE WOODGRAIN",
+      "type": "special"
+    }
+  ],
+  "categorized": {}
+}

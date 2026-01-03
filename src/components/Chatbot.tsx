@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { MessageCircle, X, Send, Bot, User, Loader2, Minimize2 } from 'lucide-react';
+import { MessageCircle, X, Send, Bot, User, Loader2, Minimize2, Volume2, VolumeX, HardHat } from 'lucide-react';
 import { chatStorage, ChatSession } from '../lib/chatStorage';
 import { settingsStorage } from '../lib/settingsStorage';
 import { chatService } from '../lib/chatService';
@@ -11,30 +11,43 @@ export interface Message {
   timestamp: Date;
 }
 
-// Notification sound als base64 (kort ping geluid)
-const NOTIFICATION_SOUND = 'data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAABhgC7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7//////////////////////////////////////////////////////////////////8AAAAATGF2YzU4LjEzAAAAAAAAAAAAAAAAJAAAAAAAAAAAAYYNBrv+AAAAAAAAAAAAAAAAAAAAAP/7UMQAA8AAAaQAAAAgAAA0gAAABExBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//tQxBKAAADSAAAAAAAAANIAAAAATEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVU=';
 
 const Chatbot: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
+  const [isSoundEnabled, setIsSoundEnabled] = useState(true);
   const [botName, setBotName] = useState('Yannova Assistent'); // Dynamic bot name
-  const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Initialize audio element
-  useEffect(() => {
-    audioRef.current = new Audio(NOTIFICATION_SOUND);
-    audioRef.current.volume = 0.5;
-  }, []);
-
-  // Play notification sound
+  // Play notification sound (synthesized "Pop" sound)
   const playNotificationSound = useCallback(() => {
-    if (audioRef.current) {
-      audioRef.current.currentTime = 0;
-      audioRef.current.play().catch(() => {
-        // Ignore errors (e.g., user hasn't interacted with page yet)
-      });
+    if (!isSoundEnabled) return;
+
+    try {
+      const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+      if (!AudioContext) return;
+
+      const ctx = new AudioContext();
+      const t = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      // "Pop" / Bubble sound (Sine wave with rapid pitch drop)
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(800, t);
+      osc.frequency.exponentialRampToValueAtTime(100, t + 0.15); // Quick drop creates "pop" effect
+
+      gain.gain.setValueAtTime(0.1, t);
+      gain.gain.exponentialRampToValueAtTime(0.01, t + 0.15);
+
+      osc.start(t);
+      osc.stop(t + 0.15);
+    } catch (error) {
+      console.error('Audio play failed:', error);
     }
-  }, []);
+  }, [isSoundEnabled]);
 
   // Load settings specifically for bot name and updates
   useEffect(() => {
@@ -49,6 +62,15 @@ const Chatbot: React.FC = () => {
 
   /* ... existing state ... */
   const [sessionId, setSessionId] = useState<string>('');
+
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: '1',
+      role: 'assistant',
+      content: 'Hallo! 👋 Ik ben de virtuele assistent van Yannova. Hoe kan ik u helpen met uw bouw- of renovatieproject?',
+      timestamp: new Date(),
+    },
+  ]);
 
   // Initialize session
   useEffect(() => {
@@ -77,20 +99,14 @@ const Chatbot: React.FC = () => {
 
       // Initial save
       await chatStorage.saveSession(sessionWithGreeting);
+
+      // Update messages state to match the session
+      setMessages([initialMessage]);
       setIsLoading(false); // Ensure loading is false
     };
 
     initSession();
   }, []);
-
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      role: 'assistant',
-      content: 'Hallo! 👋 Ik ben de virtuele assistent van Yannova. Hoe kan ik u helpen met uw bouw- of renovatieproject?',
-      timestamp: new Date(),
-    },
-  ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -166,7 +182,7 @@ const Chatbot: React.FC = () => {
 
     try {
       // System prompt construction
-      const systemPrompt = settingsStorage.getFullSystemPrompt();
+      const systemPrompt = await settingsStorage.getFullSystemPrompt();
 
       // Build message history
       const historyMessages: any[] = messages
@@ -223,16 +239,46 @@ const Chatbot: React.FC = () => {
       }
 
       console.error('Chatbot error:', error);
+      console.error('Error details:', {
+        message: error.message,
+        name: error.name,
+        stack: error.stack,
+        response: (error as any).response,
+        status: (error as any).status
+      });
 
       // Only update state if request wasn't aborted
       if (!abortController.signal.aborted) {
         // Extract error message for better debugging
         let errorMsg = error.message || 'Onbekende fout';
 
+        // Log the full error for debugging
+        console.error('Full error object:', error);
+
+        // Check if it's a configuration error
+        const isConfigError = errorMsg.includes('model ingesteld') ||
+          errorMsg.includes('API key ingesteld') ||
+          errorMsg.includes('Model ID ontbreekt') ||
+          errorMsg.includes('Geen model') ||
+          errorMsg.includes('Geen API key');
+
+        let userFriendlyMessage = errorMsg;
+        if (isConfigError) {
+          userFriendlyMessage = `De chatbot is momenteel niet geconfigureerd. Ga naar Admin Dashboard > Instellingen om een model en API key in te stellen. Neem contact op met de beheerder of bel ons direct: +32 489 96 00 01.`;
+        } else {
+          // Show more details in development mode
+          const isDev = import.meta.env.DEV;
+          if (isDev) {
+            userFriendlyMessage = `Fout: ${errorMsg}. Controleer de browser console voor meer details.`;
+          } else {
+            userFriendlyMessage = `Sorry, er ging iets mis bij het verwerken van uw vraag. Probeer het opnieuw of neem contact met ons op via telefoon (+32 489 96 00 01) of email (info@yannova.be).`;
+          }
+        }
+
         const errorMessage: Message = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
-          content: `Sorry, er ging iets mis (${errorMsg}). U kunt ons bereiken via telefoon (+32 489 96 00 01) of email (info@yannova.be).`,
+          content: userFriendlyMessage,
           timestamp: new Date(),
         };
 
@@ -305,7 +351,7 @@ const Chatbot: React.FC = () => {
           <div className="bg-brand-dark text-white px-4 py-3 rounded-t-2xl flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-brand-accent rounded-full flex items-center justify-center">
-                <Bot size={20} />
+                <HardHat size={20} />
               </div>
               {!isMinimized && (
                 <div>
@@ -315,6 +361,14 @@ const Chatbot: React.FC = () => {
               )}
             </div>
             <div className="flex items-center gap-1">
+              <button
+                onClick={() => setIsSoundEnabled(!isSoundEnabled)}
+                className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                aria-label={isSoundEnabled ? 'Geluid dempen' : 'Geluid aanzetten'}
+                title={isSoundEnabled ? 'Geluid dempen' : 'Geluid aanzetten'}
+              >
+                {isSoundEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}
+              </button>
               <button
                 onClick={() => setIsMinimized(!isMinimized)}
                 className="p-2 hover:bg-white/10 rounded-lg transition-colors"
@@ -345,7 +399,7 @@ const Chatbot: React.FC = () => {
                       className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${message.role === 'user' ? 'bg-brand-accent text-white' : 'bg-gray-100 text-gray-600'
                         }`}
                     >
-                      {message.role === 'user' ? <User size={16} /> : <Bot size={16} />}
+                      {message.role === 'user' ? <User size={16} /> : <HardHat size={16} />}
                     </div>
                     <div
                       className={`max-w-[75%] px-4 py-2.5 rounded-2xl ${message.role === 'user'
@@ -361,7 +415,7 @@ const Chatbot: React.FC = () => {
                 {isLoading && (
                   <div className="flex gap-3">
                     <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
-                      <Bot size={16} className="text-gray-600" />
+                      <HardHat size={16} className="text-gray-600" />
                     </div>
                     <div className="bg-gray-100 px-4 py-3 rounded-2xl rounded-bl-md">
                       <Loader2 size={18} className="animate-spin text-gray-500" />

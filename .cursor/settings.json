@@ -60,7 +60,7 @@
     }
   },
   "lmStudio": {
-    "server": "http://127.0.0.1:1234",
+    "server": "http://172.20.10.3:1234/v1",
     "healthCheck": true,
     "autoReconnect": true
   }

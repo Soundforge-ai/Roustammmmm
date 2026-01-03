@@ -3,7 +3,6 @@ import { useLocation } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import ContactCTA from './ContactCTA';
-import WhatsAppButton from './WhatsAppButton';
 import CookieConsent from './CookieConsent';
 import Chatbot from './Chatbot';
 import StructuredData from './StructuredData';
@@ -62,7 +61,6 @@ const Layout: React.FC<LayoutProps> = ({
       {showContactCTA && <ContactCTA onSubmitLead={onSubmitLead} />}
       <Footer onAdminClick={onAdminClick} />
       <Chatbot />
-      <WhatsAppButton />
       <AdminEditButton />
       <CookieConsent />
     </>

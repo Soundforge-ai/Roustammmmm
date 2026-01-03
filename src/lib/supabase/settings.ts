@@ -19,6 +19,8 @@ function dbSettingsToAppSettings(dbSettings: any): AppSettings {
 
 // Haal instellingen op
 export async function getSettings(): Promise<AppSettings> {
+  console.log('Supabase getSettings - Fetching from database...');
+  
   const { data, error } = await supabase
     .from('app_settings')
     .select('*')
@@ -28,13 +30,32 @@ export async function getSettings(): Promise<AppSettings> {
   if (error) {
     if (error.code === 'PGRST116') {
       // No settings found, return defaults
+      console.log('Supabase getSettings - No settings found, creating defaults...');
       return await createDefaultSettings();
     }
-    console.error('Error fetching settings:', error);
+    console.error('Supabase getSettings - Error:', error);
     throw error;
   }
 
-  return dbSettingsToAppSettings(data);
+  console.log('Supabase getSettings - Raw data from DB:', {
+    active_provider: data.active_provider,
+    hasProviders: !!data.providers,
+    providersKeys: data.providers ? Object.keys(data.providers) : [],
+    nagaApiKey: data.providers?.naga?.apiKey ? `${data.providers.naga.apiKey.substring(0, 10)}...${data.providers.naga.apiKey.substring(data.providers.naga.apiKey.length - 5)}` : 'empty',
+    nagaApiKeyLength: data.providers?.naga?.apiKey?.length || 0,
+    fullProviders: data.providers
+  });
+
+  const converted = dbSettingsToAppSettings(data);
+  
+  console.log('Supabase getSettings - Converted settings:', {
+    activeProvider: converted.activeProvider,
+    hasNagaApiKey: !!converted.providers.naga?.apiKey,
+    nagaApiKeyLength: converted.providers.naga?.apiKey?.length || 0,
+    nagaApiKeyPreview: converted.providers.naga?.apiKey ? `${converted.providers.naga.apiKey.substring(0, 10)}...${converted.providers.naga.apiKey.substring(converted.providers.naga.apiKey.length - 5)}` : 'empty'
+  });
+
+  return converted;
 }
 
 // Maak default instellingen aan
@@ -94,9 +115,14 @@ Instructies:
 
 // Sla instellingen op
 export async function saveSettings(settings: AppSettings): Promise<AppSettings> {
-  const { data, error } = await supabase
-    .from('app_settings')
-    .upsert({
+  console.log('Supabase saveSettings - Input:', {
+    activeProvider: settings.activeProvider,
+    providersKeys: Object.keys(settings.providers),
+    nagaApiKey: settings.providers.naga?.apiKey ? `${settings.providers.naga.apiKey.substring(0, 10)}...` : 'empty',
+    nagaModel: settings.providers.naga?.model
+  });
+
+  const payload = {
       id: DEFAULT_SETTINGS_ID,
       active_provider: settings.activeProvider,
       providers: settings.providers,
@@ -106,17 +132,54 @@ export async function saveSettings(settings: AppSettings): Promise<AppSettings> 
         ...doc,
         uploadDate: doc.uploadDate.toISOString()
       }))
-    }, {
+  };
+
+  console.log('Supabase saveSettings - Payload:', {
+    ...payload,
+    providers: Object.keys(payload.providers).reduce((acc, key) => {
+      acc[key] = {
+        ...payload.providers[key],
+        apiKey: payload.providers[key]?.apiKey ? `${payload.providers[key].apiKey.substring(0, 10)}...` : 'empty'
+      };
+      return acc;
+    }, {} as any)
+  });
+
+  const { data, error } = await supabase
+    .from('app_settings')
+    .upsert(payload, {
       onConflict: 'id'
     })
     .select()
     .single();
 
   if (error) {
-    console.error('Error saving settings:', error);
+    console.error('Supabase saveSettings - Error:', {
+      message: error.message,
+      code: error.code,
+      details: error.details,
+      hint: error.hint,
+      fullError: error
+    });
     throw error;
   }
 
-  return dbSettingsToAppSettings(data);
+  console.log('Supabase saveSettings - Success! Data returned:', {
+    active_provider: data.active_provider,
+    hasProviders: !!data.providers,
+    providersKeys: data.providers ? Object.keys(data.providers) : [],
+    nagaApiKey: data.providers?.naga?.apiKey ? `${data.providers.naga.apiKey.substring(0, 10)}...${data.providers.naga.apiKey.substring(data.providers.naga.apiKey.length - 5)}` : 'empty',
+    nagaApiKeyLength: data.providers?.naga?.apiKey?.length || 0
+  });
+  
+  const converted = dbSettingsToAppSettings(data);
+  console.log('Supabase saveSettings - Converted result:', {
+    activeProvider: converted.activeProvider,
+    hasNagaApiKey: !!converted.providers.naga?.apiKey,
+    nagaApiKeyLength: converted.providers.naga?.apiKey?.length || 0,
+    nagaApiKeyPreview: converted.providers.naga?.apiKey ? `${converted.providers.naga.apiKey.substring(0, 10)}...${converted.providers.naga.apiKey.substring(converted.providers.naga.apiKey.length - 5)}` : 'empty'
+  });
+  
+  return converted;
 }
 

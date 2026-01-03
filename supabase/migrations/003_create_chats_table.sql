@@ -43,7 +43,8 @@ create policy "Authenticated users can delete chats"
   for delete
   using (auth.role() = 'authenticated');
 
--- Trigger voor updated_at
+-- Trigger voor updated_at (gebruikt gedeelde functie)
+-- Let op: Deze functie moet bestaan (uit 000_shared_functions.sql of 001_create_sites_table.sql)
 create trigger set_chat_sessions_updated_at
   before update on public.chat_sessions
   for each row

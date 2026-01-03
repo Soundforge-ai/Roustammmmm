@@ -34,7 +34,7 @@ const OverOns: React.FC = () => {
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
       <section className="relative py-24 md:py-32 bg-gradient-to-br from-brand-dark via-slate-800 to-brand-dark">
-        <div className="absolute inset-0 opacity-10 bg-[url('/images/yannova-team.jpg')] bg-cover bg-center" />
+        <div className="absolute inset-0 opacity-10 bg-[url('https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&q=80')] bg-cover bg-center" />
         <div className="container mx-auto px-6 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">Over Yannova</h1>

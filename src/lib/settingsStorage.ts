@@ -32,7 +32,7 @@ export const defaultSettings: AppSettings = {
     providers: {
         naga: {
             apiKey: '',
-            model: 'glm-4.5',
+            model: 'glm-4.5', // Default model for Naga
             baseUrl: 'https://api.naga.ac/v1'
         },
         huggingface: {
@@ -72,13 +72,16 @@ Over Yannova:
 Instructies:
 - Antwoord altijd in het Nederlands
 - Wees vriendelijk en professioneel
-- Houd antwoorden kort en bondig`,
+- Houd antwoorden kort en bondig
+- Beantwoord vragen direct met behulpzame informatie
+- Verwijs alleen naar WhatsApp of telefoon als de gebruiker daar expliciet om vraagt, of als je echt niet verder kunt helpen
+- Probeer eerst zelf de vraag te beantwoorden voordat je naar contactgegevens verwijst`,
     knowledgeBase: [],
     threeDApiUrl: ''
 };
 
 // Helper for deep merging defaults
-const mergeDefaults = (saved: any): AppSettings => {
+export const mergeDefaults = (saved: any): AppSettings => {
     // If old format (no providers object), migrate
     const base = { ...defaultSettings };
 
@@ -120,50 +123,137 @@ const localStorageFallback = {
     getSettings: (): AppSettings => {
         try {
             const stored = localStorage.getItem(SETTINGS_KEY);
-            if (!stored) return defaultSettings;
+            console.log('localStorageFallback.getSettings - Raw stored value:', stored ? 'exists' : 'empty');
+            
+            if (!stored) {
+                console.log('localStorageFallback.getSettings - No stored value, returning defaults');
+                return defaultSettings;
+            }
+            
             const parsed = JSON.parse(stored);
-            return mergeDefaults(parsed);
+            console.log('localStorageFallback.getSettings - Parsed data:', {
+                activeProvider: parsed.activeProvider,
+                hasProviders: !!parsed.providers,
+                providersKeys: parsed.providers ? Object.keys(parsed.providers) : [],
+                nagaApiKey: parsed.providers?.naga?.apiKey ? `${parsed.providers.naga.apiKey.substring(0, 10)}...${parsed.providers.naga.apiKey.substring(parsed.providers.naga.apiKey.length - 5)}` : 'empty',
+                nagaApiKeyLength: parsed.providers?.naga?.apiKey?.length || 0
+            });
+            
+            const merged = mergeDefaults(parsed);
+            console.log('localStorageFallback.getSettings - Merged result:', {
+                activeProvider: merged.activeProvider,
+                hasNagaApiKey: !!merged.providers.naga?.apiKey,
+                nagaApiKeyLength: merged.providers.naga?.apiKey?.length || 0,
+                nagaApiKeyPreview: merged.providers.naga?.apiKey ? `${merged.providers.naga.apiKey.substring(0, 10)}...${merged.providers.naga.apiKey.substring(merged.providers.naga.apiKey.length - 5)}` : 'empty'
+            });
+            
+            return merged;
         } catch (e) {
-            console.error('Error reading settings from localStorage', e);
+            console.error('localStorageFallback.getSettings - Error reading from localStorage', e);
             return defaultSettings;
         }
     },
     saveSettings: (settings: AppSettings) => {
         try {
+            console.log('localStorageFallback.saveSettings - Saving:', {
+                activeProvider: settings.activeProvider,
+                hasNagaApiKey: !!settings.providers.naga?.apiKey,
+                nagaApiKeyLength: settings.providers.naga?.apiKey?.length || 0,
+                nagaApiKeyPreview: settings.providers.naga?.apiKey ? `${settings.providers.naga.apiKey.substring(0, 10)}...${settings.providers.naga.apiKey.substring(settings.providers.naga.apiKey.length - 5)}` : 'empty'
+            });
+            
             localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+            console.log('localStorageFallback.saveSettings - Successfully saved to localStorage');
+            
+            // Verify it was saved correctly
+            const verify = localStorage.getItem(SETTINGS_KEY);
+            if (verify) {
+                const parsed = JSON.parse(verify);
+                console.log('localStorageFallback.saveSettings - Verification - saved naga API key:', {
+                    hasApiKey: !!parsed.providers?.naga?.apiKey,
+                    apiKeyLength: parsed.providers?.naga?.apiKey?.length || 0,
+                    apiKeyPreview: parsed.providers?.naga?.apiKey ? `${parsed.providers.naga.apiKey.substring(0, 10)}...${parsed.providers.naga.apiKey.substring(parsed.providers.naga.apiKey.length - 5)}` : 'empty'
+                });
+            }
+            
             window.dispatchEvent(new Event('settings-updated'));
         } catch (e) {
-            console.error('Error saving settings to localStorage', e);
+            console.error('localStorageFallback.saveSettings - Error saving to localStorage', e);
         }
     }
 };
 
 export const settingsStorage = {
     getSettings: async (): Promise<AppSettings> => {
+        console.log('settingsStorage.getSettings - Starting...', { useSupabase });
+        
         if (useSupabase) {
             try {
-                return await supabaseSettings.getSettings();
+                const settings = await supabaseSettings.getSettings();
+                console.log('settingsStorage.getSettings - Supabase settings loaded:', {
+                    activeProvider: settings.activeProvider,
+                    hasNagaApiKey: !!settings.providers.naga?.apiKey,
+                    nagaApiKeyLength: settings.providers.naga?.apiKey?.length || 0,
+                    nagaApiKeyPreview: settings.providers.naga?.apiKey ? `${settings.providers.naga.apiKey.substring(0, 10)}...${settings.providers.naga.apiKey.substring(settings.providers.naga.apiKey.length - 5)}` : 'empty'
+                });
+                return settings;
             } catch (e) {
                 console.warn('Supabase not available, falling back to localStorage', e);
                 useSupabase = false;
-                return localStorageFallback.getSettings();
+                const localSettings = localStorageFallback.getSettings();
+                console.log('settingsStorage.getSettings - LocalStorage settings loaded:', {
+                    activeProvider: localSettings.activeProvider,
+                    hasNagaApiKey: !!localSettings.providers.naga?.apiKey,
+                    nagaApiKeyLength: localSettings.providers.naga?.apiKey?.length || 0
+                });
+                return localSettings;
             }
         }
-        return localStorageFallback.getSettings();
+        
+        const localSettings = localStorageFallback.getSettings();
+        console.log('settingsStorage.getSettings - LocalStorage settings loaded:', {
+            activeProvider: localSettings.activeProvider,
+            hasNagaApiKey: !!localSettings.providers.naga?.apiKey,
+            nagaApiKeyLength: localSettings.providers.naga?.apiKey?.length || 0
+        });
+        return localSettings;
     },
 
     saveSettings: async (settings: AppSettings): Promise<void> => {
+        console.log('settingsStorage.saveSettings - Starting save...', {
+            useSupabase,
+            activeProvider: settings.activeProvider,
+            hasApiKey: !!settings.providers[settings.activeProvider]?.apiKey
+        });
+
         if (useSupabase) {
             try {
+                console.log('settingsStorage.saveSettings - Attempting Supabase save...');
                 await supabaseSettings.saveSettings(settings);
+                console.log('settingsStorage.saveSettings - Supabase save successful!');
                 window.dispatchEvent(new Event('settings-updated'));
                 return;
-            } catch (e) {
+            } catch (e: any) {
+                console.error('settingsStorage.saveSettings - Supabase save failed:', {
+                    message: e.message,
+                    code: e.code,
+                    details: e.details,
+                    hint: e.hint,
+                    fullError: e
+                });
                 console.warn('Supabase not available, falling back to localStorage', e);
                 useSupabase = false;
             }
         }
-        localStorageFallback.saveSettings(settings);
+        
+        console.log('settingsStorage.saveSettings - Using localStorage fallback...');
+        try {
+            localStorageFallback.saveSettings(settings);
+            console.log('settingsStorage.saveSettings - localStorage save successful!');
+        } catch (e) {
+            console.error('settingsStorage.saveSettings - localStorage save also failed:', e);
+            throw new Error(`Kon instellingen niet opslaan: ${e instanceof Error ? e.message : 'Onbekende fout'}`);
+        }
     },
 
     getFullSystemPrompt: async (): Promise<string> => {

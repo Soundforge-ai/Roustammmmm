@@ -1,38 +1,4 @@
-# Robots.txt voor Yannova
-# https://yannova.be
-
 User-agent: *
 Allow: /
-Allow: /over-ons
-Allow: /diensten
-Allow: /contact
-Allow: /portfolio
-Allow: /gevel/
-Allow: /posts/
-Disallow: /admin
-Disallow: /admin/
-Disallow: /dashboard/
-Disallow: /api/
-Disallow: /*.json
-Disallow: /seo
-Disallow: /jules
 
-Sitemap: https://yannova.be/sitemap.xml
-
-# Google specifiek
-User-agent: Googlebot
-Allow: /
-
-# Bing specifiek
-User-agent: Bingbot
-Allow: /
-
-# Block aggressive bots
-User-agent: AhrefsBot
-Disallow: /
-
-User-agent: SemrushBot
-Disallow: /
-
-User-agent: MJ12bot
-Disallow: /
+Sitemap: https://www.yannova.be/sitemap.xml
