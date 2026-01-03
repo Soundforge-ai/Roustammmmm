@@ -19,6 +19,30 @@
       ]
     }
   ],
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.yannovabouw.be"
+        }
+      ],
+      "destination": "https://www.yannova.be/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "yannovabouw.be"
+        }
+      ],
+      "destination": "https://www.yannova.be/$1",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/(.*)",
