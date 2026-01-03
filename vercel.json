@@ -39,7 +39,7 @@
           "value": "yannovabouw.be"
         }
       ],
-      "destination": "https://www.yannova.be/$1",
+      "destination": "https://yannova.be/$1",
       "permanent": true
     }
   ],
