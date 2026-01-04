@@ -1,31 +1,36 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
-// Werkgebieden voor lokale SEO
+// Werkgebieden voor lokale SEO - Zoersel en omgeving als focus
 const SERVICE_AREAS = [
-  // Hoofdgebieden
+  // Hoofdgebieden - Zoersel eerst voor lokale SEO
+  { name: 'Zoersel', type: 'City' },
   { name: 'Antwerpen', type: 'City' },
   { name: 'Keerbergen', type: 'City' },
   { name: 'Mechelen', type: 'City' },
-  { name: 'Zoersel', type: 'City' },
   { name: 'Putte', type: 'City' },
-  // Omliggende gemeenten
+  // Omliggende gemeenten Zoersel
+  { name: 'Malle', type: 'City' },
+  { name: 'Schilde', type: 'City' },
+  { name: 'Wijnegem', type: 'City' },
+  { name: 'Ranst', type: 'City' },
+  { name: 'Brecht', type: 'City' },
+  { name: 'Zandhoven', type: 'City' },
+  { name: 'Wommelgem', type: 'City' },
+  // Overige gemeenten
   { name: 'Heist-op-den-Berg', type: 'City' },
   { name: 'Bonheiden', type: 'City' },
   { name: 'Tremelo', type: 'City' },
   { name: 'Haacht', type: 'City' },
   { name: 'Lier', type: 'City' },
   { name: 'Nijlen', type: 'City' },
-  { name: 'Ranst', type: 'City' },
-  { name: 'Zandhoven', type: 'City' },
-  { name: 'Malle', type: 'City' },
-  { name: 'Schilde', type: 'City' },
-  { name: 'Wijnegem', type: 'City' },
-  { name: 'Wommelgem', type: 'City' },
   { name: 'Boechout', type: 'City' },
   { name: 'Lint', type: 'City' },
   { name: 'Duffel', type: 'City' },
   { name: 'Berlaar', type: 'City' },
+  // Deelgemeenten Zoersel
+  { name: 'Halle (Zoersel)', type: 'Place' },
+  { name: 'Sint-Antonius', type: 'Place' },
   // Provincies
   { name: 'Antwerpen', type: 'State' },
   { name: 'Vlaams-Brabant', type: 'State' },
@@ -41,6 +46,21 @@ const PAGE_CONFIG: Record<string, { name: string; parent?: string }> = {
   '/partners': { name: 'Partners', parent: '/' },
   '/portfolio': { name: 'Portfolio', parent: '/' },
   '/showroom': { name: 'Showroom', parent: '/' },
+  '/regio/zoersel': { name: 'Ramen en Deuren Zoersel', parent: '/' },
+  '/regio/antwerpen': { name: 'Ramen en Deuren Antwerpen', parent: '/' },
+  '/regio/mechelen': { name: 'Ramen en Deuren Mechelen', parent: '/' },
+  '/regio/keerbergen': { name: 'Ramen en Deuren Keerbergen', parent: '/' },
+  '/regio/malle': { name: 'Ramen en Deuren Malle', parent: '/' },
+  '/regio/schilde': { name: 'Ramen en Deuren Schilde', parent: '/' },
+  '/regio/wijnegem': { name: 'Ramen en Deuren Wijnegem', parent: '/' },
+  '/regio/ranst': { name: 'Ramen en Deuren Ranst', parent: '/' },
+  '/regio/brecht': { name: 'Ramen en Deuren Brecht', parent: '/' },
+  '/regio/zandhoven': { name: 'Ramen en Deuren Zandhoven', parent: '/' },
+  '/regio/wommelgem': { name: 'Ramen en Deuren Wommelgem', parent: '/' },
+  '/regio/putte': { name: 'Ramen en Deuren Putte', parent: '/' },
+  '/regio/heist-op-den-berg': { name: 'Ramen en Deuren Heist-op-den-Berg', parent: '/' },
+  '/regio/bonheiden': { name: 'Ramen en Deuren Bonheiden', parent: '/' },
+  '/regio/lier': { name: 'Ramen en Deuren Lier', parent: '/' },
   '/ramen-deuren': { name: 'Ramen en Deuren', parent: '/diensten' },
   '/tuinaanleg': { name: 'Tuinaanleg', parent: '/diensten' },
   '/renovatie': { name: 'Renovatie', parent: '/diensten' },
