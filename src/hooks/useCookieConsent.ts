@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getCookiePreferences, CookiePreferences } from '../components/CookieConsent';
+import { getCookiePreferences, CookiePreferences } from '../components/layout/CookieConsent';
 
 export function useCookieConsent() {
   const [preferences, setPreferences] = useState<CookiePreferences | null>(null);

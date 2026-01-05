@@ -67,19 +67,25 @@ const Schilderwerken: React.FC = () => {
                             </ul>
                         </div>
                         <div className="relative h-96 rounded-2xl overflow-hidden shadow-xl group">
-                            {/* Placeholder for interior painting image */}
-                            <div className="absolute inset-0 bg-gray-200 flex items-center justify-center text-gray-500">
-                                <span className="text-lg">Afbeelding Binnenschilderwerk</span>
-                            </div>
+                            <img
+                                src="https://images.unsplash.com/photo-1562259949-e8e7689d7828?auto=format&fit=crop&q=80"
+                                alt="Binnenschilderwerken interieur"
+                                className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                            <div className="absolute bottom-6 left-6 text-white font-medium">Binnenschilderwerk</div>
                         </div>
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-12 items-center">
                         <div className="order-2 md:order-1 relative h-96 rounded-2xl overflow-hidden shadow-xl group">
-                            {/* Placeholder for exterior painting image */}
-                            <div className="absolute inset-0 bg-gray-200 flex items-center justify-center text-gray-500">
-                                <span className="text-lg">Afbeelding Buitenschilderwerk</span>
-                            </div>
+                            <img
+                                src="https://images.unsplash.com/photo-1604014237800-1c9102c219da?auto=format&fit=crop&q=80"
+                                alt="Buitenschilderwerken gevel"
+                                className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                            <div className="absolute bottom-6 left-6 text-white font-medium">Buitenschilderwerk</div>
                         </div>
                         <div className="order-1 md:order-2">
                             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-light text-brand-accent font-medium text-sm mb-6">

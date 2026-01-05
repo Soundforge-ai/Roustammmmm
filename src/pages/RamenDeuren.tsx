@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Maximize, Shield, Grid, Layers, Home, CheckCircle, Wind, ChevronDown } from 'lucide-react';
-import OptimizedImage from '../components/OptimizedImage';
+import { ArrowRight, Maximize, Shield, Grid, Layers, Home, CheckCircle, Wind, ChevronDown, Zap, CheckCircle2 } from 'lucide-react';
+import OptimizedImage from '@/components/ui/OptimizedImage';
+import QuoteCalculator from '@/components/sections/QuoteCalculator';
 
 // FAQ data voor SEO
 const FAQ_ITEMS = [
     {
-        question: "Wat kost het om ramen te laten plaatsen in Keerbergen of Mechelen?",
-        answer: "De prijs hangt af van het type raam (PVC of aluminium), de afmetingen en het aantal. Gemiddeld kost PVC ramen €300-€600 per m², aluminium €400-€800 per m². Wij komen gratis langs voor een exacte opmeting en offerte op maat."
+        question: "Wat kost het om ramen te laten plaatsen in Zoersel of Mechelen?",
+        answer: "De prijs hangt af van het type raam (PVC of aluminium), de afmetingen en het aantal. Gemiddeld kosten PVC ramen €300-€600 per m², aluminium €400-€800 per m². Wij komen gratis langs voor een exacte opmeting en offerte op maat."
     },
     {
         question: "Wat is het verschil tussen PVC en aluminium ramen?",
@@ -23,7 +24,7 @@ const FAQ_ITEMS = [
     },
     {
         question: "Komen jullie ook in Zoersel, Putte en omgeving?",
-        answer: "Ja, Yannova is actief in heel de provincie Antwerpen en Vlaams-Brabant. We werken in Keerbergen, Mechelen, Zoersel, Putte, Heist-op-den-Berg, Bonheiden, Lier, Nijlen en alle omliggende gemeenten."
+        answer: "Ja, Yannova is actief in heel de provincie Antwerpen en Vlaams-Brabant. We werken in Zoersel, Mechelen, Antwerpen, Putte, Heist-op-den-Berg, Bonheiden, Lier, Nijlen en alle omliggende gemeenten."
     },
     {
         question: "Kan ik premies krijgen voor nieuwe ramen?",
@@ -84,7 +85,7 @@ const RamenDeuren: React.FC = () => {
                         </h1>
                         <p className="text-lg md:text-xl text-gray-200 mb-8 leading-relaxed max-w-3xl mx-auto">
                             Bespaar direct op uw energiefactuur en verhoog de veiligheid van uw woning.
-                            Wij plaatsen hoogwaardige PVC en Aluminium ramen in regio Keerbergen, Mechelen & Zoersel.
+                            Wij plaatsen hoogwaardige PVC en Aluminium ramen in regio Zoersel, Mechelen & Antwerpen.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <a
@@ -160,10 +161,119 @@ const RamenDeuren: React.FC = () => {
                                             to={service.href}
                                             className="inline-flex items-center text-brand-accent font-bold hover:text-orange-700 transition-colors"
                                         >
-                                            Meer informatie aanvragen
-                                            <ArrowRight size={18} className="ml-2" />
+                                            Meer informatie <ArrowRight className="ml-2" size={20} />
                                         </Link>
                                     </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Technische Specificaties - SEO & Trust */}
+            <section className="py-20 bg-slate-50">
+                <div className="container mx-auto px-6">
+                    <div className="max-w-6xl mx-auto">
+                        <h2 className="text-3xl md:text-4xl font-bold text-brand-dark mb-12 text-center">
+                            Technische Specificaties & Prestaties
+                        </h2>
+                        <div className="grid md:grid-cols-2 gap-12">
+                            <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
+                                <h3 className="text-2xl font-bold text-brand-dark mb-6 flex items-center gap-3">
+                                    <Zap className="text-brand-accent" />
+                                    Isolatiewaarden
+                                </h3>
+                                <ul className="space-y-4">
+                                    <li className="flex justify-between items-center border-b border-gray-100 pb-2">
+                                        <span className="text-gray-600">PVC Profielen</span>
+                                        <span className="font-bold text-brand-dark">Uf tot 0.89 W/m²K</span>
+                                    </li>
+                                    <li className="flex justify-between items-center border-b border-gray-100 pb-2">
+                                        <span className="text-gray-600">Aluminium Profielen</span>
+                                        <span className="font-bold text-brand-dark">Uf tot 0.96 W/m²K</span>
+                                    </li>
+                                    <li className="flex justify-between items-center border-b border-gray-100 pb-2">
+                                        <span className="text-gray-600">Beglazing (HR++)</span>
+                                        <span className="font-bold text-brand-dark">Ug = 1.0 W/m²K</span>
+                                    </li>
+                                    <li className="flex justify-between items-center pb-2">
+                                        <span className="text-gray-600">Beglazing (Triple)</span>
+                                        <span className="font-bold text-brand-dark">Ug = 0.5 W/m²K</span>
+                                    </li>
+                                </ul>
+                                <p className="mt-6 text-sm text-gray-500 italic">
+                                    * Waarden afhankelijk van gekozen profiel en glastype. Wij adviseren u graag over de beste keuze voor uw woning in Zoersel, Antwerpen of Mechelen.
+                                </p>
+                            </div>
+
+                            <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
+                                <h3 className="text-2xl font-bold text-brand-dark mb-6 flex items-center gap-3">
+                                    <Shield className="text-brand-accent" />
+                                    Veiligheid & Comfort
+                                </h3>
+                                <div className="space-y-6">
+                                    <div className="flex gap-4">
+                                        <div className="bg-orange-50 p-3 rounded-lg h-fit">
+                                            <CheckCircle2 className="text-brand-accent" size={24} />
+                                        </div>
+                                        <div>
+                                            <h4 className="font-bold text-brand-dark mb-1">Inbraakwerend</h4>
+                                            <p className="text-gray-600 text-sm">Standaard voorzien van inbraakwerend beslag en paddenstoelnokken. Optioneel veiligheidsglas voor extra gemoedsrust.</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-4">
+                                        <div className="bg-orange-50 p-3 rounded-lg h-fit">
+                                            <Maximize className="text-brand-accent" size={24} />
+                                        </div>
+                                        <div>
+                                            <h4 className="font-bold text-brand-dark mb-1">Geluidsisolatie</h4>
+                                            <p className="text-gray-600 text-sm">Houd straatlawaai buiten met onze akoestische beglazing. Ideaal voor woningen in drukke centra of langs steenwegen.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Werkwijze Section */}
+            <section className="py-20 bg-white">
+                <div className="container mx-auto px-6">
+                    <div className="max-w-6xl mx-auto">
+                        <h2 className="text-3xl md:text-4xl font-bold text-brand-dark mb-12 text-center">
+                            Onze Werkwijze: Van Opmeting tot Plaatsing
+                        </h2>
+                        <div className="grid md:grid-cols-4 gap-6">
+                            {[
+                                {
+                                    step: "01",
+                                    title: "Gratis Opmeting",
+                                    desc: "Onze expert komt bij u langs in regio Antwerpen voor een nauwkeurige opmeting en technisch advies."
+                                },
+                                {
+                                    step: "02",
+                                    title: "Offerte op Maat",
+                                    desc: "U ontvangt een gedetailleerde offerte zonder verrassingen, inclusief alle technische specificaties."
+                                },
+                                {
+                                    step: "03",
+                                    title: "Productie",
+                                    desc: "Uw ramen en deuren worden op maat gemaakt met hoogwaardige profielen (Schüco, Reynaers, ...)."
+                                },
+                                {
+                                    step: "04",
+                                    title: "Vakkundige Plaatsing",
+                                    desc: "Ons eigen team plaatst uw nieuwe ramen en werkt alles netjes af, inclusief binnenafwerking."
+                                }
+                            ].map((item, idx) => (
+                                <div key={idx} className="relative p-6 border border-gray-100 rounded-xl hover:shadow-lg transition-all bg-white group">
+                                    <div className="text-5xl font-bold text-gray-100 mb-4 group-hover:text-orange-100 transition-colors">{item.step}</div>
+                                    <h3 className="text-xl font-bold text-brand-dark mb-3">{item.title}</h3>
+                                    <p className="text-gray-600 text-sm leading-relaxed">
+                                        {item.desc}
+                                    </p>
                                 </div>
                             ))}
                         </div>
@@ -201,6 +311,9 @@ const RamenDeuren: React.FC = () => {
             </section>
 
             {/* FAQ Section */}
+            {/* Calculator Section */}
+            <QuoteCalculator />
+
             <FAQSection />
 
             {/* CTA Section */}
@@ -239,7 +352,7 @@ const FAQSection: React.FC = () => {
                         Veelgestelde Vragen over Ramen en Deuren
                     </h2>
                     <p className="text-gray-600 text-center mb-12">
-                        Antwoorden op de meest gestelde vragen over ramen en deuren plaatsen in Keerbergen, Mechelen en omgeving.
+                        Antwoorden op de meest gestelde vragen over ramen en deuren plaatsen in Zoersel, Mechelen en omgeving.
                     </p>
 
                     <div className="space-y-4">

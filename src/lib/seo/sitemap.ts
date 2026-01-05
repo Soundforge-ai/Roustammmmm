@@ -2,6 +2,8 @@
  * XML Sitemap Generator
  */
 
+import { CITIES } from '../../constants/regions';
+
 export interface SitemapEntry {
   url: string;
   lastmod?: string;
@@ -29,10 +31,19 @@ const DEFAULT_PAGES: SitemapEntry[] = [
   { url: '/crepi-info', changefreq: 'monthly', priority: 0.7 },
 ];
 
+// Regio pagina's genereren uit CITIES configuratie
+const REGION_PAGES: SitemapEntry[] = Object.keys(CITIES).map(citySlug => ({
+  url: `/regio/${citySlug}`,
+  changefreq: 'monthly',
+  priority: 0.8
+}));
+
+const ALL_PAGES = [...DEFAULT_PAGES, ...REGION_PAGES];
+
 /**
  * Genereer XML sitemap string
  */
-export function generateSitemapXML(entries: SitemapEntry[] = DEFAULT_PAGES): string {
+export function generateSitemapXML(entries: SitemapEntry[] = ALL_PAGES): string {
   const today = new Date().toISOString().split('T')[0];
   
   const urlEntries = entries.map(entry => {

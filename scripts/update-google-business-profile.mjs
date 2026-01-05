@@ -25,19 +25,19 @@ const CONFIG = {
   // Nieuwe website URL
   websiteUrl: 'https://www.yannova.be',
   
-  // Nieuw adres in Keerbergen
+  // Nieuw adres in Zoersel
   address: {
-    streetAddress: 'Keerbergen', // Vervang met exact adres indien beschikbaar
-    addressLocality: 'Keerbergen',
-    addressRegion: 'Vlaams-Brabant',
-    postalCode: '3140',
+    streetAddress: 'De Beemdekens 39',
+    addressLocality: 'Zoersel',
+    addressRegion: 'Antwerpen',
+    postalCode: '2980',
     addressCountry: 'BE'
   },
   
-  // Coördinaten Keerbergen
+  // Coördinaten Zoersel
   coordinates: {
-    lat: 51.0031,
-    lng: 4.6314
+    lat: 51.2667,
+    lng: 4.6167
   }
 };
 

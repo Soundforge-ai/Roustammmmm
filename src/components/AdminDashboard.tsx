@@ -50,8 +50,11 @@ import {
   MessageCircle,
   Bot,
   User,
-  Box
+  Box,
+  Globe,
+  Briefcase // Added for Portfolio
 } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
 import { chatStorage, ChatSession } from '../lib/chatStorage';
 import { settingsStorage, AppSettings, defaultSettings, KnowledgeDocument, AIProvider } from '../lib/settingsStorage';
 import { pageStorage, PageData } from '../lib/pageStorage';
@@ -63,22 +66,14 @@ import { migrateAll } from '../lib/migrateToSupabase';
 import { SEOManager } from './admin/SEOManager';
 import { Lead } from '../types';
 import { Link, useNavigate } from 'react-router-dom';
-import { COMPANY_NAME } from '../constants';
+import { COMPANY_NAME, ALLOWED_ADMIN_EMAILS } from '../constants';
 import { GoogleOAuthProvider, GoogleLogin, CredentialResponse } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import ThreeDBuilderFree from './admin/ThreeDBuilderFree';
 import V0Generator from './admin/V0Generator';
+import ProjectManager from './admin/ProjectManager'; // Added for Portfolio
 
 const GOOGLE_CLIENT_ID = (import.meta as any).env.VITE_GOOGLE_CLIENT_ID;
-
-// VOEG HIER JOUW EMAILADRES TOE OM IN TE KUNNEN LOGGEN
-const ALLOWED_ADMIN_EMAILS = [
-  'innovar.labs7@gmail.com',
-  'windowpro.be@gmail.com',
-  'info@yannova.be',
-  'roustamyandiev00@gmail.com',
-  'aimeester777@gmail.com'
-];
 
 interface AdminDashboardProps {
   leads: Lead[];
@@ -87,7 +82,7 @@ interface AdminDashboardProps {
   onLogout: () => void;
 }
 
-type TabType = 'dashboard' | 'leads' | 'settings' | 'chats' | 'pages' | 'media' | 'marketing' | '3dbuilder' | 'seo' | 'v0';
+type TabType = 'dashboard' | 'leads' | 'settings' | 'chats' | 'pages' | 'media' | 'marketing' | '3dbuilder' | 'seo' | 'v0' | 'portfolio';
 type FilterStatus = 'all' | Lead['status'];
 
 const ITEMS_PER_PAGE = 10;
@@ -99,11 +94,9 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
   onLogout,
 }) => {
   const navigate = useNavigate();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const { user, isLoggedIn, loginWithToken, logout } = useAuth();
+
   const [activeTab, setActiveTab] = useState<TabType>('dashboard');
-  const [loginError, setLoginError] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState<FilterStatus>('all');
   const [currentPage, setCurrentPage] = useState(1);
@@ -178,12 +171,12 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
     const attemptMigration = async () => {
       const migrationKey = 'yannova_migration_completed';
       const hasMigrated = localStorage.getItem(migrationKey);
-      
+
       if (!hasMigrated) {
         try {
           console.log('🔄 Starting automatic migration to Supabase...');
           const results = await migrateAll();
-          
+
           if (results.chats > 0 || results.pages > 0 || results.settings) {
             console.log('✅ Migration completed:', results);
             localStorage.setItem(migrationKey, 'true');
@@ -247,7 +240,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
         apiKeyLength: settings.providers[settings.activeProvider]?.apiKey?.length || 0,
         model: settings.providers[settings.activeProvider]?.model
       });
-      
+
       await settingsStorage.saveSettings(settings); // This saves API key, name and knowledge base
       setIsSavingSettings(false);
       alert('✅ Instellingen succesvol opgeslagen!');
@@ -261,7 +254,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
         fullError: error
       });
       setIsSavingSettings(false);
-      
+
       // Show more detailed error message
       let errorMessage = 'Er is een fout opgetreden bij het opslaan van de instellingen.';
       if (error.message) {
@@ -273,7 +266,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
       if (error.code === 'PGRST301' || error.message?.includes('JWT')) {
         errorMessage += '\n\n⚠️ Authenticatie probleem: Controleer je Supabase configuratie.';
       }
-      
+
       alert(errorMessage);
     }
   };
@@ -345,6 +338,67 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
     };
     setSettings(updatedSettings);
     await settingsStorage.saveSettings(updatedSettings);
+  };
+
+  const handleIndexWebsite = async () => {
+    const confirm = window.confirm('Dit zal alle huidige website-pagina\'s indexeren en toevoegen aan de kennisbank. Wil je doorgaan?');
+    if (!confirm) return;
+
+    setIsSavingSettings(true);
+    try {
+      const newDocs: KnowledgeDocument[] = [];
+
+      // Index Dynamic Pages
+      pages.forEach(page => {
+        let contentText = `Pagina Titel: ${page.title}\nURL: /p/${page.slug}\nType: Dynamische Pagina\n\n`;
+
+        // Extract text from Puck content
+        if (page.content && Array.isArray(page.content.content)) {
+          page.content.content.forEach((block: any) => {
+            if (block.props) {
+              Object.values(block.props).forEach(val => {
+                if (typeof val === 'string') contentText += val + '\n';
+              });
+            }
+          });
+        }
+
+        newDocs.push({
+          id: `web-${page.id}`,
+          name: `Website: ${page.title}`,
+          content: contentText,
+          type: 'website_page',
+          uploadDate: new Date()
+        });
+      });
+
+      // Index Static Pages
+      staticPages.forEach(page => {
+        newDocs.push({
+          id: `web-${page.id}`,
+          name: `Website: ${page.title}`,
+          content: `Pagina Titel: ${page.title}\nURL: ${page.path}\nType: Statische Pagina\n\nDit is een hoofdpagina van de Yannova website over ${page.title}.`,
+          type: 'website_page',
+          uploadDate: new Date()
+        });
+      });
+
+      // Filter out old website pages to avoid duplicates
+      const nonWebsiteDocs = settings.knowledgeBase.filter(doc => doc.type !== 'website_page');
+
+      const updatedSettings = {
+        ...settings,
+        knowledgeBase: [...nonWebsiteDocs, ...newDocs]
+      };
+
+      setSettings(updatedSettings);
+      await settingsStorage.saveSettings(updatedSettings);
+      alert(`Succesvol ${newDocs.length} pagina's geïndexeerd!`);
+    } catch (error) {
+      console.error('Indexing failed:', error);
+      alert('Fout bij indexeren.');
+    }
+    setIsSavingSettings(false);
   };
 
   const handleCreatePage = async (e: React.FormEvent) => {
@@ -592,34 +646,9 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
     setIsAnalyzing(false);
   };
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Trim whitespace and check credentials
-    const trimmedUsername = username.trim();
-    const trimmedPassword = password.trim();
-
-    if (trimmedUsername === 'admin' && trimmedPassword === 'admin123') {
-      setIsAuthenticated(true);
-      setLoginError('');
-      // Store authentication in sessionStorage to persist across page refreshes
-      sessionStorage.setItem('admin_authenticated', 'true');
-    } else {
-      setLoginError('Ongeldige gebruikersnaam of wachtwoord');
-    }
-  };
-
-  // Check if already authenticated on mount
-  useEffect(() => {
-    const isAuth = sessionStorage.getItem('admin_authenticated');
-    if (isAuth === 'true') {
-      setIsAuthenticated(true);
-    }
-  }, [setIsAuthenticated]);
-
-  // Handle logout with sessionStorage cleanup
+  // Handle logout
   const handleLogout = () => {
-    sessionStorage.removeItem('admin_authenticated');
-    setIsAuthenticated(false);
+    logout();
     onLogout();
   };
 
@@ -683,77 +712,57 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const unreadNotifications = notifications.filter((n) => !n.read).length;
 
   // Login Screen
-  if (!isAuthenticated) {
+  if (!isLoggedIn) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-brand-dark to-slate-900 flex items-center justify-center p-4">
-        <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-brand-dark">
+        <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+          <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md text-center">
+            <h1 className="text-3xl font-bold text-brand-dark mb-2">
               {COMPANY_NAME}<span className="text-brand-accent">.</span>
             </h1>
-            <p className="text-gray-500 mt-2">Admin Panel</p>
-          </div>
+            <p className="text-gray-500 mb-8">Admin Dashboard Login</p>
 
-          <form onSubmit={handleLogin} className="space-y-5">
-            <div>
-              <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
-                Gebruikersnaam
-              </label>
-              <input
-                id="username"
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-accent focus:border-brand-accent outline-none transition-all"
-                placeholder="Voer gebruikersnaam in"
-                autoComplete="username"
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                Wachtwoord
-              </label>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-accent focus:border-brand-accent outline-none transition-all"
-                placeholder="••••••••"
-                autoComplete="current-password"
+            <div className="flex justify-center mb-6">
+              <GoogleLogin
+                onSuccess={credentialResponse => {
+                  if (credentialResponse.credential) {
+                    try {
+                      const decoded: any = jwtDecode(credentialResponse.credential);
+                      if (ALLOWED_ADMIN_EMAILS.includes(decoded.email)) {
+                        loginWithToken(credentialResponse.credential);
+                      } else {
+                        alert('⛔ Geen toegang: Dit emailadres is niet geautoriseerd.');
+                        console.error('Unauthorized email:', decoded.email);
+                      }
+                    } catch (e) {
+                      console.error('Login error:', e);
+                      alert('Er ging iets mis bij het inloggen.');
+                    }
+                  }
+                }}
+                onError={() => {
+                  console.log('Login Failed');
+                  alert('Login mislukt. Probeer het opnieuw.');
+                }}
+                useOneTap
               />
             </div>
 
-            {loginError && (
-              <div className="flex items-center gap-2 text-red-500 text-sm bg-red-50 p-3 rounded-lg">
-                <AlertCircle size={16} />
-                {loginError}
-              </div>
-            )}
+            <p className="text-xs text-gray-400">
+              Alleen toegankelijk voor geautoriseerde beheerders.
+            </p>
 
-            <button
-              type="submit"
-              className="w-full bg-brand-accent hover:bg-orange-700 text-white font-bold py-3 rounded-lg transition-colors"
-            >
-              Inloggen
-            </button>
-
-            <div className="text-center">
+            <div className="mt-8 pt-4 border-t border-gray-100">
               <button
                 type="button"
-                onClick={handleLogout}
+                onClick={onLogout}
                 className="text-sm text-gray-500 hover:text-brand-accent transition-colors"
               >
                 ← Terug naar website
               </button>
             </div>
-          </form>
-
-          <div className="mt-6 p-4 bg-gray-50 rounded-lg text-sm text-gray-500">
-            <p className="font-medium text-gray-700 mb-1">Demo credentials:</p>
-            <p>Gebruiker: admin | Wachtwoord: admin123</p>
           </div>
-        </div>
+        </GoogleOAuthProvider>
       </div>
     );
   }
@@ -850,43 +859,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
               </a>
             </div>
 
-            <div className="relative my-6">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-200"></div>
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Of ga verder met</span>
-              </div>
-            </div>
 
-            <div className="flex justify-center">
-              <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-                <GoogleLogin
-                  onSuccess={credentialResponse => {
-                    try {
-                      if (credentialResponse.credential) {
-                        const decoded: any = jwtDecode(credentialResponse.credential);
-
-                        if (ALLOWED_ADMIN_EMAILS.includes(decoded.email)) {
-                          setIsAuthenticated(true);
-                          setUsername(decoded.name || decoded.email);
-                        } else {
-                          alert(`Toegang geweigerd. Het emailadres ${decoded.email} heeft geen admin rechten.`);
-                          console.warn('Unauthorized login attempt:', decoded.email);
-                        }
-                      }
-                    } catch (e) {
-                      console.error('Google login error', e);
-                    }
-                  }}
-                  onError={() => {
-                    console.log('Login Failed');
-                    alert('Google login mislukt.');
-                  }}
-                  useOneTap
-                />
-              </GoogleOAuthProvider>
-            </div>
           </div>
         </div>
       </div>
@@ -944,6 +917,14 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
           >
             <ImageIcon size={20} />
             Media & Foto's
+          </button>
+          <button
+            onClick={() => setActiveTab('portfolio')}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${activeTab === 'portfolio' ? 'bg-brand-accent text-white' : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+              }`}
+          >
+            <Briefcase size={20} />
+            Projecten Portfolio
           </button>
           <button
             onClick={() => setActiveTab('marketing')}
@@ -1012,7 +993,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         activeTab === 'marketing' ? 'AI Marketing Tools' :
 
                           activeTab === '3dbuilder' ? '3D Model Builder' :
-                            activeTab === 'v0' ? 'V0 Component Generator' : 'Instellingen'}
+                            activeTab === 'v0' ? 'V0 Component Generator' :
+                              activeTab === 'portfolio' ? 'Portfolio Beheer' : 'Instellingen'}
             </h1>
             <p className="text-gray-500">Welkom terug, Admin</p>
           </div>
@@ -1713,6 +1695,10 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
           </div>
         )}
 
+        {activeTab === 'portfolio' && (
+          <ProjectManager />
+        )}
+
         {activeTab === 'marketing' && (
           <div className="space-y-8">
             {/* Ad Gen */}
@@ -2011,11 +1997,10 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     type="text"
                     value={settings.providers[settings.activeProvider]?.model || ''}
                     disabled
-                    className={`w-full px-4 py-3 border border-gray-300 rounded-lg ${
-                      !settings.providers[settings.activeProvider]?.model 
-                        ? 'bg-red-50 border-red-300 text-red-600' 
-                        : 'bg-gray-50 text-gray-500'
-                    }`}
+                    className={`w-full px-4 py-3 border border-gray-300 rounded-lg ${!settings.providers[settings.activeProvider]?.model
+                      ? 'bg-red-50 border-red-300 text-red-600'
+                      : 'bg-gray-50 text-gray-500'
+                      }`}
                     placeholder="Geen model ingesteld"
                   />
                   {!settings.providers[settings.activeProvider]?.model && (
@@ -2055,13 +2040,22 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   className="hidden"
                   onChange={handleFileUpload}
                 />
-                <button
-                  onClick={() => fileInputRef.current?.click()}
-                  className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
-                >
-                  <Plus size={18} />
-                  Bestand toevoegen
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleIndexWebsite}
+                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+                  >
+                    <Globe size={18} />
+                    Website Indexeren
+                  </button>
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
+                  >
+                    <Plus size={18} />
+                    Bestand toevoegen
+                  </button>
+                </div>
               </div>
 
               <div className="space-y-3">

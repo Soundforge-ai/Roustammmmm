@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Phone, Mail, MapPin, Clock, CheckCircle, AlertCircle, Send } from 'lucide-react';
-import GoogleMap from '../components/GoogleMap';
+import GoogleMap from '../components/ui/GoogleMap';
 
 // Company location
-const COMPANY_ADDRESS = 'Keerbergen, België';
-const COMPANY_COORDINATES = { lat: 51.0031, lng: 4.6314 }; // Keerbergen coordinates
+const COMPANY_ADDRESS = 'De Beemdekens 39, 2980 Zoersel, België';
+const COMPANY_COORDINATES = { lat: 51.2667, lng: 4.6167 }; // Zoersel coordinates
 
 interface FormErrors {
   name?: string;
@@ -69,10 +69,9 @@ const Contact: React.FC = () => {
   };
 
   const inputClasses = (fieldName: keyof FormErrors) =>
-    `w-full px-4 py-3 border rounded-lg transition-all focus:outline-none ${
-      errors[fieldName]
-        ? 'border-red-400 focus:ring-2 focus:ring-red-200'
-        : 'border-gray-300 focus:ring-2 focus:ring-brand-accent/50 focus:border-brand-accent'
+    `w-full px-4 py-3 border rounded-lg transition-all focus:outline-none ${errors[fieldName]
+      ? 'border-red-400 focus:ring-2 focus:ring-red-200'
+      : 'border-gray-300 focus:ring-2 focus:ring-brand-accent/50 focus:border-brand-accent'
     }`;
 
   return (
@@ -83,7 +82,7 @@ const Contact: React.FC = () => {
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">Contact</h1>
             <p className="text-lg md:text-xl text-gray-200 leading-relaxed">
-              Heeft u een vraag of wilt u een offerte aanvragen? Neem gerust contact met ons op.
+              Vertel ons kort wat u wil aanpakken. We luisteren, denken mee en helpen u graag verder met duidelijk advies en een vrijblijvende offerte.
             </p>
           </div>
         </div>
@@ -105,7 +104,7 @@ const Contact: React.FC = () => {
                       </div>
                       <div>
                         <h3 className="font-semibold text-brand-dark">Adres</h3>
-                        <p className="text-gray-600">Keerbergen<br />3140 Keerbergen, België</p>
+                        <p className="text-gray-600">De Beemdekens 39<br />2980 Zoersel, België</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-4">

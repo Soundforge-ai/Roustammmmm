@@ -67,10 +67,10 @@ const AuthCallback: React.FC = () => {
             <h2 className="text-xl font-bold text-brand-dark mb-2">Fout bij inloggen</h2>
             <p className="text-gray-500 mb-4">{error}</p>
             <button
-              onClick={() => navigate('/jules')}
+              onClick={() => navigate('/')}
               className="px-4 py-2 bg-brand-accent text-white rounded-lg hover:bg-orange-700 transition-colors"
             >
-              Terug naar Jules
+              Terug naar Home
             </button>
           </>
         )}

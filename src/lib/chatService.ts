@@ -305,6 +305,16 @@ export const chatService = {
             return "Oei, dat is vervelend! Voor dringende interventies belt u best direct naar +32 489 96 00 01 zodat we snel kunnen schakelen.";
         }
 
+        // --- BEVESTIGING & ACTIE (Voorkomt loops) ---
+        // Vangt antwoorden op als "Ja graag", "Ok", "Prima" na een vraag van de bot
+        if (text === 'ja' || text === 'ja graag' || text.includes('graag') || text.includes('is goed') || text.includes('ok ') || text === 'ok' || text.includes('zeker') || text.includes('prima') || text.includes('doe maar') || text.includes('graag')) {
+            return "Dat is genoteerd! ✅ \n\nIk geef het door aan Yannick. Hij neemt zo snel mogelijk contact met u op om dit verder te bespreken. \n\nHeeft u intussen nog andere vragen?";
+        }
+
+        if (text === 'nee' || text.includes('nee bedankt') || text.includes('hoeft niet') || text.includes('niet nodig') || text.includes('laat maar')) {
+            return "Geen probleem! U weet ons te vinden als u ons later nodig heeft. \n\nKan ik u nog ergens anders mee helpen?";
+        }
+
         // --- CATCH-ALL ---
         // Soms vragen mensen gewoon "wat doen jullie?"
         if (text.includes('dienst') || text.includes('activiteit')) {

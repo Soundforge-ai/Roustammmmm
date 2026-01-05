@@ -1,6 +1,6 @@
 import React from 'react';
 import PageManager from '../../components/admin/PageManager';
-import Layout from '../../components/Layout';
+import Layout from '../../components/layout/Layout';
 import { ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 

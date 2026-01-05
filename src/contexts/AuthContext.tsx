@@ -5,6 +5,7 @@ import {
   initiateGoogleLogin,
   logout as googleLogout,
   isLoggedIn as checkIsLoggedIn,
+  loginWithCredential,
 } from '@/lib/auth/google';
 
 interface AuthContextType {
@@ -12,6 +13,7 @@ interface AuthContextType {
   isLoggedIn: boolean;
   isLoading: boolean;
   login: () => void;
+  loginWithToken: (credential: string) => void;
   logout: () => void;
 }
 
@@ -32,6 +34,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     initiateGoogleLogin();
   }, []);
 
+  const loginWithToken = useCallback((credential: string) => {
+    const user = loginWithCredential(credential);
+    if (user) {
+      setUser(user);
+    }
+  }, []);
+
   const logout = useCallback(() => {
     googleLogout();
     setUser(null);
@@ -44,6 +53,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         isLoggedIn: !!user,
         isLoading,
         login,
+        loginWithToken,
         logout,
       }}
     >

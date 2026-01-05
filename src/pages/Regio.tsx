@@ -1,168 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { MapPin, CheckCircle2, ArrowRight, Phone, Building2, ShieldCheck, Clock, Star, Users, Award } from 'lucide-react';
-import GoogleMap from '../components/GoogleMap';
-
-// Uitgebreide configuratie voor alle ondersteunde steden
-const CITIES: Record<string, {
-    name: string;
-    zip: string;
-    description: string;
-    longDescription: string;
-    coordinates: { lat: number; lng: number };
-    deelgemeenten?: string[];
-    landmarks?: string[];
-    population?: string;
-}> = {
-    zoersel: {
-        name: 'Zoersel',
-        zip: '2980',
-        description: 'Specialist in ramen, deuren en renovaties in Zoersel en deelgemeenten. Lokale vakmannen, snelle service.',
-        longDescription: 'Yannova Bouw is uw betrouwbare partner voor alle bouw- en renovatiewerken in Zoersel. Met ons kantoor in de regio kennen wij de lokale bouwstijlen en voorschriften als geen ander. Of u nu woont in het centrum van Zoersel, in Halle of Sint-Antonius, wij staan voor u klaar met vakkundige service.',
-        coordinates: { lat: 51.2667, lng: 4.6167 },
-        deelgemeenten: ['Halle', 'Sint-Antonius'],
-        landmarks: ['Kasteel van Zoersel', 'Zoerselbos', 'Gemeentehuis Zoersel'],
-        population: '22.000',
-    },
-    antwerpen: {
-        name: 'Antwerpen',
-        zip: '2000',
-        description: 'Uw partner voor bouw- en renovatiewerken in regio Antwerpen. Van stadscentrum tot havengebied.',
-        longDescription: 'In de bruisende stad Antwerpen verzorgt Yannova Bouw renovaties en ramen- en deurenplaatsing voor zowel historische panden als moderne appartementen. Wij kennen de specifieke uitdagingen van bouwen in de stad en werken nauw samen met de stedelijke diensten.',
-        coordinates: { lat: 51.2194, lng: 4.4025 },
-        deelgemeenten: ['Berchem', 'Borgerhout', 'Deurne', 'Ekeren', 'Hoboken', 'Merksem', 'Wilrijk'],
-        landmarks: ['Centraal Station', 'Grote Markt', 'MAS Museum'],
-        population: '530.000',
-    },
-    mechelen: {
-        name: 'Mechelen',
-        zip: '2800',
-        description: 'Renovatie en schrijnwerk in Mechelen. Kwalitatieve ramen en deuren voor elke woningstijl.',
-        longDescription: 'Mechelen, de stad tussen Brussel en Antwerpen, kent een mix van historische architectuur en moderne nieuwbouw. Yannova Bouw heeft ruime ervaring met renovaties in de Mechelse binnenstad en de omliggende wijken. Van Sint-Romboutstoren tot Nekkerspoel, wij zijn uw lokale specialist.',
-        coordinates: { lat: 51.0259, lng: 4.4776 },
-        deelgemeenten: ['Battel', 'Heffen', 'Hombeek', 'Leest', 'Muizen', 'Walem'],
-        landmarks: ['Sint-Romboutskathedraal', 'Grote Markt Mechelen', 'Technopolis'],
-        population: '87.000',
-    },
-    putte: {
-        name: 'Putte',
-        zip: '2580',
-        description: 'Bouwbedrijf actief in Putte. Wij verzorgen uw gevelwerken en totaalrenovaties tot in de puntjes.',
-        longDescription: 'In de landelijke gemeente Putte, gelegen tussen Mechelen en Lier, biedt Yannova Bouw een volledig gamma aan bouw- en renovatiediensten. De typische Kempense woningen in Putte en Beerzel vragen om vakmanschap dat wij met trots leveren.',
-        coordinates: { lat: 51.0556, lng: 4.6307 },
-        deelgemeenten: ['Beerzel', 'Grasheide', 'Peulis'],
-        landmarks: ['Sint-Niklaaskerk Putte', 'Putte Kapellen'],
-        population: '17.000',
-    },
-    'heist-op-den-berg': {
-        name: 'Heist-op-den-Berg',
-        zip: '2220',
-        description: 'Ramen, deuren en renovatie in Heist-op-den-Berg. Vraag uw gratis offerte aan bij uw lokale specialist.',
-        longDescription: 'Heist-op-den-Berg, de grootste gemeente van de provincie Antwerpen qua oppervlakte, kent diverse deelgemeenten waar Yannova Bouw actief is. Van Hallaar tot Itegem, van Booischot tot Wiekevorst - overal leveren wij kwaliteitswerk.',
-        coordinates: { lat: 51.0762, lng: 4.7226 },
-        deelgemeenten: ['Hallaar', 'Itegem', 'Booischot', 'Wiekevorst', 'Schriek'],
-        landmarks: ['Bergom', 'Heistse Berg'],
-        population: '43.000',
-    },
-    // Nieuwe gemeenten rond Zoersel
-    malle: {
-        name: 'Malle',
-        zip: '2390',
-        description: 'Ramen en deuren specialist in Malle. Vakkundige plaatsing en renovatie in Oostmalle en Westmalle.',
-        longDescription: 'De gemeente Malle, bestaande uit Oostmalle en Westmalle, is bekend om zijn landelijke karakter en de beroemde Trappistenabdij. Yannova Bouw verzorgt hier renovaties en ramen- en deurenplaatsing met oog voor de lokale bouwstijl.',
-        coordinates: { lat: 51.2944, lng: 4.6944 },
-        deelgemeenten: ['Oostmalle', 'Westmalle'],
-        landmarks: ['Abdij van Westmalle', 'Kasteel de Renesse'],
-        population: '15.000',
-    },
-    schilde: {
-        name: 'Schilde',
-        zip: '2970',
-        description: 'Hoogwaardige renovaties en ramen in Schilde. Specialist voor villa\'s en karakterwoningen.',
-        longDescription: 'Schilde staat bekend als een welvarende residentiële gemeente met prachtige villa\'s en karaktervolle woningen. Yannova Bouw heeft ruime ervaring met renovaties die het karakter van deze woningen respecteren en versterken.',
-        coordinates: { lat: 51.2500, lng: 4.5833 },
-        deelgemeenten: ['\'s-Gravenwezel'],
-        landmarks: ['Kasteel van Schilde', 'Gemeentepark'],
-        population: '20.000',
-    },
-    wijnegem: {
-        name: 'Wijnegem',
-        zip: '2110',
-        description: 'Bouwbedrijf actief in Wijnegem. Ramen, deuren en gevelwerken voor woningen en appartementen.',
-        longDescription: 'Wijnegem, gelegen aan de rand van Antwerpen, combineert stedelijke voorzieningen met een dorps karakter. Yannova Bouw is hier actief voor zowel renovaties van bestaande woningen als afwerking van nieuwbouwprojecten.',
-        coordinates: { lat: 51.2333, lng: 4.5167 },
-        landmarks: ['Wijnegem Shopping Center', 'Fort van Wijnegem'],
-        population: '9.500',
-    },
-    ranst: {
-        name: 'Ranst',
-        zip: '2520',
-        description: 'Renovatie en ramen specialist in Ranst. Actief in Broechem, Emblem en Oelegem.',
-        longDescription: 'De gemeente Ranst omvat de deelgemeenten Broechem, Emblem en Oelegem. Yannova Bouw kent deze regio goed en levert er kwaliteitsvolle renovaties en ramen- en deurenplaatsing.',
-        coordinates: { lat: 51.1833, lng: 4.5500 },
-        deelgemeenten: ['Broechem', 'Emblem', 'Oelegem'],
-        landmarks: ['Kasteel van Ranst', 'Zevenbergenbos'],
-        population: '19.000',
-    },
-    brecht: {
-        name: 'Brecht',
-        zip: '2960',
-        description: 'Ramen en deuren in Brecht en Sint-Job-in-\'t-Goor. Lokale vakmannen voor uw renovatie.',
-        longDescription: 'Brecht is een uitgestrekte gemeente in de Noorderkempen met diverse deelgemeenten. Yannova Bouw is hier actief voor renovaties, gevelwerken en ramen- en deurenplaatsing.',
-        coordinates: { lat: 51.3500, lng: 4.6333 },
-        deelgemeenten: ['Sint-Job-in-\'t-Goor', 'Sint-Lenaarts', 'Overbroek'],
-        landmarks: ['Gemeentehuis Brecht', 'Brechtse Heide'],
-        population: '29.000',
-    },
-    zandhoven: {
-        name: 'Zandhoven',
-        zip: '2240',
-        description: 'Bouwbedrijf in Zandhoven. Specialist in ramen, deuren en totaalrenovaties.',
-        longDescription: 'Zandhoven, gelegen tussen Antwerpen en de Kempen, is een groene gemeente waar Yannova Bouw graag werkt. Wij verzorgen hier renovaties en nieuwbouwafwerking met aandacht voor kwaliteit.',
-        coordinates: { lat: 51.2167, lng: 4.6667 },
-        deelgemeenten: ['Pulderbos', 'Pulle', 'Massenhoven', 'Viersel'],
-        landmarks: ['Kasteel van Zandhoven'],
-        population: '13.000',
-    },
-    wommelgem: {
-        name: 'Wommelgem',
-        zip: '2160',
-        description: 'Renovatie en ramen plaatsen in Wommelgem. Snelle service, lokale vakmannen.',
-        longDescription: 'Wommelgem ligt strategisch tussen Antwerpen en de Kempen. Yannova Bouw is hier actief voor renovaties van zowel oudere woningen als moderne nieuwbouw.',
-        coordinates: { lat: 51.2000, lng: 4.5167 },
-        landmarks: ['Fort van Wommelgem', 'Gemeentehuis'],
-        population: '13.500',
-    },
-    bonheiden: {
-        name: 'Bonheiden',
-        zip: '2820',
-        description: 'Ramen en deuren in Bonheiden en Rijmenam. Vakkundige renovatie door lokale specialisten.',
-        longDescription: 'Bonheiden, gelegen tussen Mechelen en Keerbergen, is een aangename woongemeente waar Yannova Bouw graag projecten uitvoert. Van klassieke renovaties tot moderne nieuwbouw.',
-        coordinates: { lat: 51.0333, lng: 4.5333 },
-        deelgemeenten: ['Rijmenam'],
-        landmarks: ['Bonheiden centrum', 'Rijmenamse Vijvers'],
-        population: '15.500',
-    },
-    lier: {
-        name: 'Lier',
-        zip: '2500',
-        description: 'Bouwbedrijf actief in Lier. Renovatie, ramen en gevelwerken in de Pallieterstad.',
-        longDescription: 'Lier, de historische Pallieterstad, kent een prachtig stadscentrum met veel karaktervolle woningen. Yannova Bouw heeft ervaring met renovaties die het historische karakter respecteren.',
-        coordinates: { lat: 51.1333, lng: 4.5667 },
-        deelgemeenten: ['Koningshooikt'],
-        landmarks: ['Zimmertoren', 'Grote Markt Lier', 'Begijnhof'],
-        population: '36.000',
-    },
-    keerbergen: {
-        name: 'Keerbergen',
-        zip: '3140',
-        description: 'Uw lokale bouwpartner in Keerbergen. Ramen, deuren, renovatie en gevelwerken.',
-        longDescription: 'Keerbergen, bekend om zijn vijvers en villawijken, is een van onze thuisregio\'s. Yannova Bouw kent hier elke straat en levert al jaren kwaliteitswerk voor de inwoners van Keerbergen.',
-        coordinates: { lat: 51.0031, lng: 4.6314 },
-        landmarks: ['Keerbergse vijvers', 'Gemeentehuis Keerbergen'],
-        population: '13.500',
-    },
-};
+import GoogleMap from '../components/ui/GoogleMap';
+import OptimizedImage from '@/components/ui/OptimizedImage';
+import { CITIES } from '../constants/regions';
 
 // FAQ Schema generator voor lokale SEO
 const generateFAQSchema = (cityData: typeof CITIES['zoersel']) => {
@@ -196,10 +37,26 @@ const generateFAQSchema = (cityData: typeof CITIES['zoersel']) => {
             },
             {
                 "@type": "Question",
-                "name": `Doen jullie ook kleine renovaties in ${cityData.name}?`,
+                "name": `Doen jullie ook renovaties in ${cityData.name}?`,
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": `Zeker! Naast totaalrenovaties helpen wij u ook graag met kleinere projecten zoals het vervangen van één raam, het isoleren van een gevel of het schilderen van uw woning in ${cityData.name}.`
+                    "text": `Zeker! Naast ramen en deuren verzorgen wij ook totaalrenovaties in ${cityData.name}. Van kleine verbouwingen tot complete renovatieprojecten - wij zijn uw lokale partner voor alle bouwwerken.`
+                }
+            },
+            {
+                "@type": "Question",
+                "name": `Plaatsen jullie crepi in ${cityData.name}?`,
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": `Ja, wij zijn specialist in crepi en gevelbepleistering in ${cityData.name} en omgeving. Wij bieden verschillende soorten crepi aan: siliconenpleister, korrelpleister en schuurpleister. Inclusief eventuele gevelisolatie.`
+                }
+            },
+            {
+                "@type": "Question",
+                "name": `Doen jullie isolatie werken in ${cityData.name}?`,
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": `Absoluut! Wij verzorgen gevelisolatie, buitenmuurisolatie en spouwmuurisolatie in ${cityData.name}. Dit kan gecombineerd worden met crepi of steenstrips voor een mooie afwerking én lagere energiekosten.`
                 }
             },
             {
@@ -241,6 +98,52 @@ const generateLocalBusinessSchema = (cityData: typeof CITIES['zoersel']) => {
             { "@type": "City", "name": cityData.name },
             ...(cityData.deelgemeenten?.map(d => ({ "@type": "Place", "name": d })) || [])
         ],
+        "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": `Diensten in ${cityData.name}`,
+            "itemListElement": [
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": `Ramen en Deuren ${cityData.name}`,
+                        "description": `Levering en plaatsing van PVC en aluminium ramen en deuren in ${cityData.name}`
+                    }
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": `Renovatie ${cityData.name}`,
+                        "description": `Totaalrenovatie en verbouwingen in ${cityData.name} en omgeving`
+                    }
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": `Crepi ${cityData.name}`,
+                        "description": `Crepi en gevelbepleistering in ${cityData.name}`
+                    }
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": `Isolatie werken ${cityData.name}`,
+                        "description": `Gevelisolatie en buitenmuurisolatie in ${cityData.name}`
+                    }
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": `Gevelwerken ${cityData.name}`,
+                        "description": `Gevelrenovatie, steenstrips en gevelbescherming in ${cityData.name}`
+                    }
+                }
+            ]
+        },
         "aggregateRating": {
             "@type": "AggregateRating",
             "ratingValue": "4.8",
@@ -298,11 +201,25 @@ const RegioPage: React.FC = () => {
         document.head.appendChild(lbScript);
 
         // Update page title and meta description
-        document.title = `Ramen en Deuren ${cityData.name} | Renovatie & Gevelwerken | Yannova Bouw`;
-        
+        document.title = `Ramen en Deuren ${cityData.name} | Renovatie, Crepi & Isolatie | Yannova Bouw`;
+
         const metaDesc = document.querySelector('meta[name="description"]');
         if (metaDesc) {
-            metaDesc.setAttribute('content', `${cityData.longDescription} ✓ Gratis offerte ✓ Lokale vakmannen ✓ 10 jaar garantie`);
+            metaDesc.setAttribute('content', `Specialist in ramen en deuren, renovatie, crepi en isolatie werken in ${cityData.name} (${cityData.zip}). ${cityData.description} ✓ Gratis offerte ✓ Lokale vakmannen ✓ 10 jaar garantie`);
+        }
+
+        // Update keywords for this specific city
+        const metaKeywords = document.querySelector('meta[name="keywords"]');
+        if (metaKeywords) {
+            metaKeywords.setAttribute('content', 
+                `ramen en deuren ${cityData.name}, renovatie ${cityData.name}, crepi ${cityData.name}, ` +
+                `isolatie werken ${cityData.name}, gevelwerken ${cityData.name}, gevelisolatie ${cityData.name}, ` +
+                `aannemer ${cityData.name}, bouwbedrijf ${cityData.name}, PVC ramen ${cityData.name}, ` +
+                `aluminium ramen ${cityData.name}, totaalrenovatie ${cityData.name}, verbouwing ${cityData.name}, ` +
+                `gevelbepleistering ${cityData.name}, steenstrips ${cityData.name}, ramen plaatsen ${cityData.name}, ` +
+                (cityData.deelgemeenten ? cityData.deelgemeenten.map(d => `renovatie ${d}, ramen ${d}`).join(', ') + ', ' : '') +
+                `Yannova Bouw ${cityData.name}`
+            );
         }
 
         // Cleanup on unmount
@@ -410,7 +327,7 @@ const RegioPage: React.FC = () => {
                         </div>
                         <div className="flex flex-wrap justify-center gap-3">
                             {cityData.deelgemeenten.map((deelgemeente) => (
-                                <span 
+                                <span
                                     key={deelgemeente}
                                     className="px-4 py-2 bg-gray-100 rounded-full text-brand-dark font-medium"
                                 >
@@ -515,6 +432,15 @@ const RegioPage: React.FC = () => {
                         </div>
 
                         <div className="relative">
+                            {/* Local Project Image for SEO */}
+                            <div className="mb-8 rounded-xl overflow-hidden shadow-lg h-64">
+                                <OptimizedImage 
+                                    src="/images/downloads/crepi-1.jpg" 
+                                    alt={`Gevelrenovatie en ramen plaatsen in ${cityData.name}`}
+                                    className="w-full h-full object-cover"
+                                />
+                            </div>
+
                             {/* Map Component pointing to coordinates of city */}
                             <div className="h-80 rounded-xl overflow-hidden shadow-2xl border-4 border-white/10">
                                 <GoogleMap

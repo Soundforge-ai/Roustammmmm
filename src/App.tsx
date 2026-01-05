@@ -1,7 +1,7 @@
 import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Layout from './components/Layout';
-import ErrorBoundary from './components/ErrorBoundary';
+import Layout from './components/layout/Layout';
+import ErrorBoundary from './components/ui/ErrorBoundary';
 import { I18nProvider } from './contexts/I18nContext';
 import { AuthProvider } from './contexts/AuthContext';
 import { Lead } from './types';
@@ -9,15 +9,15 @@ import { TESTIMONIALS } from './constants';
 import { getLeads, createLead, updateLeadStatus, deleteLead } from './lib/supabase/leads';
 
 // Lazy load components
-const Hero = lazy(() => import('./components/Hero'));
-const About = lazy(() => import('./components/About'));
-const Services = lazy(() => import('./components/Services'));
-const Approach = lazy(() => import('./components/Approach'));
-const WhyUs = lazy(() => import('./components/WhyUs'));
-const TestimonialsCarousel = lazy(() => import('./components/TestimonialsCarousel'));
-const QuoteCalculator = lazy(() => import('./components/QuoteCalculator'));
+const Hero = lazy(() => import('./components/sections/Hero'));
+const About = lazy(() => import('./components/sections/About'));
+const Services = lazy(() => import('./components/sections/Services'));
+const Approach = lazy(() => import('./components/sections/Approach'));
+const WhyUs = lazy(() => import('./components/sections/WhyUs'));
+const TestimonialsCarousel = lazy(() => import('./components/sections/TestimonialsCarousel'));
+const QuoteCalculator = lazy(() => import('./components/sections/QuoteCalculator'));
 const AdminDashboard = lazy(() => import('./components/AdminDashboard'));
-const NotFound = lazy(() => import('./components/NotFound'));
+const NotFound = lazy(() => import('./components/layout/NotFound'));
 
 // Lazy load pages
 const OverOns = lazy(() => import('./pages/OverOns'));
@@ -29,15 +29,15 @@ const Contact = lazy(() => import('./pages/Contact'));
 const Posts = lazy(() => import('./pages/Posts'));
 const Post = lazy(() => import('./pages/Post'));
 const Portfolio = lazy(() => import('./pages/Portfolio'));
-const Showroom = lazy(() => import('./components/Showroom'));
+const Showroom = lazy(() => import('./components/features/Showroom'));
 
 // Lazy load gevel pages
-const Gevel = lazy(() => import('./components/Gevel'));
-const Gevelbepleistering = lazy(() => import('./components/gevel/Gevelbepleistering'));
-const Gevelbescherming = lazy(() => import('./components/gevel/Gevelbescherming'));
-const Gevelisolatie = lazy(() => import('./components/gevel/Gevelisolatie'));
-const Steenstrips = lazy(() => import('./components/gevel/Steenstrips'));
-const Gevelrenovatie = lazy(() => import('./components/gevel/Gevelrenovatie'));
+const Gevel = lazy(() => import('./components/features/Gevel'));
+const Gevelbepleistering = lazy(() => import('./components/features/gevel/Gevelbepleistering'));
+const Gevelbescherming = lazy(() => import('./components/features/gevel/Gevelbescherming'));
+const Gevelisolatie = lazy(() => import('./components/features/gevel/Gevelisolatie'));
+const Steenstrips = lazy(() => import('./components/features/gevel/Steenstrips'));
+const Gevelrenovatie = lazy(() => import('./components/features/gevel/Gevelrenovatie'));
 
 // Nieuwe hoofdpagina's
 // Nieuwe hoofdpagina's
@@ -51,11 +51,10 @@ const RegioPage = lazy(() => import('./pages/Regio'));
 // Lazy load dashboard pages
 const EditorPage = lazy(() => import('./pages/dashboard/editor/EditorPageWrapper'));
 const SiteView = lazy(() => import('./pages/SiteView'));
-const JulesAssistantPage = lazy(() => import('./pages/JulesAssistant'));
-const DynamicPageRenderer = lazy(() => import('./components/DynamicPageRenderer'));
+const DynamicPageRenderer = lazy(() => import('./components/features/DynamicPageRenderer'));
 const AuthCallback = lazy(() => import('./pages/AuthCallback'));
 const SEODashboardPage = lazy(() => import('./pages/SEODashboard'));
-const SEORankingMonitor = lazy(() => import('./components/SEORankingMonitor'));
+const SEORankingMonitor = lazy(() => import('./components/seo/SEORankingMonitor'));
 const PageManagerPage = lazy(() => import('./pages/admin/PageManagerPage'));
 
 const PageLoader: React.FC = () => (
@@ -332,20 +331,6 @@ const App: React.FC = () => {
                     }
                   />
 
-                  {/* Jules Assistant */}
-                  <Route
-                    path="/jules"
-                    element={
-                      <Layout
-                        onSubmitLead={handleAddLead}
-                        onAdminClick={() => window.location.href = '/admin'}
-                        seo={{ title: 'Jules AI Assistant', description: 'AI-powered code generatie en automatisering met Jules.' }}
-                      >
-                        <JulesAssistantPage />
-                      </Layout>
-                    }
-                  />
-
                   {/* SEO Dashboard */}
                   <Route
                     path="/seo"
@@ -524,9 +509,9 @@ const App: React.FC = () => {
                         onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{
-                          title: 'Ramen en Deuren Keerbergen - PVC & Aluminium',
-                          description: 'Topkwaliteit ramen en deuren in PVC en Aluminium. Plaatsing door eigen vakmensen in Keerbergen, Mechelen, Zoersel. 10 jaar garantie.',
-                          keywords: 'ramen en deuren Keerbergen, PVC ramen, aluminium ramen, voordeuren, schuiframen'
+                          title: 'Ramen en Deuren Zoersel, Antwerpen & Mechelen | PVC & Alu | Yannova',
+                          description: 'Specialist in PVC en Aluminium ramen en deuren. Vakkundige plaatsing in Zoersel, Antwerpen, Mechelen en omgeving. Hoogste isolatiewaarden en 10 jaar garantie. Vraag uw gratis offerte.',
+                          keywords: 'ramen en deuren Zoersel, ramen en deuren Antwerpen, ramen en deuren Mechelen, PVC ramen, aluminium ramen, ramen vervangen, voordeuren, schuiframen, hoogrendementsglas'
                         }}
                       >
                         <RamenDeuren />

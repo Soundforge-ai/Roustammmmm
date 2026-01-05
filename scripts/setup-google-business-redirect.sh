@@ -139,7 +139,7 @@ echo "  2. Selecteer je bedrijf"
 echo "  3. Klik op 'Informatie'"
 echo "  4. Update:"
 echo "     - Website: $NEW_DOMAIN"
-echo "     - Adres: Keerbergen, 3140 Keerbergen, België"
+echo "     - Adres: De Beemdekens 39, 2980 Zoersel, België"
 echo ""
 
 echo "✅ Setup instructies compleet!"

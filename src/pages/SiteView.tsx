@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import PublicRenderer from '@/components/PublicRenderer';
+import PublicRenderer from '@/components/features/PublicRenderer';
 import { getSiteContent } from '@/lib/api/site-actions';
 
 export default function SiteView() {

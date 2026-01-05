@@ -51,14 +51,6 @@ export function checkConfig(): ConfigStatus[] {
     value: geminiKey ? `${geminiKey.substring(0, 10)}...` : undefined
   });
 
-  const julesKey = import.meta.env.VITE_JULES_API_KEY || import.meta.env.JULES_API_KEY;
-  checks.push({
-    name: 'Jules API Key',
-    status: julesKey ? 'ok' : 'warning',
-    message: julesKey ? 'Geconfigureerd' : 'Niet geconfigureerd - Jules assistant werkt niet',
-    value: julesKey ? `${julesKey.substring(0, 10)}...` : undefined
-  });
-
   // Environment mode
   const isDev = import.meta.env.DEV;
   checks.push({

@@ -83,7 +83,7 @@
   "validation.message": "Beschrijf uw vraag in minimaal 10 karakters",
   
   "portfolio.title": "Onze Projecten",
-  "portfolio.subtitle": "Bekijk onze afgeronde werken",
+  "portfolio.subtitle": "Laat u inspireren door een selectie van werken die we met zorg hebben opgeleverd",
   "portfolio.filter.all": "Alle",
   "portfolio.filter.gevelwerken": "Gevelwerken",
   "portfolio.filter.renovatie": "Renovatie",
@@ -93,13 +93,13 @@
   "testimonials.title": "Wat onze klanten zeggen",
   
   "calculator.title": "Indicatieve Prijsberekening",
-  "calculator.subtitle": "Krijg een eerste indicatie van de kosten voor uw project",
+  "calculator.subtitle": "Krijg snel een eerste indicatie — daarna maken we graag een duidelijke offerte op maat.",
   "calculator.projectType": "Type project",
   "calculator.surfaceArea": "Oppervlakte (m²)",
   "calculator.calculate": "Bereken prijs",
   "calculator.result": "Indicatieve prijs",
-  "calculator.disclaimer": "Deze prijs is indicatief en kan afwijken na inspectie ter plaatse.",
-  "calculator.requestQuote": "Vraag offerte aan",
+  "calculator.disclaimer": "Deze prijs is indicatief en kan wijzigen na een opmeting of bespreking ter plaatse.",
+  "calculator.requestQuote": "Vraag een vrijblijvende offerte aan",
   
   "cookies.title": "Cookie voorkeuren",
   "cookies.description": "Wij gebruiken cookies om uw ervaring te verbeteren.",
@@ -144,5 +144,11 @@
   "configurator.classes.standard": "Standaard",
   "configurator.classes.standardDesc": "Bewezen oplossing",
   "configurator.classes.premium": "Premium",
-  "configurator.classes.premiumDesc": "Voor veeleisende klanten"
+  "configurator.classes.premiumDesc": "Voor veeleisende klanten",
+
+  "showroom.badge": "VIRTUELE SHOWROOM",
+  "showroom.title": "Bekijk onze producten",
+  "showroom.subtitle": "Ontdek ons volledige assortiment. Bekijk producten in 3D of bekijk de details.",
+  "showroom.notice.title": "3D showroom in ontwikkeling",
+  "showroom.notice.body": "We zijn druk bezig aan onze 3D showroom. Niet alle modellen en functies zijn al volledig beschikbaar. Kom binnenkort zeker nog eens terug."
 }

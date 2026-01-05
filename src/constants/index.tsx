@@ -10,7 +10,7 @@ import {
 import { ServiceItem, StepItem, BenefitItem, NavItem } from './types';
 
 export const COMPANY_NAME = 'Yannova';
-export const COMPANY_TAGLINE = 'Ramen en Deuren, Renovatie, Isolatie & Crepi in Keerbergen, Mechelen, Zoersel';
+export const COMPANY_TAGLINE = 'Ramen en Deuren, Renovatie, Isolatie & Crepi in Zoersel, Antwerpen, Mechelen';
 
 // Werkgebieden voor lokale SEO
 export const SERVICE_AREAS = [
@@ -24,6 +24,7 @@ export const NAV_ITEMS: NavItem[] = [
   { label: 'Home', href: '/' },
   { label: 'Onze Diensten', href: '/diensten' },
   { label: 'Werkregio', href: '/#werkgebied' },
+  { label: '3D Showroom (in opbouw)', href: '/showroom' },
   { label: 'Projecten', href: '/portfolio' },
   { label: 'Contact', href: '/contact' },
 ];
@@ -36,10 +37,19 @@ export const ADMIN_TOOLS: NavItem[] = [
   { label: 'Admin Panel', href: '/admin' },
 ];
 
+// Admin emails
+export const ALLOWED_ADMIN_EMAILS = [
+  'innovar.labs7@gmail.com',
+  'windowpro.be@gmail.com',
+  'info@yannova.be',
+  'roustamyandiev00@gmail.com',
+  'aimeester777@gmail.com'
+];
+
 export const HERO_CONTENT = {
-  title: 'Ramen en Deuren, Renovatie & Crepi in Keerbergen en Omgeving',
-  subtitle: 'Uw betrouwbare partner voor nieuwbouw en renovatie in Keerbergen, Mechelen, Zoersel, Putte en heel de provincie Antwerpen.',
-  cta: 'Vraag uw gratis offerte aan',
+  title: 'Ramen, Deuren, Renovatie & Crepi — met zorg voor uw thuis',
+  subtitle: 'We luisteren naar uw plannen, denken mee en zorgen voor een nette uitvoering. Actief in Zoersel, Antwerpen, Mechelen en omgeving.',
+  cta: 'Vraag uw vrijblijvende offerte aan',
   image: '/images/c67c2ffe-a42b-477f-a67d-10100999c4f0.png',
 };
 
@@ -175,6 +185,31 @@ export const PROJECTS: Project[] = [
     ],
     completedDate: '2024-01',
     location: 'Leuven',
+  },
+  {
+    id: 'project-recent-auto',
+    title: 'Recente Realisaties',
+    description: 'Een selectie van onze meest recente projecten in de regio, waaronder diverse gevelrenovaties en isolatiewerken.',
+    type: 'renovatie',
+    images: [
+      "/images/foto's/Gemini_Generated_Image_12huit12huit12hu.png",
+      "/images/foto's/Gemini_Generated_Image_16tc0t16tc0t16tc.png",
+      "/images/foto's/Gemini_Generated_Image_4f1lyg4f1lyg4f1l.png",
+      "/images/foto's/Gemini_Generated_Image_4jf3fd4jf3fd4jf3.png",
+      "/images/foto's/Gemini_Generated_Image_4xh3am4xh3am4xh3.png",
+      "/images/foto's/Gemini_Generated_Image_73yqjc73yqjc73yq.png",
+      "/images/foto's/Gemini_Generated_Image_7stbs27stbs27stb.png",
+      "/images/foto's/Gemini_Generated_Image_a0290xa0290xa029.png",
+      "/images/foto's/Gemini_Generated_Image_bf8tm8bf8tm8bf8t.png",
+      "/images/foto's/Gemini_Generated_Image_evuy78evuy78evuy.png",
+      "/images/foto's/Gemini_Generated_Image_gv2xcygv2xcygv2x.png",
+      "/images/foto's/Gemini_Generated_Image_m9y450m9y450m9y4.png",
+      "/images/foto's/Gemini_Generated_Image_n7s3q7n7s3q7n7s3.png",
+      "/images/foto's/Gemini_Generated_Image_pqrnmbpqrnmbpqrn.png",
+      "/images/foto's/Gemini_Generated_Image_tn45ittn45ittn45.png"
+    ],
+    completedDate: '2024-01',
+    location: 'Diverse Locaties',
   },
 ];
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Hammer, PaintBucket, Ruler, Home, CheckCircle, Bath, ChevronDown } from 'lucide-react';
-import OptimizedImage from '../components/OptimizedImage';
+import { ArrowRight, Hammer, PaintBucket, Ruler, Home, CheckCircle, Bath, ChevronDown, Layers, Grid } from 'lucide-react';
+import OptimizedImage from '@/components/ui/OptimizedImage';
 
 // FAQ data voor SEO
 const FAQ_ITEMS = [
@@ -22,8 +22,8 @@ const FAQ_ITEMS = [
         answer: "Voor energiebesparende renovaties (isolatie, hoogrendementsbeglazing, warmtepomp) kunt u premies krijgen van de Vlaamse overheid en uw netbeheerder. Ook voor sloop en heropbouw bestaan er BTW-voordelen. Wij adviseren u graag over de mogelijkheden."
     },
     {
-        question: "Werkt Yannova ook in Keerbergen, Mechelen en Zoersel?",
-        answer: "Ja, Yannova voert renovatiewerken uit in heel de provincie Antwerpen en Vlaams-Brabant. We zijn actief in Keerbergen, Mechelen, Zoersel, Putte, Heist-op-den-Berg, Bonheiden, Lier en alle omliggende gemeenten."
+        question: "Werkt Yannova ook in Zoersel, Mechelen en Antwerpen?",
+        answer: "Ja, Yannova voert renovatiewerken uit in heel de provincie Antwerpen en Vlaams-Brabant. We zijn actief in Zoersel, Mechelen, Antwerpen, Putte, Heist-op-den-Berg, Bonheiden, Lier en alle omliggende gemeenten."
     },
     {
         question: "Verzorgt Yannova ook de vergunningen?",
@@ -195,6 +195,40 @@ const Renovatie: React.FC = () => {
                 </div>
             </section>
 
+            {/* Related Services - Internal Linking */}
+            <section className="py-16 bg-white border-t border-gray-100">
+                <div className="container mx-auto px-6">
+                    <div className="text-center max-w-2xl mx-auto mb-12">
+                        <h2 className="text-2xl font-bold text-slate-900 mb-4">Onze andere specialisaties</h2>
+                        <p className="text-gray-600">
+                            Yannova is meer dan enkel renovatie. Bekijk ook onze specifieke diensten voor gevels en schrijnwerk.
+                        </p>
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                        <Link to="/gevel" className="group bg-gray-50 p-6 rounded-xl border border-gray-100 hover:shadow-md transition-all flex items-center gap-6">
+                            <div className="bg-white p-4 rounded-lg shadow-sm text-brand-accent group-hover:bg-brand-accent group-hover:text-white transition-colors">
+                                <Layers size={24} />
+                            </div>
+                            <div>
+                                <h3 className="text-lg font-bold text-slate-900 group-hover:text-brand-accent transition-colors">Gevelrenovatie & Crepi</h3>
+                                <p className="text-sm text-gray-600 mt-1">Isolatie en afwerking voor een nieuwe look.</p>
+                            </div>
+                            <ArrowRight className="ml-auto text-gray-400 group-hover:text-brand-accent transform group-hover:translate-x-1 transition-all" size={20} />
+                        </Link>
+                        <Link to="/ramen-deuren" className="group bg-gray-50 p-6 rounded-xl border border-gray-100 hover:shadow-md transition-all flex items-center gap-6">
+                            <div className="bg-white p-4 rounded-lg shadow-sm text-brand-accent group-hover:bg-brand-accent group-hover:text-white transition-colors">
+                                <Grid size={24} />
+                            </div>
+                            <div>
+                                <h3 className="text-lg font-bold text-slate-900 group-hover:text-brand-accent transition-colors">Ramen & Deuren</h3>
+                                <p className="text-sm text-gray-600 mt-1">PVC en Aluminium schrijnwerk op maat.</p>
+                            </div>
+                            <ArrowRight className="ml-auto text-gray-400 group-hover:text-brand-accent transform group-hover:translate-x-1 transition-all" size={20} />
+                        </Link>
+                    </div>
+                </div>
+            </section>
+
             {/* FAQ Section */}
             <FAQSection />
 
@@ -234,7 +268,7 @@ const FAQSection: React.FC = () => {
                         Veelgestelde Vragen over Renovatie
                     </h2>
                     <p className="text-gray-600 text-center mb-12">
-                        Antwoorden op de meest gestelde vragen over renoveren in Keerbergen, Mechelen en omgeving.
+                        Antwoorden op de meest gestelde vragen over renoveren in Zoersel, Mechelen en omgeving.
                     </p>
 
                     <div className="space-y-4">

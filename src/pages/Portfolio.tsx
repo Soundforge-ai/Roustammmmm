@@ -1,16 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useI18n } from '../hooks/useI18n';
 import { PROJECTS } from '../constants';
 import { Project } from '../types';
-import PortfolioGrid from '../components/portfolio/PortfolioGrid';
-import ProjectDetail from '../components/portfolio/ProjectDetail';
-import Lightbox from '../components/portfolio/Lightbox';
+import PortfolioGrid from '../components/features/portfolio/PortfolioGrid';
+import ProjectDetail from '../components/features/portfolio/ProjectDetail';
+import Lightbox from '../components/features/portfolio/Lightbox';
+import ImageSlideshow from '../components/ui/ImageSlideshow';
+import { projectStorage } from '../lib/projectStorage';
 
 const Portfolio: React.FC = () => {
   const { t } = useI18n();
+  const [projects, setProjects] = useState<Project[]>(PROJECTS);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [lightboxImages, setLightboxImages] = useState<string[] | null>(null);
   const [lightboxIndex, setLightboxIndex] = useState(0);
+
+  // Get the separate slideshow images from the "Recente Realisaties" project
+  const slideshowImages = projects.find(p => p.id === 'project-recent-auto')?.images || [];
+
+  useEffect(() => {
+    const loadProjects = async () => {
+      try {
+        const storedProjects = await projectStorage.getProjects();
+        if (storedProjects.length > 0) {
+          // Combine hardcoded projects with dynamic ones
+          setProjects([...PROJECTS, ...storedProjects]);
+        }
+      } catch (error) {
+        console.error('Failed to load dynamic projects', error);
+      }
+    };
+    loadProjects();
+  }, []);
 
   const handleProjectClick = (project: Project) => {
     setSelectedProject(project);
@@ -51,12 +72,25 @@ const Portfolio: React.FC = () => {
         </div>
       </section>
 
+      {/* Featured Slideshow Section (Only if images exist) */}
+      {slideshowImages.length > 0 && (
+        <section className="py-12 bg-white border-b border-gray-100">
+          <div className="container mx-auto px-6 max-w-5xl">
+            <div className="mb-8 text-center">
+              <h2 className="text-2xl font-bold text-brand-dark">Recente realisaties om inspiratie uit te halen</h2>
+              <p className="text-gray-500">Een greep uit projecten die we recent met zorg hebben opgeleverd</p>
+            </div>
+            <ImageSlideshow images={slideshowImages} title="Recente Realisaties" />
+          </div>
+        </section>
+      )}
+
       {/* Portfolio Grid Section */}
       <section className="py-16 md:py-24 bg-gray-50">
         <div className="container mx-auto px-6">
-          <PortfolioGrid 
-            projects={PROJECTS} 
-            onProjectClick={handleProjectClick} 
+          <PortfolioGrid
+            projects={projects}
+            onProjectClick={handleProjectClick}
           />
         </div>
       </section>

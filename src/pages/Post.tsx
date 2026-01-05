@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { getPostBySlug, type PostDetail } from '../lib/sanity/post'
 import { urlFor } from '../lib/sanity/imageUrl'
-import PortableText from '../components/PortableText'
+import PortableText from '../components/ui/PortableText'
 
 export default function PostPage() {
   const { slug } = useParams<{ slug: string }>()

@@ -82,7 +82,7 @@
   "validation.message": "Décrivez votre question en au moins 10 caractères",
   
   "portfolio.title": "Nos Projets",
-  "portfolio.subtitle": "Découvrez nos travaux réalisés",
+  "portfolio.subtitle": "Inspirez-vous d'une sélection de réalisations que nous avons livrées avec soin",
   "portfolio.filter.all": "Tous",
   "portfolio.filter.gevelwerken": "Travaux de façade",
   "portfolio.filter.renovatie": "Rénovation",
@@ -92,13 +92,13 @@
   "testimonials.title": "Ce que disent nos clients",
   
   "calculator.title": "Calcul de Prix Indicatif",
-  "calculator.subtitle": "Obtenez une première indication des coûts pour votre projet",
+  "calculator.subtitle": "Obtenez rapidement une première estimation — ensuite, nous vous proposons volontiers un devis clair et personnalisé.",
   "calculator.projectType": "Type de projet",
   "calculator.surfaceArea": "Surface (m²)",
   "calculator.calculate": "Calculer le prix",
   "calculator.result": "Prix indicatif",
-  "calculator.disclaimer": "Ce prix est indicatif et peut varier après inspection sur place.",
-  "calculator.requestQuote": "Demander un devis",
+  "calculator.disclaimer": "Ce prix est indicatif et peut varier après une visite ou une prise de mesures sur place.",
+  "calculator.requestQuote": "Demander un devis sans engagement",
   
   "cookies.title": "Préférences de cookies",
   "cookies.description": "Nous utilisons des cookies pour améliorer votre expérience.",
@@ -113,5 +113,11 @@
   
   "common.loading": "Chargement...",
   "common.error": "Une erreur s'est produite",
-  "common.retry": "Réessayer"
+  "common.retry": "Réessayer",
+
+  "showroom.badge": "SHOWROOM VIRTUEL",
+  "showroom.title": "Découvrez nos produits",
+  "showroom.subtitle": "Explorez notre assortiment complet. Visualisez les produits en 3D ou consultez les détails.",
+  "showroom.notice.title": "Showroom 3D en cours de développement",
+  "showroom.notice.body": "Nous travaillons activement sur notre showroom 3D. Tous les modèles et fonctionnalités ne sont pas encore totalement disponibles. Revenez bientôt."
 }

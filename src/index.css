@@ -2,6 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Mobile-first improvements */
+@layer base {
+  /* Prevent horizontal scroll on mobile */
+  html, body {
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Better touch targets for mobile */
+  button, a, input, select, textarea {
+    min-height: 44px;
+  }
+  
+  /* Prevent zoom on input focus on iOS */
+  @media screen and (max-width: 768px) {
+    input, select, textarea {
+      font-size: 16px !important;
+    }
+  }
+}
+
 /* Custom animations */
 @keyframes slide-up {
   from {
@@ -108,4 +129,37 @@ input[type="range"].slider::-moz-range-thumb {
 input[type="range"].slider::-moz-range-thumb:hover {
   background: #f97316;
   transform: scale(1.1);
+}
+
+
+/* Mobile-specific improvements */
+@media (max-width: 640px) {
+  /* Improve tap targets */
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  /* Better spacing for mobile cards */
+  .grid {
+    gap: 1rem;
+  }
+  
+  /* Ensure images don't overflow */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* Safe area insets for notched devices */
+@supports (padding: max(0px)) {
+  .container {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+  }
+  
+  footer {
+    padding-bottom: max(2rem, env(safe-area-inset-bottom));
+  }
 }

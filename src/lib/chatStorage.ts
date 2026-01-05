@@ -1,4 +1,4 @@
-import { Message } from '../components/Chatbot';
+import { Message } from '../components/chat/Chatbot';
 import * as supabaseChats from './supabase/chats';
 
 export interface ChatSession {

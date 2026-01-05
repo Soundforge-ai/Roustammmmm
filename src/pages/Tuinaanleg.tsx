@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Trees, Flower2, Construction, Waves, CheckCircle } from 'lucide-react';
+import { ArrowRight, Trees, Flower2, Construction, Waves, CheckCircle, Shield } from 'lucide-react';
 
 const Tuinaanleg: React.FC = () => {
     const services = [
@@ -188,8 +188,5 @@ const Tuinaanleg: React.FC = () => {
         </div>
     );
 };
-
-// Add explicit import for Shield since it was used in services array
-import { Shield } from 'lucide-react';
 
 export default Tuinaanleg;

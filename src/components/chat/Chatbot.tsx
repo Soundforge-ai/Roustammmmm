@@ -1,0 +1,492 @@
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { MessageCircle, X, Send, Bot, User, Loader2, Minimize2, Volume2, VolumeX, HardHat } from 'lucide-react';
+import { chatStorage, ChatSession } from '../../lib/chatStorage';
+import { settingsStorage } from '../../lib/settingsStorage';
+import { chatService } from '../../lib/chatService';
+
+export interface Message {
+    id: string;
+    role: 'user' | 'assistant';
+    content: string;
+    timestamp: Date;
+}
+
+
+const Chatbot: React.FC = () => {
+    const [isOpen, setIsOpen] = useState(false);
+    const [isMinimized, setIsMinimized] = useState(false);
+    const [isSoundEnabled, setIsSoundEnabled] = useState(true);
+    const [botName, setBotName] = useState('Yannova Assistent'); // Dynamic bot name
+
+    // Play notification sound (synthesized "Pop" sound)
+    const playNotificationSound = useCallback(() => {
+        if (!isSoundEnabled) return;
+
+        try {
+            const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+            if (!AudioContext) return;
+
+            const ctx = new AudioContext();
+            const t = ctx.currentTime;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+
+            // "Pop" / Bubble sound (Sine wave with rapid pitch drop)
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(800, t);
+            osc.frequency.exponentialRampToValueAtTime(100, t + 0.15); // Quick drop creates "pop" effect
+
+            gain.gain.setValueAtTime(0.1, t);
+            gain.gain.exponentialRampToValueAtTime(0.01, t + 0.15);
+
+            osc.start(t);
+            osc.stop(t + 0.15);
+        } catch (error) {
+            console.error('Audio play failed:', error);
+        }
+    }, [isSoundEnabled]);
+
+    // Load settings specifically for bot name and updates
+    useEffect(() => {
+        const loadSettings = async () => {
+            const settings = await settingsStorage.getSettings();
+            setBotName(settings.botName);
+        };
+        loadSettings();
+        window.addEventListener('settings-updated', loadSettings);
+        return () => window.removeEventListener('settings-updated', loadSettings);
+    }, []);
+
+    /* ... existing state ... */
+    const [sessionId, setSessionId] = useState<string>('');
+
+    const [messages, setMessages] = useState<Message[]>([
+        {
+            id: '1',
+            role: 'assistant',
+            content: 'Hallo! 👋 Ik ben de virtuele assistent van Yannova. Hoe kan ik u helpen met uw bouw- of renovatieproject?',
+            timestamp: new Date(),
+        },
+    ]);
+
+    // Initialize session
+    useEffect(() => {
+        const initSession = async () => {
+            // Check for existing active session or create new one
+            // For simplicity in this demo, we create a new session on page load
+            // In a real app, you might check localStorage for an active session ID first
+            const newSession = await chatStorage.createSession();
+            setSessionId(newSession.id);
+
+            const settings = await settingsStorage.getSettings(); // Get current name for greeting if needed, though greeting is hardcoded usually
+
+            // Add initial greeting to the session
+            const initialMessage: Message = {
+                id: '1',
+                role: 'assistant',
+                content: `Hallo! 👋 Ik ben ${settings.botName}. Hoe kan ik u helpen met uw bouw- of renovatieproject?`,
+                timestamp: new Date(),
+            };
+
+            const sessionWithGreeting = {
+                ...newSession,
+                messages: [initialMessage],
+                lastMessageTime: new Date()
+            };
+
+            // Initial save
+            await chatStorage.saveSession(sessionWithGreeting);
+
+            // Update messages state to match the session
+            setMessages([initialMessage]);
+            setIsLoading(false); // Ensure loading is false
+        };
+
+        initSession();
+    }, []);
+    const [input, setInput] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
+    const abortControllerRef = useRef<AbortController | null>(null);
+    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]);
+
+    useEffect(() => {
+        if (isOpen && !isMinimized && inputRef.current) {
+            inputRef.current.focus();
+        }
+    }, [isOpen, isMinimized]);
+
+    // Cleanup functie voor abort controller en timeouts bij unmount
+    useEffect(() => {
+        return () => {
+            // Abort pending fetch requests
+            if (abortControllerRef.current) {
+                abortControllerRef.current.abort();
+            }
+            // Clear pending timeouts
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
+        };
+    }, []);
+
+    const sendMessage = async () => {
+        if (!input.trim() || isLoading) return;
+
+        const userMessage: Message = {
+            id: Date.now().toString(),
+            role: 'user',
+            content: input.trim(),
+            timestamp: new Date(),
+        };
+
+        // Update local state
+        const updatedMessages = [...messages, userMessage];
+        setMessages(updatedMessages);
+        setInput('');
+        setIsLoading(true);
+
+        // Save to storage
+        if (sessionId) {
+            chatStorage.saveSession({
+                id: sessionId,
+                startTime: messages[0]?.timestamp || new Date(),
+                lastMessageTime: new Date(),
+                messages: updatedMessages,
+                preview: userMessage.content.substring(0, 50) + (userMessage.content.length > 50 ? '...' : ''),
+                status: 'active',
+                tags: ['Inquiry']
+            });
+        }
+
+        // Abort previous request if it exists
+        if (abortControllerRef.current) {
+            abortControllerRef.current.abort();
+        }
+
+        // Create new AbortController for this request
+        const abortController = new AbortController();
+        abortControllerRef.current = abortController;
+
+        try {
+            // System prompt construction
+            const systemPrompt = await settingsStorage.getFullSystemPrompt();
+
+            // Build message history
+            const historyMessages: any[] = messages
+                .filter((msg) => msg.role !== 'assistant' || msg.id !== '1') // Filter out initial greeting logic if needed
+                .map((msg) => ({
+                    role: msg.role as any,
+                    content: msg.content,
+                }));
+
+            const apiMessages = [
+                { role: 'system', content: systemPrompt },
+                ...historyMessages,
+                { role: 'user', content: userMessage.content }
+            ];
+
+            console.log('Sending message via chatService...');
+
+            // Use the unified chatService
+            // Note: chatService returns a string (the content) directly
+            const assistantContent = await chatService.sendMessage(apiMessages, abortController.signal);
+
+            const assistantMessage: Message = {
+                id: (Date.now() + 1).toString(),
+                role: 'assistant',
+                content: assistantContent,
+                timestamp: new Date(),
+            };
+
+            // Only update state if request wasn't aborted
+            if (!abortController.signal.aborted) {
+                const finalMessages = [...updatedMessages, assistantMessage];
+                setMessages(finalMessages);
+
+                // Play notification sound for new message
+                playNotificationSound();
+
+                // Save assistant response to storage
+                if (sessionId) {
+                    chatStorage.saveSession({
+                        id: sessionId,
+                        startTime: messages[0]?.timestamp || new Date(),
+                        lastMessageTime: new Date(),
+                        messages: finalMessages,
+                        preview: userMessage.content.substring(0, 50) + '...', // Keep preview based on last user input roughly
+                        status: 'active',
+                        tags: ['Inquiry']
+                    });
+                }
+            }
+        } catch (error: any) {
+            // Don't handle error if request was aborted (component unmounted)
+            if (error.name === 'AbortError') {
+                return;
+            }
+
+            console.error('Chatbot error:', error);
+            console.error('Error details:', {
+                message: error.message,
+                name: error.name,
+                stack: error.stack,
+                response: (error as any).response,
+                status: (error as any).status
+            });
+
+            // Only update state if request wasn't aborted
+            if (!abortController.signal.aborted) {
+                // Extract error message for better debugging
+                let errorMsg = error.message || 'Onbekende fout';
+
+                // Log the full error for debugging
+                console.error('Full error object:', error);
+
+                // Check if it's a configuration error
+                const isConfigError = errorMsg.includes('model ingesteld') ||
+                    errorMsg.includes('API key ingesteld') ||
+                    errorMsg.includes('Model ID ontbreekt') ||
+                    errorMsg.includes('Geen model') ||
+                    errorMsg.includes('Geen API key');
+
+                let userFriendlyMessage = errorMsg;
+                if (isConfigError) {
+                    userFriendlyMessage = `De chatbot is momenteel niet geconfigureerd. Ga naar Admin Dashboard > Instellingen om een model en API key in te stellen. Neem contact op met de beheerder of bel ons direct: +32 489 96 00 01.`;
+                } else {
+                    // Show more details in development mode
+                    const isDev = import.meta.env.DEV;
+                    if (isDev) {
+                        userFriendlyMessage = `Fout: ${errorMsg}. Controleer de browser console voor meer details.`;
+                    } else {
+                        userFriendlyMessage = `Sorry, er ging iets mis bij het verwerken van uw vraag. Probeer het opnieuw of neem contact met ons op via telefoon (+32 489 96 00 01) of email (info@yannova.be).`;
+                    }
+                }
+
+                const errorMessage: Message = {
+                    id: (Date.now() + 1).toString(),
+                    role: 'assistant',
+                    content: userFriendlyMessage,
+                    timestamp: new Date(),
+                };
+
+                const finalMessages = [...updatedMessages, errorMessage];
+                setMessages(finalMessages);
+
+                // Save error response to storage
+                if (sessionId) {
+                    chatStorage.saveSession({
+                        id: sessionId,
+                        startTime: messages[0]?.timestamp || new Date(),
+                        lastMessageTime: new Date(),
+                        messages: finalMessages,
+                        preview: userMessage.content.substring(0, 50),
+                        status: 'active',
+                        tags: ['Error']
+                    });
+                }
+            }
+        } finally {
+            // Only update loading state if request wasn't aborted
+            if (!abortController.signal.aborted) {
+                setIsLoading(false);
+            }
+            // Clear abort controller reference
+            if (abortControllerRef.current === abortController) {
+                abortControllerRef.current = null;
+            }
+        }
+    };
+
+    const handleKeyPress = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    };
+
+    const quickQuestions = [
+        'Wat zijn jullie diensten?',
+        'Hoe vraag ik een offerte aan?',
+        'Wat kost gevelisolatie?',
+    ];
+
+    return (
+        <>
+            {/* Chat Button */}
+            {!isOpen && (
+                <button
+                    onClick={() => setIsOpen(true)}
+                    className="fixed bottom-6 right-6 z-50 bg-brand-accent hover:bg-orange-700 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:scale-110 group"
+                    aria-label="Open chat"
+                >
+                    <MessageCircle size={28} />
+                    <span className="absolute -top-2 -right-2 w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
+                        <span className="w-2 h-2 bg-white rounded-full animate-pulse" />
+                    </span>
+                </button>
+            )}
+
+            {/* Chat Window */}
+            {isOpen && (
+                <div
+                    className={`fixed z-50 bg-white rounded-2xl shadow-xl border border-gray-300 transition-all duration-300 flex flex-col ${isMinimized
+                        ? 'bottom-6 right-6 w-72 h-14'
+                        : 'bottom-6 right-6 w-[380px] h-[550px] max-h-[80vh]'
+                        }`}
+                    style={{ backgroundColor: '#ffffff', isolation: 'isolate' }}
+                >
+                    {/* Header */}
+                    <div className="bg-brand-dark text-white px-4 py-3 rounded-t-2xl flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-brand-accent rounded-full flex items-center justify-center">
+                                <HardHat size={20} />
+                            </div>
+                            {!isMinimized && (
+                                <div>
+                                    <h3 className="font-semibold">{botName}</h3>
+                                    <p className="text-xs text-gray-300">Online • Antwoordt direct</p>
+                                </div>
+                            )}
+                        </div>
+                        <div className="flex items-center gap-1">
+                            <button
+                                onClick={() => setIsSoundEnabled(!isSoundEnabled)}
+                                className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                                aria-label={isSoundEnabled ? 'Geluid dempen' : 'Geluid aanzetten'}
+                                title={isSoundEnabled ? 'Geluid dempen' : 'Geluid aanzetten'}
+                            >
+                                {isSoundEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}
+                            </button>
+                            <button
+                                onClick={() => setIsMinimized(!isMinimized)}
+                                className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                                aria-label={isMinimized ? 'Maximaliseren' : 'Minimaliseren'}
+                            >
+                                <Minimize2 size={18} />
+                            </button>
+                            <button
+                                onClick={() => setIsOpen(false)}
+                                className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                                aria-label="Sluiten"
+                            >
+                                <X size={18} />
+                            </button>
+                        </div>
+                    </div>
+
+                    {!isMinimized && (
+                        <>
+                            {/* Messages */}
+                            <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0">
+                                {messages.map((message) => (
+                                    <div
+                                        key={message.id}
+                                        className={`flex gap-3 ${message.role === 'user' ? 'flex-row-reverse' : ''}`}
+                                    >
+                                        <div
+                                            className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${message.role === 'user' ? 'bg-brand-accent text-white' : 'bg-gray-100 text-gray-600'
+                                                }`}
+                                        >
+                                            {message.role === 'user' ? <User size={16} /> : <HardHat size={16} />}
+                                        </div>
+                                        <div
+                                            className={`max-w-[75%] px-4 py-2.5 rounded-2xl ${message.role === 'user'
+                                                ? 'bg-brand-accent text-white rounded-br-md'
+                                                : 'bg-gray-100 text-gray-800 rounded-bl-md'
+                                                }`}
+                                        >
+                                            <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                                        </div>
+                                    </div>
+                                ))}
+
+                                {isLoading && (
+                                    <div className="flex gap-3">
+                                        <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+                                            <HardHat size={16} className="text-gray-600" />
+                                        </div>
+                                        <div className="bg-gray-100 px-4 py-3 rounded-2xl rounded-bl-md">
+                                            <Loader2 size={18} className="animate-spin text-gray-500" />
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div ref={messagesEndRef} />
+                            </div>
+
+                            {/* Quick Questions */}
+                            {messages.length === 1 && (
+                                <div className="px-4 pb-2">
+                                    <p className="text-xs text-gray-500 mb-2">Snelle vragen:</p>
+                                    <div className="flex flex-wrap gap-2">
+                                        {quickQuestions.map((q, idx) => (
+                                            <button
+                                                key={idx}
+                                                onClick={() => {
+                                                    // Clear previous timeout if it exists
+                                                    if (timeoutRef.current) {
+                                                        clearTimeout(timeoutRef.current);
+                                                    }
+                                                    setInput(q);
+                                                    timeoutRef.current = setTimeout(() => {
+                                                        timeoutRef.current = null;
+                                                        sendMessage();
+                                                    }, 100);
+                                                }}
+                                                className="text-xs px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full transition-colors"
+                                            >
+                                                {q}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Input */}
+                            <div className="p-4 border-t border-gray-100">
+                                <div className="flex gap-2">
+                                    <input
+                                        ref={inputRef}
+                                        type="text"
+                                        value={input}
+                                        onChange={(e) => setInput(e.target.value)}
+                                        onKeyPress={handleKeyPress}
+                                        placeholder="Typ uw vraag..."
+                                        className="flex-1 px-4 py-2.5 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-brand-accent/50 focus:border-brand-accent text-sm"
+                                        disabled={isLoading}
+                                    />
+                                    <button
+                                        onClick={sendMessage}
+                                        disabled={!input.trim() || isLoading}
+                                        className="p-2.5 bg-brand-accent hover:bg-orange-700 disabled:bg-gray-300 text-white rounded-full transition-colors"
+                                        aria-label="Verstuur"
+                                    >
+                                        <Send size={18} />
+                                    </button>
+                                </div>
+                                <p className="text-[10px] text-gray-400 text-center mt-2">
+                                    Powered by GLM AI
+                                </p>
+                            </div>
+                        </>
+                    )}
+                </div>
+            )}
+        </>
+    );
+};
+
+export default Chatbot;

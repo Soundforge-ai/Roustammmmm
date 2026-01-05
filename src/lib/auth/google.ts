@@ -1,3 +1,5 @@
+import { jwtDecode } from 'jwt-decode';
+
 /**
  * Google OAuth 2.0 Authentication
  */
@@ -94,6 +96,33 @@ export async function handleOAuthCallback(code: string, state: string): Promise<
 }
 
 /**
+ * Login with Google JWT Credential (Client-side flow)
+ */
+export function loginWithCredential(credential: string): GoogleUser | null {
+  try {
+    const decoded: any = jwtDecode(credential);
+
+    // Create user object from JWT
+    // Note: Standard Google Sign-In JWTs don't provide access_token for API calls, 
+    // but they are sufficient for identity verification.
+    const user: GoogleUser = {
+      id: decoded.sub,
+      email: decoded.email,
+      name: decoded.name,
+      picture: decoded.picture,
+      accessToken: credential, // Using ID token as access token for client-side valid.
+      expiresAt: decoded.exp * 1000,
+    };
+
+    saveUser(user);
+    return user;
+  } catch (error) {
+    console.error('Invalid credential:', error);
+    return null;
+  }
+}
+
+/**
  * Get current logged in user
  */
 export function getCurrentUser(): GoogleUser | null {
@@ -102,7 +131,7 @@ export function getCurrentUser(): GoogleUser | null {
     if (!stored) return null;
 
     const user: GoogleUser = JSON.parse(stored);
-    
+
     // Check if token expired
     if (user.expiresAt < Date.now()) {
       logout();

@@ -1,4 +1,4 @@
-import { Message } from '../components/Chatbot';
+import { Message } from '../components/chat/Chatbot';
 import { settingsStorage } from './settingsStorage';
 import { chatService } from './chatService';
 
