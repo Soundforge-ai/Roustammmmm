@@ -7,27 +7,27 @@ import OptimizedImage from '@/components/ui/OptimizedImage';
 const FAQ_ITEMS = [
     {
         question: "Hoeveel kost een totaalrenovatie per m²?",
-        answer: "Een totaalrenovatie kost gemiddeld €800 tot €1.500 per m², afhankelijk van de staat van de woning, de gekozen materialen en de omvang van de werken. Wij maken altijd een gedetailleerde offerte op maat na een plaatsbezoek."
+        answer: "Dat hangt af van de staat van de woning, de gekozen materialen en de omvang van de werken. Als richtprijs ligt een totaalrenovatie gemiddeld tussen €800 en €1.500 per m². We komen graag langs om uw plannen te bespreken en maken daarna een duidelijke, gedetailleerde offerte op maat."
     },
     {
         question: "Hoe lang duurt een volledige renovatie?",
-        answer: "Een totaalrenovatie van een gemiddelde woning duurt 3 tot 6 maanden. Een badkamerrenovatie duurt 2-3 weken, een zolderinrichting 2-4 weken. De exacte duur hangt af van de omvang en complexiteit van het project."
+        answer: "Dat verschilt per project. Een totaalrenovatie van een gemiddelde woning duurt meestal 3 tot 6 maanden. Een badkamerrenovatie duurt vaak 2-3 weken en een zolderinrichting 2-4 weken. We maken vooraf een realistische planning en houden u onderweg goed op de hoogte."
     },
     {
         question: "Kan ik in mijn woning blijven wonen tijdens de renovatie?",
-        answer: "Bij kleinere renovaties zoals een badkamer of zolder is dat meestal mogelijk. Bij een totaalrenovatie raden we aan om tijdelijk elders te verblijven voor uw comfort en om de werken sneller te laten verlopen."
+        answer: "Bij kleinere werken (bv. badkamer of zolder) is dat vaak mogelijk. Bij een totaalrenovatie raden we meestal aan om tijdelijk elders te verblijven: dat is comfortabeler voor u en het helpt om de werken vlotter te laten verlopen. We bespreken dit altijd op voorhand, zodat u goed kan plannen."
     },
     {
         question: "Welke premies kan ik krijgen voor renovatie?",
-        answer: "Voor energiebesparende renovaties (isolatie, hoogrendementsbeglazing, warmtepomp) kunt u premies krijgen van de Vlaamse overheid en uw netbeheerder. Ook voor sloop en heropbouw bestaan er BTW-voordelen. Wij adviseren u graag over de mogelijkheden."
+        answer: "Voor energiebesparende renovaties (isolatie, hoogrendementsbeglazing, warmtepomp) kunt u premies krijgen via de Vlaamse overheid en uw netbeheerder. In sommige gevallen zijn er ook BTW-voordelen bij sloop en heropbouw. We adviseren u graag over wat voor uw situatie mogelijk is."
     },
     {
         question: "Werkt Yannova ook in Zoersel, Mechelen en Antwerpen?",
-        answer: "Ja, Yannova voert renovatiewerken uit in heel de provincie Antwerpen en Vlaams-Brabant. We zijn actief in Zoersel, Mechelen, Antwerpen, Putte, Heist-op-den-Berg, Bonheiden, Lier en alle omliggende gemeenten."
+        answer: "Ja. Yannova voert renovatiewerken uit in heel de provincie Antwerpen en Vlaams-Brabant. We zijn actief in Zoersel, Mechelen, Antwerpen, Putte, Heist-op-den-Berg, Bonheiden, Lier en alle omliggende gemeenten. Niet zeker of we bij u langskomen? Laat het ons weten, dan bevestigen we het meteen."
     },
     {
         question: "Verzorgt Yannova ook de vergunningen?",
-        answer: "Wij begeleiden u bij het aanvragen van de nodige vergunningen. Voor bepaalde werken is een omgevingsvergunning nodig. Wij werken samen met architecten en kunnen u doorverwijzen indien nodig."
+        answer: "We begeleiden u bij het traject rond vergunningen. Voor bepaalde werken is een omgevingsvergunning nodig. We leggen u duidelijk uit wat er nodig is en werken indien nodig samen met architecten, of verwijzen u gericht door."
     }
 ];
 
@@ -79,14 +79,14 @@ const Renovatie: React.FC = () => {
                             <span className="block text-brand-accent mt-2">in Antwerpen & Mechelen</span>
                         </h1>
                         <p className="text-lg md:text-xl text-gray-300 mb-8 leading-relaxed max-w-3xl mx-auto">
-                            Van badkamer tot totaalproject. Yannova coördineert en realiseert uw verbouwing met vakmensen en kwaliteitsmaterialen.
+                            Van badkamer tot totaalproject. Yannova denkt met u mee, coördineert alle werken en zorgt voor een nette oplevering waar u echt van kan genieten.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <a
                                 href="/portfolio"
                                 className="bg-brand-accent hover:bg-orange-700 text-white px-8 py-4 rounded-md font-bold text-lg transition-all transform hover:scale-105 shadow-lg flex items-center justify-center gap-2"
                             >
-                                Onze Realisaties
+                                Bekijk realisaties
                                 <ArrowRight size={20} />
                             </a>
                         </div>
@@ -101,7 +101,7 @@ const Renovatie: React.FC = () => {
                         <p className="text-lg md:text-xl text-gray-700 leading-relaxed">
                             <strong>Verbouwen is een investering in uw toekomst.</strong>
                             Het verhoogt niet alleen de waarde van uw woning, maar ook uw wooncomfort.
-                            Wij nemen de stress van de verbouwing weg door een strakke planning en heldere communicatie.
+                            Wij nemen de stress weg met een realistische planning, duidelijke afspraken en één aanspreekpunt.
                         </p>
                     </div>
                 </div>
@@ -171,14 +171,14 @@ const Renovatie: React.FC = () => {
                 <div className="container mx-auto px-6">
                     <div className="max-w-4xl mx-auto">
                         <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-12 text-center">
-                            Uw partner in renovatie
+                            Renovatie met een gerust gevoel
                         </h2>
                         <div className="grid md:grid-cols-2 gap-8">
                             {[
-                                { title: "Eén aanspreekpunt", description: "Geen gedoe met verschillende aannemers. Wij coördineren alle werken voor u." },
-                                { title: "Strakke Planning", description: "Wij houden ons aan de afgesproken termijnen, zodat u niet onnodig lang in de rommel zit." },
-                                { title: "Nette Afwerking", description: "Wij laten de werf elke dag netjes achter en werken tot in de puntjes af." },
-                                { title: "Budgetcontrole", description: "Duidelijke offertes zonder verrassingen achteraf." }
+                                { title: "Eén aanspreekpunt", description: "Geen gedoe met verschillende aannemers. U heeft één contactpersoon die uw dossier écht kent." },
+                                { title: "Heldere planning", description: "We plannen realistisch en houden u op de hoogte — zodat u weet waar u aan toe bent." },
+                                { title: "Nette uitvoering", description: "We werken proper en met respect voor uw woning. Elke dag een werf waar u nog door kan." },
+                                { title: "Duidelijke offerte", description: "Transparante prijzen en duidelijke afspraken, zodat u geen verrassingen krijgt." }
                             ].map((benefit, idx) => (
                                 <div key={idx} className="flex gap-4 p-4 rounded-lg hover:bg-slate-50 transition-colors">
                                     <div className="flex-shrink-0">
@@ -239,14 +239,14 @@ const Renovatie: React.FC = () => {
                         Plannen om te verbouwen?
                     </h2>
                     <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-                        Groot of klein project? Wij denken graag met u mee voor de beste oplossing.
+                        Groot of klein project? Vertel ons kort wat u wil aanpakken — we denken graag mee en geven eerlijk advies.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <a
                             href="/contact"
                             className="bg-brand-accent hover:bg-orange-700 text-white px-8 py-4 rounded-md font-bold text-lg transition-all shadow-lg flex items-center justify-center gap-2"
                         >
-                            Vraag advies aan
+                            Plan een vrijblijvend gesprek
                             <ArrowRight size={20} />
                         </a>
                     </div>

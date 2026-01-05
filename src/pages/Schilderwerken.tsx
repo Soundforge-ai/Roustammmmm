@@ -20,15 +20,14 @@ const Schilderwerken: React.FC = () => {
                             <span className="block text-brand-accent mt-2">Binnen en Buiten</span>
                         </h1>
                         <p className="text-xl text-gray-200 mb-8 leading-relaxed">
-                            Geef uw woning een frisse uitstraling met onze vakkundige schilderwerken.
-                            Van muren en plafonds tot gevels en houtwerk: wij zorgen voor een perfecte afwerking.
+                            Een nieuwe kleur doet wonderen. Van muren en plafonds tot gevels en houtwerk: wij zorgen voor een strakke afwerking en een resultaat dat lang mooi blijft.
                         </p>
                         <div className="flex flex-wrap gap-4">
                             <Link
                                 to="/contact"
                                 className="bg-brand-accent hover:bg-orange-700 text-white px-8 py-4 rounded-lg font-semibold flex items-center gap-2 transition-all shadow-lg hover:shadow-xl"
                             >
-                                Gratis Offerte Aanvragen <ArrowRight size={20} />
+                                Plan een vrijblijvende bespreking <ArrowRight size={20} />
                             </Link>
                         </div>
                     </div>
@@ -123,7 +122,7 @@ const Schilderwerken: React.FC = () => {
                 <div className="container mx-auto px-6">
                     <div className="text-center max-w-2xl mx-auto mb-16">
                         <h2 className="text-3xl font-bold text-brand-dark mb-4">Waarom Kiezen voor Onze Schilderwerken?</h2>
-                        <p className="text-gray-600">Wij combineren vakmanschap met de beste materialen voor een perfect eindresultaat.</p>
+                        <p className="text-gray-600">We combineren vakmanschap met kwaliteitsverf en een propere werf — voor een resultaat waar u trots op bent.</p>
                     </div>
 
                     <div className="grid md:grid-cols-3 gap-8">
@@ -161,14 +160,13 @@ const Schilderwerken: React.FC = () => {
                 <div className="container mx-auto px-6 text-center">
                     <h2 className="text-3xl font-bold mb-6">Klaar voor een Nieuwe Look?</h2>
                     <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-                        Vraag vandaag nog uw gratis offerte aan voor binnen- of buitenschilderwerken.
-                        Wij komen graag langs om uw project te bespreken.
+                        Vertel ons kort wat u wil laten schilderen. We denken mee, geven eerlijk advies en bezorgen een duidelijke offerte.
                     </p>
                     <Link
                         to="/contact"
                         className="inline-flex items-center gap-2 bg-white text-brand-accent px-8 py-4 rounded-lg font-bold hover:bg-gray-100 transition-colors shadow-lg"
                     >
-                        Gratis Offerte Aanvragen
+                        Vraag een vrijblijvende offerte aan
                     </Link>
                 </div>
             </section>

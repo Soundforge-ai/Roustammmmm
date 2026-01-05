@@ -8,27 +8,27 @@ import QuoteCalculator from '@/components/sections/QuoteCalculator';
 const FAQ_ITEMS = [
     {
         question: "Wat kost het om ramen te laten plaatsen in Zoersel of Mechelen?",
-        answer: "De prijs hangt af van het type raam (PVC of aluminium), de afmetingen en het aantal. Gemiddeld kosten PVC ramen €300-€600 per m², aluminium €400-€800 per m². Wij komen gratis langs voor een exacte opmeting en offerte op maat."
+        answer: "Dat hangt af van het type raam (PVC of aluminium), de afmetingen en het aantal ramen. Als richtprijs: PVC ramen kosten gemiddeld €300-€600 per m² en aluminium €400-€800 per m². We komen graag gratis langs voor een exacte opmeting en een duidelijke offerte op maat, zodat u meteen weet waar u aan toe bent."
     },
     {
         question: "Wat is het verschil tussen PVC en aluminium ramen?",
-        answer: "PVC ramen zijn goedkoper, zeer goed isolerend en onderhoudsvriendelijk. Aluminium ramen hebben slankere profielen, zijn sterker en ideaal voor grote glaspartijen. Beide zijn beschikbaar in vele kleuren en bieden uitstekende isolatie."
+        answer: "PVC ramen zijn meestal voordeliger, isoleren uitstekend en vragen weinig onderhoud. Aluminium ramen hebben slankere profielen, zijn extra sterk en ideaal voor grote glaspartijen of een strakke, moderne look. Beide opties zijn beschikbaar in veel kleuren en bieden vandaag een heel goede isolatie — we helpen u graag kiezen wat het best past bij uw woning en budget."
     },
     {
         question: "Hoe lang duurt het plaatsen van nieuwe ramen?",
-        answer: "Voor een gemiddelde woning met 8-10 ramen rekent u op 2-3 werkdagen. Grotere projecten of volledige renovaties kunnen langer duren. Wij plannen altijd in overleg zodat u minimale hinder ondervindt."
+        answer: "Voor een gemiddelde woning met 8-10 ramen rekenen we meestal op 2-3 werkdagen. Grotere projecten of een volledige renovatie kunnen wat langer duren. We plannen alles in overleg en zorgen voor een nette werf, zodat u zo weinig mogelijk hinder ondervindt."
     },
     {
         question: "Welke garantie krijg ik op mijn nieuwe ramen en deuren?",
-        answer: "Wij bieden 10 jaar garantie op al onze ramen en deuren. Dit omvat zowel de materialen (profielen, beglazing, beslag) als de vakkundige plaatsing door onze eigen monteurs."
+        answer: "U krijgt 10 jaar garantie op onze ramen en deuren. Dat omvat zowel de materialen (profielen, beglazing, beslag) als de vakkundige plaatsing door ons eigen team. Zo kan u met een gerust gevoel investeren in comfort en energiezuinigheid."
     },
     {
         question: "Komen jullie ook in Zoersel, Putte en omgeving?",
-        answer: "Ja, Yannova is actief in heel de provincie Antwerpen en Vlaams-Brabant. We werken in Zoersel, Mechelen, Antwerpen, Putte, Heist-op-den-Berg, Bonheiden, Lier, Nijlen en alle omliggende gemeenten."
+        answer: "Ja. Yannova is actief in heel de provincie Antwerpen en Vlaams-Brabant. We werken onder andere in Zoersel, Mechelen, Antwerpen, Putte, Heist-op-den-Berg, Bonheiden, Lier, Nijlen en alle omliggende gemeenten. Twijfelt u of we bij u langskomen? Stuur ons gerust uw adres, dan bevestigen we het meteen."
     },
     {
         question: "Kan ik premies krijgen voor nieuwe ramen?",
-        answer: "Ja, voor energiezuinige ramen met een Uw-waarde ≤ 1.5 W/m²K kunt u in aanmerking komen voor premies van de Vlaamse overheid en uw netbeheerder. Wij adviseren u graag over de mogelijkheden en helpen met de aanvraag."
+        answer: "Ja. Voor energiezuinige ramen met een Uw-waarde ≤ 1.5 W/m²K kunt u in aanmerking komen voor premies van de Vlaamse overheid en uw netbeheerder. We adviseren u graag over de mogelijkheden en helpen u met de juiste info voor de aanvraag."
     }
 ];
 
@@ -81,18 +81,18 @@ const RamenDeuren: React.FC = () => {
                     <div className="max-w-4xl mx-auto text-center">
                         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
                             Nieuwe Ramen en Deuren?
-                            <span className="block text-brand-accent mt-2">Kies voor Kwaliteit en Comfort.</span>
+                            <span className="block text-brand-accent mt-2">Comfort dat u elke dag voelt.</span>
                         </h1>
                         <p className="text-lg md:text-xl text-gray-200 mb-8 leading-relaxed max-w-3xl mx-auto">
-                            Bespaar direct op uw energiefactuur en verhoog de veiligheid van uw woning.
-                            Wij plaatsen hoogwaardige PVC en Aluminium ramen in regio Zoersel, Mechelen & Antwerpen.
+                            Warmer in de winter, koeler in de zomer — en vooral: meer rust in huis.
+                            We plaatsen hoogwaardige PVC en aluminium ramen en deuren in Zoersel, Antwerpen, Mechelen en omgeving.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <a
                                 href="/showroom"
                                 className="bg-brand-accent hover:bg-orange-700 text-white px-8 py-4 rounded-md font-bold text-lg transition-all transform hover:scale-105 shadow-lg flex items-center justify-center gap-2"
                             >
-                                Bekijk onze Showroom
+                                Bekijk onze showroom (in opbouw)
                                 <ArrowRight size={20} />
                             </a>
                         </div>
@@ -118,7 +118,7 @@ const RamenDeuren: React.FC = () => {
                 <div className="container mx-auto px-6">
                     <div className="max-w-7xl mx-auto">
                         <h2 className="text-3xl md:text-4xl font-bold text-brand-dark mb-12 text-center">
-                            Ons Aanbod
+                            Kies wat bij uw woning past
                         </h2>
 
                         <div className="grid md:grid-cols-2 gap-8">
@@ -161,7 +161,7 @@ const RamenDeuren: React.FC = () => {
                                             to={service.href}
                                             className="inline-flex items-center text-brand-accent font-bold hover:text-orange-700 transition-colors"
                                         >
-                                            Meer informatie <ArrowRight className="ml-2" size={20} />
+                                            Bespreek dit met ons <ArrowRight className="ml-2" size={20} />
                                         </Link>
                                     </div>
                                 </div>
@@ -176,7 +176,7 @@ const RamenDeuren: React.FC = () => {
                 <div className="container mx-auto px-6">
                     <div className="max-w-6xl mx-auto">
                         <h2 className="text-3xl md:text-4xl font-bold text-brand-dark mb-12 text-center">
-                            Technische Specificaties & Prestaties
+                            Sterke prestaties, elke dag opnieuw
                         </h2>
                         <div className="grid md:grid-cols-2 gap-12">
                             <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
@@ -203,7 +203,7 @@ const RamenDeuren: React.FC = () => {
                                     </li>
                                 </ul>
                                 <p className="mt-6 text-sm text-gray-500 italic">
-                                    * Waarden afhankelijk van gekozen profiel en glastype. Wij adviseren u graag over de beste keuze voor uw woning in Zoersel, Antwerpen of Mechelen.
+                                    * Waarden afhankelijk van profiel en glastype. We adviseren u graag zodat u kiest wat écht bij uw woning en budget past.
                                 </p>
                             </div>
 
@@ -243,19 +243,19 @@ const RamenDeuren: React.FC = () => {
                 <div className="container mx-auto px-6">
                     <div className="max-w-6xl mx-auto">
                         <h2 className="text-3xl md:text-4xl font-bold text-brand-dark mb-12 text-center">
-                            Onze Werkwijze: Van Opmeting tot Plaatsing
+                            Onze werkwijze: duidelijk, proper en zonder stress
                         </h2>
                         <div className="grid md:grid-cols-4 gap-6">
                             {[
                                 {
                                     step: "01",
                                     title: "Gratis Opmeting",
-                                    desc: "Onze expert komt bij u langs in regio Antwerpen voor een nauwkeurige opmeting en technisch advies."
+                                    desc: "We komen bij u langs in Zoersel, Antwerpen, Mechelen en omgeving voor een nauwkeurige opmeting en helder advies."
                                 },
                                 {
                                     step: "02",
                                     title: "Offerte op Maat",
-                                    desc: "U ontvangt een gedetailleerde offerte zonder verrassingen, inclusief alle technische specificaties."
+                                    desc: "U krijgt een duidelijke offerte zonder verrassingen, met alle opties netjes uitgelegd."
                                 },
                                 {
                                     step: "03",
@@ -265,7 +265,7 @@ const RamenDeuren: React.FC = () => {
                                 {
                                     step: "04",
                                     title: "Vakkundige Plaatsing",
-                                    desc: "Ons eigen team plaatst uw nieuwe ramen en werkt alles netjes af, inclusief binnenafwerking."
+                                    desc: "Ons eigen team plaatst uw nieuwe ramen en werkt alles netjes af — met respect voor uw woning."
                                 }
                             ].map((item, idx) => (
                                 <div key={idx} className="relative p-6 border border-gray-100 rounded-xl hover:shadow-lg transition-all bg-white group">
@@ -320,17 +320,17 @@ const RamenDeuren: React.FC = () => {
             <section className="py-20 bg-brand-dark text-white">
                 <div className="container mx-auto px-6 text-center">
                     <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                        Klaar voor nieuwe ramen?
+                        Zullen we uw ramen samen bekijken?
                     </h2>
                     <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-                        Vraag vandaag nog uw gratis offerte aan. Wij komen vrijblijvend langs voor opmeting en advies op maat.
+                        Vraag een vrijblijvende offerte aan. We komen graag langs voor opmeting en eerlijk advies, zodat u met zekerheid kiest.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <a
                             href="/contact"
                             className="bg-brand-accent hover:bg-orange-700 text-white px-8 py-4 rounded-md font-bold text-lg transition-all shadow-lg flex items-center justify-center gap-2"
                         >
-                            Gratis Offerte Aanvragen
+                            Plan een vrijblijvende opmeting
                             <ArrowRight size={20} />
                         </a>
                     </div>
@@ -352,7 +352,7 @@ const FAQSection: React.FC = () => {
                         Veelgestelde Vragen over Ramen en Deuren
                     </h2>
                     <p className="text-gray-600 text-center mb-12">
-                        Antwoorden op de meest gestelde vragen over ramen en deuren plaatsen in Zoersel, Mechelen en omgeving.
+                        Snel duidelijkheid over prijzen, materialen en plaatsing in Zoersel, Mechelen en omgeving.
                     </p>
 
                     <div className="space-y-4">

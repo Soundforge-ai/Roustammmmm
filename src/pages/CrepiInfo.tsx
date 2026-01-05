@@ -14,7 +14,7 @@ const CrepiInfo: React.FC = () => {
               Crepi met ingebouwde patronen
             </h1>
             <p className="text-lg md:text-xl text-gray-200 leading-relaxed">
-              Ontdek hoe u uw gevel een unieke uitstraling geeft met crepi en ingebouwde patronen.
+              Geef uw woning een warme, unieke uitstraling — met het comfort en de bescherming van moderne crepi.
             </p>
           </div>
         </div>
@@ -169,20 +169,20 @@ const CrepiInfo: React.FC = () => {
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Klaar voor een nieuwe gevel met crepi?</h2>
             <p className="text-xl text-gray-300 mb-8">
-              Laat onze experts u adviseren over de mogelijkheden voor uw project.
+              Vertel ons kort wat u wil bereiken. We geven eerlijk advies en werken een duidelijke, vrijblijvende offerte uit.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 to="/contact"
                 className="bg-brand-accent hover:bg-orange-700 text-white px-8 py-4 rounded-md font-bold text-lg transition-all transform hover:scale-105 shadow-lg flex items-center justify-center gap-2"
               >
-                Gratis Offerte Aanvragen <ArrowRight size={20} />
+                Vraag een vrijblijvende offerte aan <ArrowRight size={20} />
               </Link>
               <a
                 href="tel:+32489960001"
                 className="bg-white/10 hover:bg-white/20 border border-white/30 text-white px-8 py-4 rounded-md font-bold text-lg transition-all flex items-center justify-center"
               >
-                Bel Ons Direct
+                Bel ons
               </a>
             </div>
           </div>

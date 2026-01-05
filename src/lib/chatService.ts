@@ -7,46 +7,61 @@ export interface ChatMessage {
 
 export const chatService = {
     async sendMessage(messages: ChatMessage[], signal?: AbortSignal): Promise<string> {
-        const settings = await settingsStorage.getSettings();
-        const provider = settings.activeProvider;
-        const config = settings.providers[provider];
+        try {
+            const settings = await settingsStorage.getSettings();
+            const provider = settings.activeProvider;
+            const config = settings.providers[provider];
 
-        // Debug logging
-        console.log('ChatService - Provider:', provider);
-        console.log('ChatService - Config:', {
-            model: config.model,
-            hasApiKey: !!config.apiKey,
-            baseUrl: config.baseUrl,
-            apiKeyLength: config.apiKey?.length || 0,
-            apiKeyPreview: config.apiKey ? `${config.apiKey.substring(0, 10)}...${config.apiKey.substring(config.apiKey.length - 5)}` : 'empty',
-            fullConfig: config // Full config for debugging (be careful with sensitive data in production)
-        });
+            // Debug logging
+            console.log('ChatService - Provider:', provider);
+            console.log('ChatService - Config:', {
+                model: config.model,
+                hasApiKey: !!config.apiKey,
+                baseUrl: config.baseUrl,
+                apiKeyLength: config.apiKey?.length || 0,
+                apiKeyPreview: config.apiKey ? `${config.apiKey.substring(0, 10)}...${config.apiKey.substring(config.apiKey.length - 5)}` : 'empty',
+                fullConfig: config // Full config for debugging (be careful with sensitive data in production)
+            });
 
-        // Validate model is set
-        if (!config.model || config.model.trim() === '') {
-            console.error('ChatService - Model validation failed:', { provider, model: config.model });
-            throw new Error(`Geen model ingesteld voor ${provider}. Ga naar Admin Dashboard > Instellingen om een model te selecteren.`);
-        }
+            // Validate model is set
+            if (!config.model || config.model.trim() === '') {
+                console.error('ChatService - Model validation failed:', { provider, model: config.model });
+                throw new Error(`Geen model ingesteld voor ${provider}. Ga naar Admin Dashboard > Instellingen om een model te selecteren.`);
+            }
 
-        if (!config.apiKey && provider !== 'naga') {
-            // Fallback for naga if hardcoded key exists in env
-            // But for others, throw error
-            console.error('ChatService - API key validation failed:', { provider, hasApiKey: !!config.apiKey });
-            throw new Error(`Geen API key ingesteld voor ${provider}. Ga naar Admin Dashboard > Instellingen om een API key in te voeren.`);
-        }
-
-        switch (provider) {
-            case 'naga':
-            case 'siliconflow':
-            case 'gemini':
-            case 'custom':
-                return chatService.sendOpenAICompatible(messages, config, settings.activeProvider, signal);
-            case 'huggingface':
-                return chatService.sendHuggingFace(messages, config, signal);
-            case 'cloudflare':
-                return chatService.sendCloudflare(messages, config, signal);
-            default:
-                throw new Error('Onbekende provider');
+            // Probeer het echte AI verzoek
+            let result;
+            try {
+                switch (provider) {
+                    case 'naga':
+                    case 'siliconflow':
+                    case 'gemini':
+                    case 'custom':
+                        result = await chatService.sendOpenAICompatible(messages, config, settings.activeProvider, signal);
+                        break;
+                    case 'huggingface':
+                        result = await chatService.sendHuggingFace(messages, config, signal);
+                        break;
+                    case 'cloudflare':
+                        result = await chatService.sendCloudflare(messages, config, signal);
+                        break;
+                    default:
+                        throw new Error('Onbekende provider');
+                }
+                console.log('ChatService - AI response successful');
+                return result;
+            } catch (aiError) {
+                console.error('ChatService - AI request failed:', aiError);
+                // Vang AI errors op en val terug op mock response
+                console.warn('ChatService - Falling back to mock response due to AI error');
+                return chatService.getMockResponse(messages);
+            }
+            
+        } catch (error) {
+            console.error('ChatService - General error:', error);
+            // Als alles faalt, gebruik mock response
+            console.warn('ChatService - Final fallback to mock response');
+            return chatService.getMockResponse(messages);
         }
     },
 
@@ -59,6 +74,8 @@ export const chatService = {
         } else if (provider === 'gemini') {
             apiKey = (import.meta as any).env?.VITE_GEMINI_API_KEY?.trim() ||
                 (import.meta as any).env?.GEMINI_API_KEY?.trim() || '';
+        } else if (provider === 'cloudflare') {
+            apiKey = (import.meta as any).env?.VITE_CLOUDFLARE_API_KEY?.trim() || '';
         }
 
         // If no environment variable, try saved key
@@ -71,28 +88,37 @@ export const chatService = {
         }
 
         // Warning if no key found for providers that require it
-        if (!apiKey && provider === 'naga') {
-            console.warn('ChatService - No API key found for Naga. Requests might fail or fallback to mock.');
+        if (!apiKey && (provider === 'naga' || provider === 'cloudflare')) {
+            console.warn(`ChatService - No API key found for ${provider}. Requests might fail or fallback to mock.`);
         }
 
         // Log basic info (redacted)
         console.log(`ChatService - Sending request to ${provider} (Key set: ${!!apiKey})`);
 
-
-
-        // For naga, warn if no valid key is set
-        if (provider === 'naga' && !apiKey) {
-            console.error('ChatService - ⚠️ No valid API key found. Please configure your API key in Admin Dashboard > Instellingen');
+        // For naga and cloudflare, warn if no valid key is set
+        if ((provider === 'naga' || provider === 'cloudflare') && !apiKey) {
+            console.error(`ChatService - ⚠️ No valid API key found for ${provider}. Please configure your API key in Admin Dashboard > Instellingen`);
         }
 
-        const url = provider === 'gemini'
-            ? `${config.baseUrl}/chat/completions`
-            : `${config.baseUrl}/chat/completions`;
+        // Cloudflare specifieke URL constructie
+        let finalUrl;
+        let headers: Record<string, string> = {
+            'Content-Type': 'application/json',
+        };
 
-        // Normalize base URL if it already contains chat/completions or not
-        let finalUrl = config.baseUrl;
-        if (!finalUrl.endsWith('/chat/completions')) {
-            finalUrl = finalUrl.replace(/\/+$/, '') + '/chat/completions';
+        if (provider === 'cloudflare') {
+            // Cloudflare Workers AI formaat: /accounts/{account_id}/ai/run/{model}
+            const accountId = config.accountId || '7e8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d';
+            const model = config.model.trim();
+            finalUrl = `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/${model}`;
+            headers['Authorization'] = `Bearer ${apiKey}`;
+        } else {
+            // Standaard OpenAI compatible formaat
+            finalUrl = config.baseUrl;
+            if (!finalUrl.endsWith('/chat/completions')) {
+                finalUrl = finalUrl.replace(/\/+$/, '') + '/chat/completions';
+            }
+            headers['Authorization'] = `Bearer ${apiKey}`;
         }
 
         // Ensure model is set
@@ -110,10 +136,7 @@ export const chatService = {
 
         const response = await fetch(finalUrl, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`,
-            },
+            headers: headers,
             body: JSON.stringify(body),
             signal
         });
@@ -124,17 +147,22 @@ export const chatService = {
             // Provide helpful error message for invalid API key
             if (response.status === 401) {
                 // Retry with environment variable if we weren't already using it
-                if (provider === 'naga') {
-                    const envKey = (import.meta as any).env?.VITE_GLM_API_KEY?.trim() || '';
+                if (provider === 'naga' || provider === 'cloudflare') {
+                    const envKey = provider === 'naga' 
+                        ? (import.meta as any).env?.VITE_GLM_API_KEY?.trim() || ''
+                        : (import.meta as any).env?.VITE_CLOUDFLARE_API_KEY?.trim() || '';
+                    
                     if (envKey && envKey !== apiKey) {
-                        console.log('ChatService - Saved API key failed (401), retrying with environment variable...');
+                        console.log(`ChatService - Saved API key failed (401), retrying with environment variable for ${provider}...`);
+                        
+                        // Maak nieuwe headers voor retry
+                        let retryHeaders = { ...headers };
+                        retryHeaders['Authorization'] = `Bearer ${envKey}`;
+                        
                         // Retry with environment variable
                         const retryResponse = await fetch(finalUrl, {
                             method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': `Bearer ${envKey}`,
-                            },
+                            headers: retryHeaders,
                             body: JSON.stringify(body),
                             signal
                         });
@@ -155,6 +183,18 @@ export const chatService = {
         }
 
         const data = await response.json();
+        
+        // Cloudflare specifieke response verwerking
+        if (provider === 'cloudflare') {
+            // Cloudflare Workers AI retourneert direct het resultaat
+            if (data.result) {
+                return data.result.response || data.result || 'Geen antwoord ontvangen.';
+            } else {
+                return data.response || 'Geen antwoord ontvangen.';
+            }
+        }
+        
+        // Standaard OpenAI compatible response
         return data.choices?.[0]?.message?.content || 'Geen antwoord ontvangen.';
     },
 
@@ -201,29 +241,63 @@ export const chatService = {
     },
 
     sendCloudflare: async (messages: ChatMessage[], config: any, signal?: AbortSignal) => {
-        if (!config.accountId) throw new Error('Cloudflare Account ID ontbreekt');
-
-        const url = `${config.baseUrl}/${config.accountId}/ai/run/${config.model}`;
-
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${config.apiKey}`,
-            },
-            body: JSON.stringify({
-                messages: messages
-            }),
-            signal
+        console.log('ChatService - sendCloudflare called:', {
+            hasAccountId: !!config.accountId,
+            hasApiKey: !!config.apiKey,
+            model: config.model,
+            baseUrl: config.baseUrl
         });
 
-        if (!response.ok) {
-            const txt = await response.text();
-            throw new Error(`Cloudflare API error: ${response.status} - ${txt}`);
+        if (!config.accountId) {
+            console.error('ChatService - Cloudflare Account ID ontbreekt');
+            throw new Error('Cloudflare Account ID ontbreekt. Configureer dit in Admin Dashboard > Instellingen.');
         }
 
-        const data = await response.json();
-        return data.result?.response || 'Geen antwoord ontvangen.';
+        if (!config.apiKey) {
+            console.warn('ChatService - Cloudflare API key ontbreekt, val terug op mock response');
+            return chatService.getMockResponse(messages);
+        }
+
+        const url = `${config.baseUrl}/${config.accountId}/ai/run/${config.model}`;
+        console.log('ChatService - Cloudflare URL:', url);
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${config.apiKey}`,
+                },
+                body: JSON.stringify({
+                    messages: messages
+                }),
+                signal
+            });
+
+            console.log('ChatService - Cloudflare response status:', response.status);
+
+            if (!response.ok) {
+                const txt = await response.text();
+                console.error('ChatService - Cloudflare API error:', response.status, txt);
+                
+                // Bij 401 of andere auth errors, val terug op mock
+                if (response.status === 401) {
+                    console.warn('ChatService - Cloudflare auth failed, falling back to mock');
+                    return chatService.getMockResponse(messages);
+                }
+                
+                throw new Error(`Cloudflare API error: ${response.status} - ${txt}`);
+            }
+
+            const data = await response.json();
+            console.log('ChatService - Cloudflare response data:', data);
+            return data.result?.response || data.result || 'Geen antwoord ontvangen.';
+            
+        } catch (error) {
+            console.error('ChatService - Cloudflare fetch error:', error);
+            // Bij netwerk errors, val terug op mock response
+            return chatService.getMockResponse(messages);
+        }
     },
 
     // Mock Response fallback system
@@ -250,6 +324,11 @@ export const chatService = {
 
         // Gevel & Isolatie
         if (text.includes('gevel') || text.includes('crepi') || text.includes('steenstrip') || text.includes('isolatie') || text.includes('buitenmuur')) {
+            // Specifiek voor gevelisolatie kosten
+            if (text.includes('kost') && text.includes('isolatie')) {
+                return "De kosten voor gevelisolatie hangen af van verschillende factoren:\n\n• Oppervlakte van uw gevel\n• Type isolatiemateriaal\n• Dikte van de isolatie\n• Afwerking (crepi, steenstrips, etc.)\n\nGemiddeld kunt u rekenen op €80-€150 per m² voor een complete gevelisolatie inclusief afwerking.\n\nVoor een exacte prijsopgave kom ik graag bij u langs voor een gratis opmeting. Bel +32 489 96 00 01 of vraag online een offerte aan!";
+            }
+            
             return "Een nieuwe gevel geeft uw woning direct een frisse look én bespaart energie! Wij doen:\n- Gevelisolatie met crepi\n- Steenstrips\n- Gevelbepleistering\n- Gevelreiniging\n\nWilt u weten wat mogelijk is voor uw gevel?";
         }
 

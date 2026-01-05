@@ -51,6 +51,14 @@ export function checkConfig(): ConfigStatus[] {
     value: geminiKey ? `${geminiKey.substring(0, 10)}...` : undefined
   });
 
+  const cloudflareKey = import.meta.env.VITE_CLOUDFLARE_API_KEY;
+  checks.push({
+    name: 'Cloudflare API Key',
+    status: cloudflareKey ? 'ok' : 'warning',
+    message: cloudflareKey ? 'Geconfigureerd' : 'Niet geconfigureerd (optioneel)',
+    value: cloudflareKey ? `${cloudflareKey.substring(0, 10)}...` : undefined
+  });
+
   // Environment mode
   const isDev = import.meta.env.DEV;
   checks.push({

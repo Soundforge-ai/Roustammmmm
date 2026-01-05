@@ -49,14 +49,14 @@ const Tuinaanleg: React.FC = () => {
                             Uw Droomtuin, Onze Passie
                         </h1>
                         <p className="text-lg md:text-xl text-green-50 mb-8 leading-relaxed max-w-3xl mx-auto">
-                            Van het eerste ontwerp tot de laatste plant. Yannova transformeert uw buitenruimte in een oase van rust en beleving.
+                            Van het eerste idee tot de laatste afwerking. Yannova maakt van uw buitenruimte een plek waar u écht tot rust komt.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <a
                                 href="/portfolio"
                                 className="bg-brand-accent hover:bg-orange-700 text-white px-8 py-4 rounded-md font-bold text-lg transition-all transform hover:scale-105 shadow-lg flex items-center justify-center gap-2"
                             >
-                                Bekijk onze Projecten
+                                Bekijk recente realisaties
                                 <ArrowRight size={20} />
                             </a>
                         </div>
@@ -69,9 +69,8 @@ const Tuinaanleg: React.FC = () => {
                 <div className="container mx-auto px-6">
                     <div className="max-w-4xl mx-auto text-center">
                         <p className="text-lg md:text-xl text-gray-700 leading-relaxed">
-                            Een tuin is meer dan wat planten. Het is een verlengstuk van uw woning.
-                            Of u nu houdt van een strakke, onderhoudsvriendelijke tuin of een weelderige groene oase,
-                            wij realiseren uw visie met vakmanschap en oog voor detail.
+                            Een tuin is meer dan wat planten. Het is een verlengstuk van uw woning — een plek om te leven, te spelen en te ontspannen.
+                            Of u nu houdt van strak en onderhoudsvriendelijk of net van weelderig groen: wij vertalen uw wensen naar een duurzaam totaalplaatje.
                         </p>
                     </div>
                 </div>
@@ -125,7 +124,7 @@ const Tuinaanleg: React.FC = () => {
                                             to="/contact"
                                             className="inline-flex items-center text-green-700 font-bold hover:text-green-900 transition-colors"
                                         >
-                                            Offerte aanvragen
+                                            Bespreek uw tuinidee
                                             <ArrowRight size={18} className="ml-2" />
                                         </Link>
                                     </div>
@@ -172,14 +171,14 @@ const Tuinaanleg: React.FC = () => {
                         Is uw tuin klaar voor een make-over?
                     </h2>
                     <p className="text-xl text-green-100 mb-8 max-w-2xl mx-auto">
-                        Laat ons weten wat uw wensen zijn. Wij komen graag langs voor een vrijblijvend gesprek.
+                        Vertel ons kort wat u voor ogen heeft. We komen graag langs om uw plannen te bespreken en u eerlijk advies te geven.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <a
                             href="/contact"
                             className="bg-brand-accent hover:bg-orange-700 text-white px-8 py-4 rounded-md font-bold text-lg transition-all shadow-lg flex items-center justify-center gap-2"
                         >
-                            Contacteer ons
+                            Plan een vrijblijvend gesprek
                             <ArrowRight size={20} />
                         </a>
                     </div>

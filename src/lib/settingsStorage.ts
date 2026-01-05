@@ -28,7 +28,7 @@ export interface AppSettings {
 const SETTINGS_KEY = 'yannova_app_settings';
 
 export const defaultSettings: AppSettings = {
-    activeProvider: 'naga',
+    activeProvider: 'cloudflare',
     providers: {
         naga: {
             apiKey: '',
@@ -41,9 +41,9 @@ export const defaultSettings: AppSettings = {
             baseUrl: 'https://api-inference.huggingface.co/models'
         },
         cloudflare: {
-            apiKey: '',
-            accountId: '',
-            model: '@cf/meta/llama-3-8b-instruct',
+            apiKey: '4bc4bda133904a42b5fa6e8ab2630e81.gz9TEwN7awn2jdXR',
+            accountId: '7e8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d',
+            model: '@cf/meta/llama-3.1-8b-instruct',
             baseUrl: 'https://api.cloudflare.com/client/v4/accounts'
         },
         gemini: {

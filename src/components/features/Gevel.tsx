@@ -6,27 +6,27 @@ import { ArrowRight, Palette, Shield, ThermometerSun, Layers, Home, CheckCircle,
 const FAQ_ITEMS = [
     {
         question: "Hoeveel kost crepi per m² in België?",
-        answer: "De prijs voor crepi varieert tussen €40 en €80 per m², afhankelijk van het type crepi, de ondergrond en eventuele voorbereidende werken. Met gevelisolatie erbij komt u op €80-€150 per m². Vraag een gratis offerte aan voor een exacte prijsberekening."
+        answer: "Dat hangt af van het type crepi, de ondergrond en eventuele voorbereidende werken. Als richtprijs varieert crepi tussen €40 en €80 per m². Met gevelisolatie komt u meestal uit op €80-€150 per m². We komen graag langs om uw gevel te bekijken en maken daarna een duidelijke offerte op maat."
     },
     {
         question: "Wat is het verschil tussen crepi en gevelbepleistering?",
-        answer: "Crepi is een type gevelbepleistering met een specifieke textuur (korrel). Gevelbepleistering is de overkoepelende term voor alle soorten pleisterwerk op gevels, waaronder glad pleisterwerk, structuurpleister en crepi."
+        answer: "Crepi is een type gevelbepleistering met een specifieke structuur (korrel). Gevelbepleistering is de brede term voor alle soorten pleisterwerk op gevels, zoals glad pleisterwerk, structuurpleister en crepi. We leggen u graag de verschillen uit zodat u de look kiest die bij uw woning past."
     },
     {
         question: "Hoe lang gaat crepi mee?",
-        answer: "Kwalitatief aangebrachte crepi gaat 25 tot 40 jaar mee. De levensduur hangt af van de kwaliteit van de materialen, de vakkundige uitvoering en de blootstelling aan weersinvloeden. Wij gebruiken alleen A-merken voor maximale duurzaamheid."
+        answer: "Kwalitatief aangebrachte crepi gaat doorgaans 25 tot 40 jaar mee. De levensduur hangt af van de gebruikte materialen, de uitvoering en de blootstelling aan weer en wind. Wij werken met A-merken en zorgen voor een correcte opbouw, zodat u er jarenlang zorgeloos van geniet."
     },
     {
         question: "Kan ik premies krijgen voor gevelisolatie?",
-        answer: "Ja, voor gevelisolatie kunt u premies krijgen van de Vlaamse overheid en uw netbeheerder. De premie kan oplopen tot €35 per m² afhankelijk van de isolatiewaarde. Wij helpen u graag met de aanvraag."
+        answer: "Ja. Voor gevelisolatie kunt u premies krijgen via de Vlaamse overheid en uw netbeheerder. Afhankelijk van de isolatiewaarde kan de premie oplopen tot €35 per m². We helpen u graag met de juiste info zodat u weet waar u recht op heeft."
     },
     {
         question: "Werkt Yannova ook in Keerbergen, Mechelen en Zoersel?",
-        answer: "Ja, Yannova is actief in heel de provincie Antwerpen en Vlaams-Brabant. We voeren gevelwerken uit in Keerbergen, Mechelen, Zoersel, Putte, Heist-op-den-Berg, Bonheiden, Lier en alle omliggende gemeenten."
+        answer: "Ja. Yannova is actief in heel de provincie Antwerpen en Vlaams-Brabant. We voeren gevelwerken uit in Keerbergen, Mechelen, Zoersel, Putte, Heist-op-den-Berg, Bonheiden, Lier en alle omliggende gemeenten. Stuur ons gerust uw adres, dan bevestigen we meteen of we bij u langskomen."
     },
     {
         question: "Hoelang duurt een gevelrenovatie met crepi?",
-        answer: "Een gemiddelde gevelrenovatie met crepi duurt 1-2 weken voor een vrijstaande woning. Bij gevelisolatie met crepi rekent u op 2-3 weken. De exacte duur hangt af van de grootte, de staat van de gevel en de weersomstandigheden."
+        answer: "Als richtlijn: een gevelrenovatie met crepi duurt vaak 1-2 weken voor een vrijstaande woning. Met gevelisolatie rekent u meestal 2-3 weken. De exacte timing hangt af van de grootte, de staat van de gevel en het weer. We plannen realistisch en houden u tussendoor goed op de hoogte."
     }
 ];
 
@@ -87,21 +87,20 @@ const Gevel: React.FC = () => {
         <div className="container mx-auto px-6 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-              Van kleine gevelwerken tot totaalrenovatie
+              Een gevel waar u trots op bent
             </h1>
             <p className="text-lg md:text-xl text-gray-200 mb-8 leading-relaxed max-w-3xl mx-auto">
-              Kleine gevelaanpassing of grondige gevelrenovatie? Hoe eenvoudig of complex uw gevelvraag ook is, 
-              Yannova heeft voor alles een oplossing. Bovendien duiken we met evenveel passie in elk project.
+              Kleine herstelling of een complete gevelrenovatie? Wij luisteren naar uw wensen, adviseren eerlijk en zorgen voor een nette uitvoering met oog voor detail.
             </p>
             <p className="text-base md:text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
-              Reken op onze ervaring en expertise. Ontdek wat we voor u kunnen doen.
+              Ontdek de mogelijkheden voor isolatie, bescherming en afwerking — afgestemd op uw woning en budget.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
-                href="/#contact"
+                href="/portfolio"
                 className="bg-brand-accent hover:bg-orange-700 text-white px-8 py-4 rounded-md font-bold text-lg transition-all transform hover:scale-105 shadow-lg flex items-center justify-center gap-2"
               >
-                Bekijk onze realisaties
+                Bekijk realisaties
                 <ArrowRight size={20} />
               </a>
             </div>
@@ -114,11 +113,10 @@ const Gevel: React.FC = () => {
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto text-center">
             <p className="text-lg md:text-xl text-gray-700 leading-relaxed">
-              <strong>Kleine gevelaanpassing of grondige verbouwing?</strong> Hoe eenvoudig of complex uw gevelvraag ook is, 
-              Yannova heeft voor alles een oplossing. Bovendien duiken we met evenveel passie in elk project.
+              <strong>Uw gevel bepaalt de uitstraling én het comfort van uw woning.</strong> Met de juiste aanpak beschermt u uw muren tegen weer en wind en bespaart u energie.
             </p>
             <p className="text-lg md:text-xl text-gray-700 leading-relaxed mt-4">
-              Reken op onze ervaring en expertise. Ontdek wat we voor u kunnen doen.
+              We begeleiden u van advies tot afwerking — met duidelijke afspraken en een proper resultaat.
             </p>
           </div>
         </div>
