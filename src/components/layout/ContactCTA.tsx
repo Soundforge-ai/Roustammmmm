@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Phone, Mail, MapPin, CheckCircle, AlertCircle } from 'lucide-react';
+import emailjs from '@emailjs/browser';
 import { Lead } from '../../types';
 
 interface ContactCTAProps {
@@ -62,12 +63,45 @@ const ContactCTA: React.FC<ContactCTAProps> = ({ onSubmitLead }) => {
     e.preventDefault();
     if (!validateForm()) return;
     setIsSubmitting(true);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    onSubmitLead(formData);
-    setSubmitted(true);
-    setFormData({ name: '', phone: '', email: '', project: '' });
-    setIsSubmitting(false);
-    setTimeout(() => setSubmitted(false), 5000);
+
+    try {
+      // 1. Verstuur email via EmailJS
+      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'service_yannova';
+      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'template_contact';
+      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+      const templateParams = {
+        from_name: formData.name,
+        from_email: formData.email,
+        phone: formData.phone,
+        subject: 'Offerte aanvraag via website (CTA)',
+        message: formData.project,
+        to_email: 'info@yannova.be',
+        reply_to: formData.email,
+      };
+
+      if (publicKey) {
+        await emailjs.send(serviceId, templateId, templateParams, publicKey);
+      } else {
+        console.warn('EmailJS Public Key ontbreekt, email wordt niet verzonden.');
+      }
+
+      // 2. Sla op in database (Supabase) via prop
+      await onSubmitLead(formData);
+
+      setSubmitted(true);
+      setFormData({ name: '', phone: '', email: '', project: '' });
+      setTimeout(() => setSubmitted(false), 5000);
+
+    } catch (error) {
+      console.error('Fout bij versturen formulier:', error);
+      // We tonen de gebruiker toch een succesbericht als de DB save wel gelukt is, 
+      // of we kunnen een foutmelding tonen. Voor nu, als email faalt maar DB niet, is het 'ok'
+      // Als onSubmitLead faalt, gooit die ook een error.
+      alert('Er is iets misgegaan. Probeer het later opnieuw of bel ons direct.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
