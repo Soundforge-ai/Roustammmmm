@@ -28,7 +28,11 @@ const FAQ_ITEMS = [
     },
     {
         question: "Kan ik premies krijgen voor nieuwe ramen?",
-        answer: "Ja. Voor energiezuinige ramen met een Uw-waarde ≤ 1.5 W/m²K kunt u in aanmerking komen voor premies van de Vlaamse overheid en uw netbeheerder. We adviseren u graag over de mogelijkheden en helpen u met de juiste info voor de aanvraag."
+        answer: "Ja! Voor ramen met hoogrendementsglas (Uw ≤ 1.5 W/m²K) krijgt u via de Mijn VerbouwPremie €30-50 per m² terug, met een maximum van €1.280. Let op: vanaf juli 2025 moet u ook ventilatieroosters hebben in droge kamers om de volledige premie te krijgen. Wij regelen de attesten en helpen u bij de aanvraag."
+    },
+    {
+        question: "Moeten er ventilatieroosters in mijn nieuwe ramen?",
+        answer: "Ja, dit is een belangrijke voorwaarde voor de Mijn VerbouwPremie. Vanaf 1 juli 2025 geldt voor iedereen: geen ventilatie = geen premie. In droge kamers (slaapkamers, living, bureau) moeten ventilatieroosters aanwezig zijn — in het raamkozijn, in de muur, of via een ventilatiesysteem. Onze ramen kunnen standaard met geïntegreerde ventilatieroosters geleverd worden, zodat u automatisch aan deze voorwaarde voldoet."
     }
 ];
 
@@ -72,20 +76,39 @@ const RamenDeuren: React.FC = () => {
         }
     ];
 
+    // FAQ Schema voor Google Rich Snippets
+    const faqSchema = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": FAQ_ITEMS.map(item => ({
+            "@type": "Question",
+            "name": item.question,
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": item.answer
+            }
+        }))
+    };
+
     return (
         <div className="min-h-screen bg-white text-slate-900">
+            {/* FAQ Schema for SEO */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+            />
+
             {/* Hero Section */}
             <section className="relative py-24 md:py-32 bg-gradient-to-br from-brand-dark via-slate-800 to-brand-dark">
                 <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1503708928676-1cb796a0891e?auto=format&fit=crop&q=80')] opacity-20 bg-cover bg-center mix-blend-overlay"></div>
                 <div className="container mx-auto px-6 relative z-10">
                     <div className="max-w-4xl mx-auto text-center">
                         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-                            Nieuwe Ramen en Deuren?
-                            <span className="block text-brand-accent mt-2">Comfort dat u elke dag voelt.</span>
+                            Nieuwe Ramen en Deuren in Zoersel?
+                            <span className="block text-brand-accent mt-2">Comfort dat u elke dag voelt, jaar na jaar.</span>
                         </h1>
                         <p className="text-lg md:text-xl text-gray-200 mb-8 leading-relaxed max-w-3xl mx-auto">
-                            Warmer in de winter, koeler in de zomer — en vooral: meer rust in huis.
-                            We plaatsen hoogwaardige PVC en aluminium ramen en deuren in Zoersel, Antwerpen, Mechelen en omgeving.
+                            Warmer in de winter, koeler in de zomer — en vooral: meer rust in huis. Vanuit Zoersel plaatsen wij hoogwaardige PVC en aluminium ramen en deuren in Halle, Sint-Antonius, Antwerpen, Mechelen en de omliggende gemeenten.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <a
@@ -103,11 +126,15 @@ const RamenDeuren: React.FC = () => {
             {/* Intro Section */}
             <section className="py-16 bg-white">
                 <div className="container mx-auto px-6">
-                    <div className="max-w-4xl mx-auto text-center">
+                    <div className="max-w-4xl mx-auto text-center space-y-6">
                         <p className="text-lg md:text-xl text-gray-700 leading-relaxed">
                             <strong>Een warm huis begint bij goede isolatie.</strong> Met onze ramen en deuren geniet u niet alleen van een
-                            prachtige uitstraling, maar ook van rust en veiligheid. Of u nu kiest voor de moderne look van aluminium
-                            of de warmte van PVC met houtlook: wij garanderen een perfecte plaatsing en afwerking tot in de kleinste details.
+                            prachtige uitstraling, maar ook van rust en veiligheid. Of u nu in het centrum van Zoersel woont, in Halle,
+                            Sint-Antonius of in de ruimere regio Antwerpen en Mechelen: wij zorgen voor een oplossing op maat van uw woning.
+                        </p>
+                        <p className="text-base md:text-lg text-gray-700 leading-relaxed">
+                            We denken met u mee over oriëntatie, inkijk, ventilatie en premies, zodat uw investering vandaag al klaar is voor
+                            de EPB-normen van morgen. Tijdens de plaatsing blijft uw woning bewoonbaar en laten we de werf elke dag netjes achter.
                         </p>
                     </div>
                 </div>
@@ -315,6 +342,82 @@ const RamenDeuren: React.FC = () => {
             <QuoteCalculator />
 
             <FAQSection />
+
+            {/* Regional Internal Linking Section - SEO */}
+            <section className="py-16 bg-white border-t border-gray-100">
+                <div className="container mx-auto px-6">
+                    <div className="max-w-4xl mx-auto">
+                        <h2 className="text-2xl font-bold text-brand-dark mb-6 text-center">
+                            Ramen en deuren in uw regio
+                        </h2>
+                        <p className="text-gray-600 text-center mb-8">
+                            Yannova plaatst hoogwaardige ramen en deuren in heel de provincie Antwerpen en Vlaams-Brabant.
+                            Ontdek wat we voor uw gemeente kunnen betekenen:
+                        </p>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <Link to="/regio/zoersel" className="p-4 bg-gray-50 rounded-lg hover:bg-brand-accent/10 transition-colors text-center group">
+                                <span className="font-semibold text-brand-dark group-hover:text-brand-accent">Ramen en deuren Zoersel</span>
+                            </Link>
+                            <Link to="/regio/antwerpen" className="p-4 bg-gray-50 rounded-lg hover:bg-brand-accent/10 transition-colors text-center group">
+                                <span className="font-semibold text-brand-dark group-hover:text-brand-accent">Ramen en deuren Antwerpen</span>
+                            </Link>
+                            <Link to="/regio/mechelen" className="p-4 bg-gray-50 rounded-lg hover:bg-brand-accent/10 transition-colors text-center group">
+                                <span className="font-semibold text-brand-dark group-hover:text-brand-accent">Ramen en deuren Mechelen</span>
+                            </Link>
+                            <Link to="/regio/lier" className="p-4 bg-gray-50 rounded-lg hover:bg-brand-accent/10 transition-colors text-center group">
+                                <span className="font-semibold text-brand-dark group-hover:text-brand-accent">Ramen en deuren Lier</span>
+                            </Link>
+                            <Link to="/regio/malle" className="p-4 bg-gray-50 rounded-lg hover:bg-brand-accent/10 transition-colors text-center group">
+                                <span className="font-semibold text-brand-dark group-hover:text-brand-accent">Ramen en deuren Malle</span>
+                            </Link>
+                            <Link to="/regio/schilde" className="p-4 bg-gray-50 rounded-lg hover:bg-brand-accent/10 transition-colors text-center group">
+                                <span className="font-semibold text-brand-dark group-hover:text-brand-accent">Ramen en deuren Schilde</span>
+                            </Link>
+                            <Link to="/regio/putte" className="p-4 bg-gray-50 rounded-lg hover:bg-brand-accent/10 transition-colors text-center group">
+                                <span className="font-semibold text-brand-dark group-hover:text-brand-accent">Ramen en deuren Putte</span>
+                            </Link>
+                            <Link to="/regio/bonheiden" className="p-4 bg-gray-50 rounded-lg hover:bg-brand-accent/10 transition-colors text-center group">
+                                <span className="font-semibold text-brand-dark group-hover:text-brand-accent">Ramen en deuren Bonheiden</span>
+                            </Link>
+                        </div>
+                        <p className="text-sm text-gray-500 text-center mt-6">
+                            Ook actief in Keerbergen, Heist-op-den-Berg, Ranst, Brecht, Zandhoven, Wommelgem en omliggende gemeenten.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            {/* Related Services - Cross-linking */}
+            <section className="py-16 bg-gray-50">
+                <div className="container mx-auto px-6">
+                    <div className="text-center max-w-2xl mx-auto mb-10">
+                        <h2 className="text-2xl font-bold text-brand-dark mb-4">Combineert u dit met andere werken?</h2>
+                        <p className="text-gray-600">
+                            Veel klanten combineren nieuwe ramen met gevelwerken of een totaalrenovatie. Dat is vaak voordeliger en efficiënter.
+                        </p>
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+                        <Link to="/gevel" className="group bg-white p-6 rounded-xl border border-gray-100 hover:shadow-md transition-all flex items-center gap-4">
+                            <div className="bg-brand-accent/10 p-3 rounded-lg text-brand-accent group-hover:bg-brand-accent group-hover:text-white transition-colors">
+                                <Layers size={24} />
+                            </div>
+                            <div>
+                                <h3 className="font-bold text-brand-dark group-hover:text-brand-accent transition-colors">Gevelisolatie met crepi</h3>
+                                <p className="text-sm text-gray-600">Combineer met buitenisolatie voor extra besparing.</p>
+                            </div>
+                        </Link>
+                        <Link to="/renovatie" className="group bg-white p-6 rounded-xl border border-gray-100 hover:shadow-md transition-all flex items-center gap-4">
+                            <div className="bg-brand-accent/10 p-3 rounded-lg text-brand-accent group-hover:bg-brand-accent group-hover:text-white transition-colors">
+                                <Home size={24} />
+                            </div>
+                            <div>
+                                <h3 className="font-bold text-brand-dark group-hover:text-brand-accent transition-colors">Totaalrenovatie</h3>
+                                <p className="text-sm text-gray-600">Eén aanspreekpunt voor al uw verbouwingen.</p>
+                            </div>
+                        </Link>
+                    </div>
+                </div>
+            </section>
 
             {/* CTA Section */}
             <section className="py-20 bg-brand-dark text-white">

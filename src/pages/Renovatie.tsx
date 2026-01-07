@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Hammer, PaintBucket, Ruler, Home, CheckCircle, Bath, ChevronDown, Layers, Grid } from 'lucide-react';
+import { ArrowRight, Hammer, PaintBucket, Ruler, Home, CheckCircle, Bath, ChevronDown, Layers, Grid, Wind } from 'lucide-react';
 import OptimizedImage from '@/components/ui/OptimizedImage';
 
 // FAQ data voor SEO
@@ -19,7 +19,11 @@ const FAQ_ITEMS = [
     },
     {
         question: "Welke premies kan ik krijgen voor renovatie?",
-        answer: "Voor energiebesparende renovaties (isolatie, hoogrendementsbeglazing, warmtepomp) kunt u premies krijgen via de Vlaamse overheid en uw netbeheerder. In sommige gevallen zijn er ook BTW-voordelen bij sloop en heropbouw. We adviseren u graag over wat voor uw situatie mogelijk is."
+        answer: "Via de Mijn VerbouwPremie kunt u premies krijgen voor: dakisolatie (tot €8-12/m²), gevelisolatie (tot €5.000), hoogrendementsglas (€30-50/m²), warmtepompen (tot €6.000) en ramen/deuren met ventilatie. De exacte bedragen hangen af van uw inkomen. Combineert u werken met asbestverwijdering? Dan krijgt u een extra bonus. Wij helpen u met de aanvraag en zorgen voor alle attesten."
+    },
+    {
+        question: "Moet ik ventilatieroosters plaatsen voor de premie?",
+        answer: "Ja, dit is belangrijk! Vanaf 1 juli 2025 geldt voor iedereen: geen ventilatie = geen premie voor ramen en deuren. In droge kamers (slaapkamers, living, bureau) moeten ventilatieroosters aanwezig zijn. Dit kan in het raamkozijn, in de muur, of via een mechanisch ventilatiesysteem. Wij zorgen altijd dat uw ramen aan deze voorwaarde voldoen, zodat u recht heeft op de volledige Mijn VerbouwPremie."
     },
     {
         question: "Werkt Yannova ook in Zoersel, Mechelen en Antwerpen?",
@@ -67,8 +71,28 @@ const Renovatie: React.FC = () => {
         }
     ];
 
+    // FAQ Schema voor Google Rich Snippets
+    const faqSchema = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": FAQ_ITEMS.map(item => ({
+            "@type": "Question",
+            "name": item.question,
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": item.answer
+            }
+        }))
+    };
+
     return (
         <div className="min-h-screen bg-white text-slate-900">
+            {/* FAQ Schema for SEO */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+            />
+
             {/* Hero Section */}
             <section className="relative py-24 md:py-32 bg-slate-900">
                 <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80')] opacity-30 bg-cover bg-center mix-blend-overlay"></div>
@@ -76,7 +100,7 @@ const Renovatie: React.FC = () => {
                     <div className="max-w-4xl mx-auto text-center">
                         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
                             Totaalrenovatie & Verbouwingen
-                            <span className="block text-brand-accent mt-2">in Antwerpen & Mechelen</span>
+                            <span className="block text-brand-accent mt-2">in Zoersel, Antwerpen & Mechelen</span>
                         </h1>
                         <p className="text-lg md:text-xl text-gray-300 mb-8 leading-relaxed max-w-3xl mx-auto">
                             Van badkamer tot totaalproject. Yannova denkt met u mee, coördineert alle werken en zorgt voor een nette oplevering waar u echt van kan genieten.
@@ -225,6 +249,50 @@ const Renovatie: React.FC = () => {
                             </div>
                             <ArrowRight className="ml-auto text-gray-400 group-hover:text-brand-accent transform group-hover:translate-x-1 transition-all" size={20} />
                         </Link>
+                    </div>
+                </div>
+            </section>
+
+            {/* Regional Internal Linking Section - SEO */}
+            <section className="py-16 bg-gray-50">
+                <div className="container mx-auto px-6">
+                    <div className="max-w-4xl mx-auto">
+                        <h2 className="text-2xl font-bold text-slate-900 mb-6 text-center">
+                            Renovatie in uw regio
+                        </h2>
+                        <p className="text-gray-600 text-center mb-8">
+                            Yannova voert renovatiewerken uit in heel de provincie Antwerpen en Vlaams-Brabant.
+                            Ontdek wat we voor uw gemeente kunnen betekenen:
+                        </p>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <Link to="/regio/zoersel" className="p-4 bg-white rounded-lg hover:bg-brand-accent/10 transition-colors text-center group border border-gray-100">
+                                <span className="font-semibold text-slate-900 group-hover:text-brand-accent">Renovatie Zoersel</span>
+                            </Link>
+                            <Link to="/regio/antwerpen" className="p-4 bg-white rounded-lg hover:bg-brand-accent/10 transition-colors text-center group border border-gray-100">
+                                <span className="font-semibold text-slate-900 group-hover:text-brand-accent">Renovatie Antwerpen</span>
+                            </Link>
+                            <Link to="/regio/mechelen" className="p-4 bg-white rounded-lg hover:bg-brand-accent/10 transition-colors text-center group border border-gray-100">
+                                <span className="font-semibold text-slate-900 group-hover:text-brand-accent">Renovatie Mechelen</span>
+                            </Link>
+                            <Link to="/regio/lier" className="p-4 bg-white rounded-lg hover:bg-brand-accent/10 transition-colors text-center group border border-gray-100">
+                                <span className="font-semibold text-slate-900 group-hover:text-brand-accent">Renovatie Lier</span>
+                            </Link>
+                            <Link to="/regio/putte" className="p-4 bg-white rounded-lg hover:bg-brand-accent/10 transition-colors text-center group border border-gray-100">
+                                <span className="font-semibold text-slate-900 group-hover:text-brand-accent">Renovatie Putte</span>
+                            </Link>
+                            <Link to="/regio/bonheiden" className="p-4 bg-white rounded-lg hover:bg-brand-accent/10 transition-colors text-center group border border-gray-100">
+                                <span className="font-semibold text-slate-900 group-hover:text-brand-accent">Renovatie Bonheiden</span>
+                            </Link>
+                            <Link to="/regio/heist-op-den-berg" className="p-4 bg-white rounded-lg hover:bg-brand-accent/10 transition-colors text-center group border border-gray-100">
+                                <span className="font-semibold text-slate-900 group-hover:text-brand-accent">Renovatie Heist-op-den-Berg</span>
+                            </Link>
+                            <Link to="/regio/keerbergen" className="p-4 bg-white rounded-lg hover:bg-brand-accent/10 transition-colors text-center group border border-gray-100">
+                                <span className="font-semibold text-slate-900 group-hover:text-brand-accent">Renovatie Keerbergen</span>
+                            </Link>
+                        </div>
+                        <p className="text-sm text-gray-500 text-center mt-6">
+                            Ook actief in Malle, Schilde, Ranst, Brecht, Zandhoven, Wommelgem en omliggende gemeenten.
+                        </p>
                     </div>
                 </div>
             </section>

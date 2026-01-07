@@ -200,7 +200,7 @@ const ContactCTA: React.FC<ContactCTAProps> = ({ onSubmitLead }) => {
 
           <div className="lg:w-2/5 bg-brand-primary p-6 sm:p-10 lg:p-16 text-white flex flex-col justify-between relative overflow-hidden">
             <div className="absolute inset-0 z-0 opacity-20">
-              <img src="/images/003a3c82-53d0-4c81-8d96-4ae5ad333f15.png" className="w-full h-full object-cover" alt="" loading="lazy" />
+              <img src="/images/003a3c82-53d0-4c81-8d96-4ae5ad333f15.png" className="w-full h-full object-cover" alt="Yannova Bouw - Renovatieproject achtergrond" loading="lazy" />
             </div>
             <div className="relative z-10">
               <h3 className="text-2xl font-bold mb-8 border-b border-white/20 pb-4">Contactgegevens</h3>

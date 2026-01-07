@@ -9,6 +9,7 @@ import StructuredData from '../seo/StructuredData';
 import SEO from '../seo/SEO';
 import { Lead } from '../../types';
 import AdminEditButton from '../admin/AdminEditButton';
+import MobileStickyBar from '../ui/MobileStickyBar';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -63,6 +64,7 @@ const Layout: React.FC<LayoutProps> = ({
       <Chatbot />
       <AdminEditButton />
       <CookieConsent />
+      <MobileStickyBar />
     </>
   );
 };

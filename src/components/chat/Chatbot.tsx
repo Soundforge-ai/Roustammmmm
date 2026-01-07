@@ -124,7 +124,14 @@ const Chatbot: React.FC = () => {
 
     useEffect(() => {
         if (isOpen && !isMinimized && inputRef.current) {
-            inputRef.current.focus();
+            // Use a small timeout to ensure the input is rendered and ready
+            const timeoutId = setTimeout(() => {
+                if (inputRef.current) {
+                    inputRef.current.focus();
+                }
+            }, 100);
+            
+            return () => clearTimeout(timeoutId);
         }
     }, [isOpen, isMinimized]);
 
@@ -157,6 +164,11 @@ const Chatbot: React.FC = () => {
         setMessages(updatedMessages);
         setInput('');
         setIsLoading(true);
+        
+        // Clear any existing focus timeout
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+        }
 
         // Save to storage
         if (sessionId) {
@@ -231,6 +243,13 @@ const Chatbot: React.FC = () => {
                         tags: ['Inquiry']
                     });
                 }
+                
+                // Focus back to input after AI response
+                setTimeout(() => {
+                    if (inputRef.current) {
+                        inputRef.current.focus();
+                    }
+                }, 100);
             }
         } catch (error: any) {
             // Don't handle error if request was aborted (component unmounted)

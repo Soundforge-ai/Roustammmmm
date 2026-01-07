@@ -47,8 +47,8 @@ export const ALLOWED_ADMIN_EMAILS = [
 ];
 
 export const HERO_CONTENT = {
-  title: 'Ramen, Deuren, Renovatie & Crepi — met zorg voor uw thuis',
-  subtitle: 'We luisteren naar uw plannen, denken mee en zorgen voor een nette uitvoering. Actief in Zoersel, Antwerpen, Mechelen en omgeving.',
+  title: 'Ramen, Deuren, Renovatie & Crepi in Zoersel en omgeving',
+  subtitle: 'Lokale vakmannen uit Zoersel die uw woning in Halle, Sint-Antonius en de ruime regio Antwerpen en Mechelen energiezuiniger en mooier maken.',
   cta: 'Vraag uw vrijblijvende offerte aan',
   image: '/images/c67c2ffe-a42b-477f-a67d-10100999c4f0.png',
 };

@@ -37,9 +37,12 @@ const OverOns: React.FC = () => {
         <div className="absolute inset-0 opacity-10 bg-[url('https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&q=80')] bg-cover bg-center" />
         <div className="container mx-auto px-6 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">Over Yannova</h1>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
+              Over Yannova Bouw
+              <span className="block text-brand-accent mt-2 text-2xl md:text-3xl">Uw aannemer in Zoersel, Antwerpen & Mechelen</span>
+            </h1>
             <p className="text-lg md:text-xl text-gray-200 leading-relaxed">
-              Al meer dan 15 jaar helpen we klanten in België met renovatie- en bouwprojecten — met oog voor detail, duidelijke communicatie en een proper resultaat.
+              Al meer dan 15 jaar helpen we klanten in Zoersel, Antwerpen, Mechelen en omgeving met renovatie- en bouwprojecten — met oog voor detail, duidelijke communicatie en een proper resultaat.
             </p>
           </div>
         </div>

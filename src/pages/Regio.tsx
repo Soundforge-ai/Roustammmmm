@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { MapPin, CheckCircle2, ArrowRight, Phone, Building2, ShieldCheck, Clock, Star, Users, Award } from 'lucide-react';
 import GoogleMap from '../components/ui/GoogleMap';
 import OptimizedImage from '@/components/ui/OptimizedImage';
+import GoogleBusinessCard from '../components/seo/GoogleBusinessCard';
 import { CITIES } from '../constants/regions';
 
 // FAQ Schema generator voor lokale SEO
@@ -169,15 +170,11 @@ const generateLocalBusinessSchema = (cityData: typeof CITIES['zoersel']) => {
 
 const RegioPage: React.FC = () => {
     const { city } = useParams<{ city: string }>();
-    const [cityData, setCityData] = useState<typeof CITIES['zoersel'] | null>(null);
 
-    useEffect(() => {
-        if (city && CITIES[city.toLowerCase()]) {
-            setCityData(CITIES[city.toLowerCase()]);
-        } else {
-            setCityData(null);
-        }
-    }, [city]);
+    // Direct initialisatie in plaats van useEffect om race condition te voorkomen
+    const cityKey = city?.toLowerCase() || '';
+    const cityData = CITIES[cityKey] || null;
+    const isValidCity = cityKey && CITIES[cityKey];
 
     // Inject structured data schemas
     useEffect(() => {
@@ -211,7 +208,7 @@ const RegioPage: React.FC = () => {
         // Update keywords for this specific city
         const metaKeywords = document.querySelector('meta[name="keywords"]');
         if (metaKeywords) {
-            metaKeywords.setAttribute('content', 
+            metaKeywords.setAttribute('content',
                 `ramen en deuren ${cityData.name}, renovatie ${cityData.name}, crepi ${cityData.name}, ` +
                 `isolatie werken ${cityData.name}, gevelwerken ${cityData.name}, gevelisolatie ${cityData.name}, ` +
                 `aannemer ${cityData.name}, bouwbedrijf ${cityData.name}, PVC ramen ${cityData.name}, ` +
@@ -231,10 +228,14 @@ const RegioPage: React.FC = () => {
         };
     }, [cityData]);
 
-    if (!cityData) {
-        if (city) return <Navigate to="/contact" replace />;
-        return null;
+    // Als de stad niet bestaat, toon 404 pagina (niet redirect naar contact!)
+    if (!isValidCity) {
+        // Redirect naar NotFound in plaats van contact
+        return <Navigate to="/404" replace />;
     }
+
+    // cityData is hier gegarandeerd niet null dankzij isValidCity check
+    if (!cityData) return null;
 
     // Nabijgelegen steden voor interne linking
     const nearbyCities = Object.entries(CITIES)
@@ -259,7 +260,8 @@ const RegioPage: React.FC = () => {
                             Ramen, Deuren & Renovaties in <span className="text-brand-accent">{cityData.name}</span>
                         </h1>
                         <p className="text-xl text-gray-200 leading-relaxed mb-8">
-                            {cityData.longDescription}
+                            {/* Gebruik unieke localIntro indien beschikbaar, anders fallback */}
+                            {cityData.content?.localIntro || cityData.longDescription}
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <Link
@@ -275,6 +277,10 @@ const RegioPage: React.FC = () => {
                                 <Phone size={20} className="text-brand-accent" /> Bel Direct
                             </a>
                         </div>
+                        {/* Lokale CTA subtekst */}
+                        {cityData.content?.ctaSubtext && (
+                            <p className="text-gray-400 text-sm mt-4">{cityData.content.ctaSubtext}</p>
+                        )}
                     </div>
                 </div>
             </section>
@@ -357,11 +363,12 @@ const RegioPage: React.FC = () => {
                             </div>
                             <h3 className="text-xl font-bold text-brand-dark mb-4">Ramen en Deuren</h3>
                             <p className="text-gray-600 mb-6">
-                                Levering en plaatsing van hoogwaardige PVC en Aluminium ramen en deuren in {cityData.name}.
-                                Uitstekende isolatie en veiligheid.
+                                {/* Unieke dienst-beschrijving of fallback */}
+                                {cityData.content?.serviceHighlights?.ramen ||
+                                    `Levering en plaatsing van hoogwaardige PVC en Aluminium ramen en deuren in ${cityData.name}. Uitstekende isolatie en veiligheid.`}
                             </p>
                             <Link to="/ramen-deuren" className="text-brand-accent font-medium hover:underline flex items-center gap-1">
-                                Meer info <ArrowRight size={16} />
+                                Bekijk onze ramen en deuren <ArrowRight size={16} />
                             </Link>
                         </div>
 
@@ -371,11 +378,12 @@ const RegioPage: React.FC = () => {
                             </div>
                             <h3 className="text-xl font-bold text-brand-dark mb-4">Gevelrenovatie</h3>
                             <p className="text-gray-600 mb-6">
-                                Geef uw gevel in {cityData.name} een nieuwe look met crepi, steenstrips of gevelisolatie.
-                                Duurzaam en energiebesparend.
+                                {/* Unieke dienst-beschrijving of fallback */}
+                                {cityData.content?.serviceHighlights?.gevel ||
+                                    `Geef uw gevel in ${cityData.name} een nieuwe look met crepi, steenstrips of gevelisolatie. Duurzaam en energiebesparend.`}
                             </p>
                             <Link to="/gevel" className="text-brand-accent font-medium hover:underline flex items-center gap-1">
-                                Meer info <ArrowRight size={16} />
+                                Ontdek onze gevelwerken <ArrowRight size={16} />
                             </Link>
                         </div>
 
@@ -385,11 +393,12 @@ const RegioPage: React.FC = () => {
                             </div>
                             <h3 className="text-xl font-bold text-brand-dark mb-4">Totaalrenovatie</h3>
                             <p className="text-gray-600 mb-6">
-                                Van afbraak tot afwerking: wij coördineren uw volledige verbouwing in {cityData.name}.
-                                Eén aanspreekpunt voor al uw werken.
+                                {/* Unieke dienst-beschrijving of fallback */}
+                                {cityData.content?.serviceHighlights?.renovatie ||
+                                    `Van afbraak tot afwerking: wij coördineren uw volledige verbouwing in ${cityData.name}. Eén aanspreekpunt voor al uw werken.`}
                             </p>
                             <Link to="/renovatie" className="text-brand-accent font-medium hover:underline flex items-center gap-1">
-                                Meer info <ArrowRight size={16} />
+                                Meer over renovatie <ArrowRight size={16} />
                             </Link>
                         </div>
                     </div>
@@ -401,28 +410,26 @@ const RegioPage: React.FC = () => {
                 <div className="container mx-auto px-6">
                     <div className="grid md:grid-cols-2 gap-12 items-center">
                         <div>
-                            <h2 className="text-3xl font-bold mb-6">Uw Lokale Partner in {cityData.name}</h2>
+                            <h2 className="text-3xl font-bold mb-6">
+                                {cityData.content?.ctaText || `Uw Lokale Partner in ${cityData.name}`}
+                            </h2>
                             <p className="text-gray-300 mb-8 leading-relaxed">
                                 Waarom kiezen voor een aannemer van ver, als u lokale kwaliteit kunt krijgen?
                                 Yannova Bouw kent de regio {cityData.name} en staat garant voor een persoonlijke service.
                             </p>
+                            {/* Gebruik unieke USPs indien beschikbaar, anders fallback */}
                             <ul className="space-y-4">
-                                <li className="flex items-center gap-3">
-                                    <CheckCircle2 className="text-brand-accent flex-shrink-0" size={24} />
-                                    <span>Snel ter plaatse in {cityData.name} en de regio {cityData.zip}</span>
-                                </li>
-                                <li className="flex items-center gap-3">
-                                    <CheckCircle2 className="text-brand-accent flex-shrink-0" size={24} />
-                                    <span>Gratis opmeting en offerte op maat</span>
-                                </li>
-                                <li className="flex items-center gap-3">
-                                    <CheckCircle2 className="text-brand-accent flex-shrink-0" size={24} />
-                                    <span>Ervaring met lokale bouwstijlen en voorschriften</span>
-                                </li>
-                                <li className="flex items-center gap-3">
-                                    <CheckCircle2 className="text-brand-accent flex-shrink-0" size={24} />
-                                    <span>Nederlandstalige aanspreekpunt en vakmannen</span>
-                                </li>
+                                {(cityData.content?.localUSPs || [
+                                    `Snel ter plaatse in ${cityData.name} en de regio ${cityData.zip}`,
+                                    'Gratis opmeting en offerte op maat',
+                                    'Ervaring met lokale bouwstijlen en voorschriften',
+                                    'Nederlandstalige aanspreekpunt en vakmannen'
+                                ]).map((usp, index) => (
+                                    <li key={index} className="flex items-center gap-3">
+                                        <CheckCircle2 className="text-brand-accent flex-shrink-0" size={24} />
+                                        <span>{usp}</span>
+                                    </li>
+                                ))}
                             </ul>
                             <div className="mt-8">
                                 <Link to="/contact" className="bg-white text-brand-dark font-bold py-3 px-6 rounded-lg hover:bg-gray-100 transition-colors inline-block">
@@ -431,15 +438,9 @@ const RegioPage: React.FC = () => {
                             </div>
                         </div>
 
-                        <div className="relative">
-                            {/* Local Project Image for SEO */}
-                            <div className="mb-8 rounded-xl overflow-hidden shadow-lg h-64">
-                                <OptimizedImage 
-                                    src="/images/downloads/crepi-1.jpg" 
-                                    alt={`Gevelrenovatie en ramen plaatsen in ${cityData.name}`}
-                                    className="w-full h-full object-cover"
-                                />
-                            </div>
+                        <div className="relative space-y-6">
+                            {/* Google Business Card for Local SEO */}
+                            <GoogleBusinessCard cityName={cityData.name} />
 
                             {/* Map Component pointing to coordinates of city */}
                             <div className="h-80 rounded-xl overflow-hidden shadow-2xl border-4 border-white/10">
@@ -454,12 +455,46 @@ const RegioPage: React.FC = () => {
                 </div>
             </section>
 
+            {/* Local Project Highlight - alleen tonen als er een project is */}
+            {cityData.content?.localProject && (
+                <section className="py-16 bg-gray-50">
+                    <div className="container mx-auto px-6">
+                        <div className="max-w-4xl mx-auto">
+                            <div className="bg-white rounded-xl shadow-md p-8 border border-gray-100">
+                                <div className="flex items-start gap-4">
+                                    <div className="flex-shrink-0 w-12 h-12 bg-brand-accent/10 rounded-lg flex items-center justify-center">
+                                        <Award className="text-brand-accent" size={24} />
+                                    </div>
+                                    <div>
+                                        <span className="text-sm text-brand-accent font-medium uppercase tracking-wide">Referentieproject in {cityData.name}</span>
+                                        <h3 className="text-xl font-bold text-brand-dark mt-1 mb-2">{cityData.content.localProject.title}</h3>
+                                        <p className="text-gray-600">{cityData.content.localProject.description}</p>
+                                        <Link to="/portfolio" className="text-brand-accent font-medium hover:underline flex items-center gap-1 mt-4">
+                                            Bekijk meer projecten <ArrowRight size={16} />
+                                        </Link>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            )}
+
             {/* FAQ Local */}
             <section className="py-20 bg-white">
                 <div className="container mx-auto px-6 max-w-4xl">
                     <h2 className="text-3xl font-bold text-brand-dark mb-10 text-center">Veelgestelde vragen in {cityData.name}</h2>
 
                     <div className="space-y-6">
+                        {/* Lokale FAQ's eerst (indien beschikbaar) */}
+                        {cityData.content?.localFAQs?.map((faq, index) => (
+                            <div key={`local-${index}`} className="bg-brand-accent/5 p-6 rounded-lg border-l-4 border-brand-accent">
+                                <h3 className="text-lg font-bold text-brand-dark mb-2">{faq.question}</h3>
+                                <p className="text-gray-600">{faq.answer}</p>
+                            </div>
+                        ))}
+
+                        {/* Standaard FAQ's */}
                         <div className="bg-gray-50 p-6 rounded-lg">
                             <h3 className="text-lg font-bold text-brand-dark mb-2">Plaatsen jullie ook ramen en deuren in het centrum van {cityData.name}?</h3>
                             <p className="text-gray-600">Ja, wij werken in heel {cityData.name} ({cityData.zip}){cityData.deelgemeenten ? ` en de deelgemeenten ${cityData.deelgemeenten.join(', ')}` : ''}. Of u nu in het centrum of landelijk woont, wij komen graag bij u langs.</p>

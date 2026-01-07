@@ -170,8 +170,8 @@ const App: React.FC = () => {
                         onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{
-                          title: 'Yannova Bouw | Ramen en Deuren, Renovatie & Crepi | Keerbergen, Mechelen, Zoersel',
-                          description: 'Yannova Bouw - Specialist in ramen en deuren, renovatie, isolatie en crepi gevelafwerking in Keerbergen, Mechelen, Zoersel, Putte en omgeving. ✓ Gratis offerte ✓ 15+ jaar ervaring ✓ Vakkundige plaatsing',
+                          title: 'Ramen, Deuren & Renovatie Antwerpen - Yannova Bouw',
+                          description: 'Specialist in ramen, deuren en totaalrenovaties in regio Antwerpen & Zoersel. Vraag uw gratis offerte in 2 min. 15+ jaar ervaring.',
                           keywords: 'Yannova, Yannova Bouw, ramen en deuren Keerbergen, ramen en deuren Mechelen, ramen en deuren Zoersel, ramen en deuren Putte, PVC ramen, aluminium ramen, renovatie Keerbergen, renovatie Mechelen, renovatie Zoersel, bouwbedrijf Keerbergen, bouwbedrijf Mechelen, crepi gevel, gevelisolatie, gevelbepleistering, isolatiewerken, ramen plaatsen Antwerpen, deuren plaatsen, gevelrenovatie, energiezuinige ramen, ramen Heist-op-den-Berg, ramen Bonheiden, ramen Lier, ramen Nijlen, renovatie Putte, renovatie Heist-op-den-Berg, bouwbedrijf Antwerpen provincie, ramen Tremelo, ramen Haacht, renovatie Bonheiden, crepi Keerbergen, crepi Mechelen, gevel Zoersel'
                         }}
                       >
@@ -194,9 +194,9 @@ const App: React.FC = () => {
                         onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{
-                          title: 'Over Ons - Bouwbedrijf Keerbergen, Mechelen, Zoersel',
-                          description: 'Leer meer over Yannova Bouw, uw betrouwbare partner voor ramen en deuren, renovatie en crepi in Keerbergen, Mechelen, Zoersel en omgeving. 15+ jaar ervaring.',
-                          keywords: 'Yannova Bouw, bouwbedrijf Keerbergen, aannemer Mechelen, renovatie Zoersel, over ons'
+                          title: 'Over Ons | Bouwbedrijf Zoersel, Antwerpen & Mechelen | Yannova',
+                          description: 'Maak kennis met Yannova Bouw: 15+ jaar ervaring in ramen, deuren, renovatie en gevelwerken. Vakmanschap en persoonlijke begeleiding in Zoersel, Antwerpen en Mechelen.',
+                          keywords: 'Yannova Bouw, bouwbedrijf Zoersel, aannemer Antwerpen, renovatie Mechelen, over ons, team bouwbedrijf'
                         }}
                       >
                         <OverOns />
@@ -210,9 +210,9 @@ const App: React.FC = () => {
                         onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{
-                          title: 'Diensten - Ramen en Deuren, Renovatie, Isolatie, Crepi',
-                          description: 'Ontdek onze diensten: ramen en deuren plaatsen, totaalrenovatie, isolatiewerken en crepi gevelafwerking in Keerbergen, Mechelen, Zoersel, Putte en omgeving.',
-                          keywords: 'ramen en deuren Keerbergen, renovatie Mechelen, isolatie Zoersel, crepi Putte, diensten bouwbedrijf'
+                          title: 'Diensten | Ramen, Deuren, Renovatie & Gevelwerken | Yannova',
+                          description: 'Ontdek onze diensten: ramen en deuren, totaalrenovatie, gevelisolatie met crepi en tuinaanleg in Zoersel, Antwerpen, Mechelen en omgeving. Gratis offerte aanvragen.',
+                          keywords: 'ramen en deuren Zoersel, renovatie Antwerpen, gevelisolatie Mechelen, crepi, diensten bouwbedrijf, aannemer'
                         }}
                       >
                         <Diensten />
@@ -226,9 +226,9 @@ const App: React.FC = () => {
                         onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{
-                          title: 'Crepi Info - Gevelbepleistering Keerbergen, Mechelen',
-                          description: 'Alles over crepi en gevelbepleistering. Professionele crepi afwerking in Keerbergen, Mechelen, Zoersel en omgeving. Vraag gratis advies aan.',
-                          keywords: 'crepi Keerbergen, crepi Mechelen, gevelbepleistering Zoersel, crepi info, crepi patronen'
+                          title: 'Crepi Info | Gevelbepleistering Zoersel, Antwerpen | Yannova',
+                          description: 'Alles over crepi en gevelbepleistering: soorten, kleuren, prijzen en onderhoud. Professionele crepi afwerking in Zoersel, Antwerpen en Mechelen. Gratis advies.',
+                          keywords: 'crepi Zoersel, crepi Antwerpen, gevelbepleistering Mechelen, crepi info, crepi patronen, crepi prijs per m2'
                         }}
                       >
                         <CrepiInfoPage />
@@ -242,9 +242,9 @@ const App: React.FC = () => {
                         onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{
-                          title: 'Onze Aanpak - Van Offerte tot Oplevering',
-                          description: 'Van eerste contact tot oplevering: ontdek de werkwijze van Yannova Bouw. Transparante communicatie en vakkundige uitvoering in Keerbergen en omgeving.',
-                          keywords: 'werkwijze bouwbedrijf, aanpak renovatie, offerte aanvragen, Yannova aanpak'
+                          title: 'Onze Aanpak | Van Offerte tot Oplevering | Yannova',
+                          description: 'Zo werkt Yannova: van eerste contact tot oplevering. Transparante werkwijze, heldere planning en vakkundige uitvoering in Zoersel, Antwerpen en Mechelen.',
+                          keywords: 'werkwijze bouwbedrijf, aanpak renovatie, offerte aanvragen, Yannova aanpak, bouwproces'
                         }}
                       >
                         <Aanpak />
@@ -275,9 +275,9 @@ const App: React.FC = () => {
                         onAdminClick={() => window.location.href = '/admin'}
                         showContactCTA={false}
                         seo={{
-                          title: 'Contact - Gratis Offerte Aanvragen Keerbergen, Mechelen',
-                          description: 'Neem contact op met Yannova Bouw voor een gratis offerte. Actief in Keerbergen, Mechelen, Zoersel, Putte en heel de provincie Antwerpen. Bel of mail ons!',
-                          keywords: 'contact Yannova, gratis offerte, offerte ramen en deuren, contact bouwbedrijf Keerbergen'
+                          title: 'Contact | Gratis Offerte Aanvragen Zoersel, Antwerpen | Yannova',
+                          description: 'Neem contact op met Yannova Bouw voor een gratis offerte. Gevestigd in Zoersel, actief in Antwerpen, Mechelen en heel Vlaanderen. Bel +32 489 96 00 01 of mail ons.',
+                          keywords: 'contact Yannova, gratis offerte, offerte ramen en deuren, contact bouwbedrijf Zoersel, aannemer Antwerpen'
                         }}
                       >
                         <Contact />
@@ -311,8 +311,8 @@ const App: React.FC = () => {
                         onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{
-                          title: 'Virtuele Showroom - 3D Voordeuren Bekijken | Keerbergen, Zoersel',
-                          description: 'Bekijk voordeuren in 3D met onze virtuele showroom. Draai, zoom en bekijk elke deur vanuit alle hoeken. Gebruik AR om de deur in uw woning te projecteren. Actief in Keerbergen, Mechelen, Zoersel en omgeving.',
+                          title: '3D Deuren Configurator & Showroom | Yannova',
+                          description: 'Bekijk uw nieuwe voordeur direct op uw eigen huis via onze 3D tool. Ontwerp online uw droomdeur en ontvang een prijsindicatie.',
                           keywords: 'voordeuren 3D, virtuele showroom, AR deuren bekijken, aluminium voordeur, voordeuren Keerbergen, voordeuren Zoersel, 3D showroom ramen en deuren, deuren configurator'
                         }}
                       >
@@ -393,9 +393,9 @@ const App: React.FC = () => {
                         onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{
-                          title: 'Gevelwerken Keerbergen, Mechelen, Zoersel',
-                          description: 'Professionele gevelwerken in Keerbergen, Mechelen, Zoersel en omgeving. Gevelbepleistering, gevelisolatie, crepi en steenstrips. Gratis offerte!',
-                          keywords: 'gevelwerken Keerbergen, gevel Mechelen, gevelrenovatie Zoersel, crepi gevel, gevelisolatie'
+                          title: 'Gevelrenovatie & Crepi Antwerpen | Met Premiegarantie',
+                          description: 'Laat uw gevel bepleisteren (crepi) of isoleren. Bespaar tot 30% energie. Wij helpen met uw premie-aanvraag tot €5.000.',
+                          keywords: 'gevelwerken Zoersel, gevel Antwerpen, gevelrenovatie Mechelen, crepi gevel, gevelisolatie, premie gevelisolatie'
                         }}
                       >
                         <Gevel />
@@ -409,9 +409,9 @@ const App: React.FC = () => {
                         onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{
-                          title: 'Gevelbepleistering Keerbergen, Mechelen - Crepi Specialist',
-                          description: 'Professionele gevelbepleistering en crepi afwerking in Keerbergen, Mechelen, Zoersel en omgeving. Diverse structuren en kleuren. Vraag gratis offerte aan.',
-                          keywords: 'gevelbepleistering Keerbergen, crepi Mechelen, gevelpleister Zoersel, crepi afwerking, gevelbepleistering prijs'
+                          title: 'Gevelbepleistering & Crepi Zoersel, Antwerpen | Yannova',
+                          description: 'Professionele gevelbepleistering en crepi afwerking in Zoersel, Antwerpen, Mechelen. Siliconen- en silikaatpleister. Diverse structuren en kleuren. Gratis offerte.',
+                          keywords: 'gevelbepleistering Zoersel, crepi Antwerpen, gevelpleister Mechelen, crepi afwerking, crepi prijs per m2'
                         }}
                       >
                         <Gevelbepleistering />
@@ -441,9 +441,9 @@ const App: React.FC = () => {
                         onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{
-                          title: 'Gevelisolatie Keerbergen, Mechelen - Bespaar Energie',
-                          description: 'Bespaar energie met professionele gevelisolatie in Keerbergen, Mechelen, Zoersel. Buitengevelisolatie met EPS en crepi afwerking. Tot 30% energiebesparing.',
-                          keywords: 'gevelisolatie Keerbergen, buitenisolatie Mechelen, EPS isolatie gevel, gevelisolatie prijs, energiebesparing'
+                          title: 'Gevelisolatie Zoersel, Antwerpen & Mechelen | Tot €5.000 Premie | Yannova',
+                          description: 'Bespaar tot 30% energie met professionele gevelisolatie in Zoersel, Antwerpen, Mechelen. EPS isolatie met crepi. Tot €5.000 Mijn VerbouwPremie. Gratis offerte.',
+                          keywords: 'gevelisolatie Zoersel, buitenisolatie Antwerpen, EPS isolatie gevel Mechelen, gevelisolatie premie, energiebesparing'
                         }}
                       >
                         <Gevelisolatie />
@@ -457,9 +457,9 @@ const App: React.FC = () => {
                         onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{
-                          title: 'Steenstrips Keerbergen, Mechelen - Baksteenlook Gevel',
-                          description: 'Authentieke baksteenlook met steenstrips in Keerbergen, Mechelen, Zoersel. Diverse kleuren en structuren. Duurzaam en onderhoudsvriendelijk.',
-                          keywords: 'steenstrips Keerbergen, steenstrips gevel Mechelen, baksteenstrips, gevelbekleden steenstrips'
+                          title: 'Steenstrips Zoersel, Antwerpen & Mechelen | Baksteenlook | Yannova',
+                          description: 'Authentieke baksteenlook met steenstrips in Zoersel, Antwerpen, Mechelen. Diverse kleuren en structuren. Duurzaam, onderhoudsvriendelijk en isolerend.',
+                          keywords: 'steenstrips Zoersel, steenstrips gevel Antwerpen, baksteenstrips Mechelen, gevelbekleding steenstrips'
                         }}
                       >
                         <Steenstrips />
@@ -473,9 +473,9 @@ const App: React.FC = () => {
                         onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{
-                          title: 'Gevelrenovatie Keerbergen, Mechelen - Complete Renovatie',
-                          description: 'Complete gevelrenovatie van A tot Z in Keerbergen, Mechelen, Zoersel en omgeving. Van vochtbehandeling tot nieuwe crepi afwerking.',
-                          keywords: 'gevelrenovatie Keerbergen, gevel renoveren Mechelen, gevel opknappen, gevelrenovatie prijs'
+                          title: 'Gevelrenovatie Zoersel, Antwerpen & Mechelen | Yannova',
+                          description: 'Complete gevelrenovatie van A tot Z in Zoersel, Antwerpen, Mechelen. Van vochtbehandeling tot isolatie en crepi afwerking. 10 jaar garantie. Gratis offerte.',
+                          keywords: 'gevelrenovatie Zoersel, gevel renoveren Antwerpen, gevel opknappen Mechelen, gevelrenovatie prijs'
                         }}
                       >
                         <Gevelrenovatie />
@@ -509,8 +509,8 @@ const App: React.FC = () => {
                         onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{
-                          title: 'Ramen en Deuren Zoersel, Antwerpen & Mechelen | PVC & Alu | Yannova',
-                          description: 'Specialist in PVC en Aluminium ramen en deuren. Vakkundige plaatsing in Zoersel, Antwerpen, Mechelen en omgeving. Hoogste isolatiewaarden en 10 jaar garantie. Vraag uw gratis offerte.',
+                          title: 'Ramen en Deuren Kopen Zoersel? PVC & Alu | Yannova',
+                          description: 'Hoogwaardige PVC en Aluminium ramen & deuren. Inbraakveilig en top-isolatie. Bekijk onze realisaties of bezoek de showroom.',
                           keywords: 'ramen en deuren Zoersel, ramen en deuren Antwerpen, ramen en deuren Mechelen, PVC ramen, aluminium ramen, ramen vervangen, voordeuren, schuiframen, hoogrendementsglas'
                         }}
                       >
@@ -525,9 +525,9 @@ const App: React.FC = () => {
                         onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{
-                          title: 'Schilderwerken Binnen & Buiten | Yannova',
-                          description: 'Professionele schilderwerken voor uw interieur en gevel. Kwalitatief schilderwerk, lakwerk en kleuradvies in Keerbergen, Mechelen en omgeving.',
-                          keywords: 'schilderwerken, huisschilder, binnenschilder, buitenschilder, gevel schilderen, ramen schilderen'
+                          title: 'Schilderwerken Binnen & Buiten Zoersel, Antwerpen | Yannova',
+                          description: 'Professionele schilderwerken voor interieur en gevel in Zoersel, Antwerpen, Mechelen en omgeving. Kwalitatief schilderwerk met 10 jaar garantie.',
+                          keywords: 'schilderwerken Zoersel, huisschilder Antwerpen, binnenschilder, buitenschilder, gevel schilderen Mechelen'
                         }}
                       >
                         <Schilderwerken />
@@ -541,9 +541,9 @@ const App: React.FC = () => {
                         onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{
-                          title: 'Tuinaanleg & Opritten Keerbergen, Mechelen',
-                          description: 'Professioneel tuinontwerp en tuinaanleg. Opritten, terrassen, afsluitingen en totaalprojecten in regio Keerbergen en Mechelen.',
-                          keywords: 'tuinaanleg Keerbergen, opritten, klinkers leggen, terras aanleggen, tuinarchitect'
+                          title: 'Tuinaanleg & Opritten Zoersel, Antwerpen, Mechelen | Yannova',
+                          description: 'Professionele tuinaanleg, opritten en terrassen in Zoersel, Antwerpen, Mechelen en omgeving. Klinkers, natuursteen en groenvoorziening. Gratis offerte.',
+                          keywords: 'tuinaanleg Zoersel, opritten Antwerpen, klinkers leggen Mechelen, terras aanleggen, tuinarchitect'
                         }}
                       >
                         <Tuinaanleg />
@@ -557,9 +557,9 @@ const App: React.FC = () => {
                         onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{
-                          title: 'Totaalrenovatie & Badkamers Keerbergen',
-                          description: 'Uw partner voor totaalrenovatie, badkamerrenovatie en gyprocwerken in Keerbergen, Mechelen en omgeving. Eén aanspreekpunt voor uw verbouwing.',
-                          keywords: 'totaalrenovatie Keerbergen, badkamer renovatie, gyprocwerken, zolderinrichting, aannemer renovatie'
+                          title: 'Totaalrenovatie & Aannemer Zoersel / Antwerpen | Yannova',
+                          description: 'Uw woning professioneel verbouwen? Van ruwbouw tot afwerking. Eén aanspreekpunt voor uw totaalrenovatie in provincie Antwerpen.',
+                          keywords: 'totaalrenovatie Zoersel, renovatie Antwerpen, badkamer renovatie Mechelen, gyprocwerken, zolderinrichting, verbouwing, aannemer renovatie'
                         }}
                       >
                         <Renovatie />

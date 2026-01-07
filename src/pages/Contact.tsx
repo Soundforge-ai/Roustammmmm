@@ -55,13 +55,13 @@ const Contact: React.FC = () => {
     e.preventDefault();
     if (!validateForm()) return;
     setIsSubmitting(true);
-    
+
     try {
       // EmailJS configuratie - vervang met jouw eigen service ID en template ID
       const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'service_yannova';
       const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'template_contact';
       const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'YOUR_PUBLIC_KEY';
-      
+
       // Voorbereid de template parameters
       const templateParams = {
         from_name: formData.name,
@@ -72,14 +72,14 @@ const Contact: React.FC = () => {
         to_email: 'info@yannova.be',
         reply_to: formData.email,
       };
-      
+
       // Verstuur de email
       await emailjs.send(serviceId, templateId, templateParams, publicKey);
-      
+
       // Succesvol verzonden
       setSubmitted(true);
       setFormData({ name: '', phone: '', email: '', subject: '', message: '' });
-      
+
     } catch (error) {
       console.error('EmailJS Error:', error);
       alert('Er is een fout opgetreden bij het versturen van uw bericht. Probeer het later opnieuw of contacteer ons telefonisch.');
@@ -108,7 +108,10 @@ const Contact: React.FC = () => {
       <section className="relative py-24 md:py-32 bg-gradient-to-br from-brand-dark via-slate-800 to-brand-dark">
         <div className="container mx-auto px-6 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">Contact</h1>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
+              Contact Yannova Bouw
+              <span className="block text-brand-accent mt-2 text-3xl md:text-4xl">Zoersel, Antwerpen & Mechelen</span>
+            </h1>
             <p className="text-lg md:text-xl text-gray-200 leading-relaxed">
               Vertel ons kort wat u wil aanpakken. We luisteren, denken mee en helpen u graag verder met duidelijk advies en een vrijblijvende offerte.
             </p>

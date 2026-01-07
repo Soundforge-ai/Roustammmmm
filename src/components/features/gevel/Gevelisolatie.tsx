@@ -10,10 +10,10 @@ const Gevelisolatie: React.FC = () => {
         <div className="container mx-auto px-6 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-              Gevelisolatie laten plaatsen: mogelijkheden en voordelen
+              Gevelisolatie in Zoersel en omgeving
             </h1>
             <p className="text-xl text-gray-200 mb-8 leading-relaxed">
-              Bespaar aanzienlijk op uw energierekening en verhoog het comfort van uw woning met professionele gevelisolatie.
+              Bespaar aanzienlijk op uw energierekening en verhoog het comfort van uw woning met professionele gevelisolatie, geplaatst door een lokaal team uit Zoersel dat de woningen in Halle, Sint-Antonius en de ruime regio Antwerpen en Mechelen door en door kent.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
@@ -288,4 +288,3 @@ const Gevelisolatie: React.FC = () => {
 };
 
 export default Gevelisolatie;
-

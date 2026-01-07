@@ -50,7 +50,7 @@ const ImageSlideshow: React.FC<ImageSlideshowProps> = ({
                 >
                     <img
                         src={img}
-                        alt={`Slide ${index + 1}`}
+                        alt={title ? `${title} - Afbeelding ${index + 1} van ${images.length}` : `Yannova project afbeelding ${index + 1} van ${images.length}`}
                         className="w-full h-full object-cover"
                     />
                 </div>
@@ -79,8 +79,8 @@ const ImageSlideshow: React.FC<ImageSlideshowProps> = ({
                         key={index}
                         onClick={() => setCurrentIndex(index)}
                         className={`w-2.5 h-2.5 rounded-full transition-all ${index === currentIndex
-                                ? 'bg-brand-accent w-8'
-                                : 'bg-white/50 hover:bg-white'
+                            ? 'bg-brand-accent w-8'
+                            : 'bg-white/50 hover:bg-white'
                             }`}
                         aria-label={`Go to slide ${index + 1}`}
                     />
