@@ -1,11 +1,6 @@
 import React, { useState } from 'react';
 import { Phone, Mail, MapPin, CheckCircle, AlertCircle } from 'lucide-react';
 import emailjs from '@emailjs/browser';
-import { Lead } from '../../types';
-
-interface ContactCTAProps {
-  onSubmitLead: (lead: Omit<Lead, 'id' | 'date' | 'status'>) => void;
-}
 
 interface FormErrors {
   name?: string;
@@ -14,7 +9,7 @@ interface FormErrors {
   project?: string;
 }
 
-const ContactCTA: React.FC<ContactCTAProps> = ({ onSubmitLead }) => {
+const ContactCTA: React.FC = () => {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -89,7 +84,6 @@ const ContactCTA: React.FC<ContactCTAProps> = ({ onSubmitLead }) => {
       };
 
       let emailSuccess = false;
-      let dbSuccess = false;
 
       if (publicKey) {
         console.log('📨 Versturen naar EmailJS...');
@@ -105,23 +99,12 @@ const ContactCTA: React.FC<ContactCTAProps> = ({ onSubmitLead }) => {
       }
 
       // 2. Sla op in database (Supabase) via prop
-      console.log('💾 Opslaan in database...');
-      try {
-        await onSubmitLead(formData);
-        console.log('✅ Opgeslagen in database');
-        dbSuccess = true;
-      } catch (dbError) {
-        console.error('❌ Database Fout (Supabase):', dbError);
-        // Supabase kan soms 503 geven als het project gepauzeerd is.
-      }
-
-      // Als minstens één van beide is gelukt, beschouwen we het als succes
-      if (emailSuccess || dbSuccess) {
+      if (emailSuccess) {
         setSubmitted(true);
         setFormData({ name: '', phone: '', email: '', project: '' });
         setTimeout(() => setSubmitted(false), 5000);
       } else {
-        throw new Error('Zowel email als database opslag mislukt');
+        throw new Error('Email verzenden is mislukt');
       }
 
     } catch (error) {

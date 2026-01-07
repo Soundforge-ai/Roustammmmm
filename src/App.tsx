@@ -6,7 +6,6 @@ import { I18nProvider } from './contexts/I18nContext';
 import { AuthProvider } from './contexts/AuthContext';
 import { Lead } from './types';
 import { TESTIMONIALS } from './constants';
-import { getLeads, createLead, updateLeadStatus, deleteLead } from './lib/supabase/leads';
 
 // Lazy load components
 const Hero = lazy(() => import('./components/sections/Hero'));
@@ -69,56 +68,17 @@ const PageLoader: React.FC = () => (
 const App: React.FC = () => {
   const [view, setView] = useState<'public' | 'admin'>('public');
   const [leads, setLeads] = useState<Lead[]>([]);
-  const [isLoadingLeads, setIsLoadingLeads] = useState(true);
-
-  // Haal leads op bij het laden van de app
-  useEffect(() => {
-    const loadLeads = async () => {
-      try {
-        setIsLoadingLeads(true);
-        const fetchedLeads = await getLeads();
-        setLeads(fetchedLeads);
-      } catch (error) {
-        console.error('Error loading leads:', error);
-        // Fallback naar lege array bij fout
-        setLeads([]);
-      } finally {
-        setIsLoadingLeads(false);
-      }
-    };
-
-    loadLeads();
-  }, []);
-
-  const handleAddLead = async (newLeadData: Omit<Lead, 'id' | 'date' | 'status'>) => {
-    try {
-      const newLead = await createLead(newLeadData);
-      setLeads([newLead, ...leads]);
-    } catch (error) {
-      console.error('Error creating lead:', error);
-      // We throwen de error zodat de calling component (ContactCTA) weet dat het mislukte
-      throw error;
-    }
-  };
 
   const handleUpdateStatus = async (id: string, newStatus: Lead['status']) => {
-    try {
-      const updatedLead = await updateLeadStatus(id, newStatus);
-      setLeads(leads.map((lead) => (lead.id === id ? updatedLead : lead)));
-    } catch (error) {
-      console.error('Error updating lead status:', error);
-      alert('Er is een fout opgetreden bij het updaten van de lead. Probeer het opnieuw.');
-    }
+    setLeads((currentLeads) =>
+      currentLeads.map((lead) =>
+        lead.id === id ? { ...lead, status: newStatus } : lead
+      )
+    );
   };
 
   const handleDeleteLead = async (id: string) => {
-    try {
-      await deleteLead(id);
-      setLeads(leads.filter((lead) => lead.id !== id));
-    } catch (error) {
-      console.error('Error deleting lead:', error);
-      alert('Er is een fout opgetreden bij het verwijderen van de lead. Probeer het opnieuw.');
-    }
+    setLeads((currentLeads) => currentLeads.filter((lead) => lead.id !== id));
   };
 
   // Admin route component wrapper
@@ -167,7 +127,6 @@ const App: React.FC = () => {
                     path="/"
                     element={
                       <Layout
-                        onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{
                           title: 'Ramen, Deuren & Renovatie Antwerpen - Yannova Bouw',
@@ -191,7 +150,6 @@ const App: React.FC = () => {
                     path="/over-ons"
                     element={
                       <Layout
-                        onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{
                           title: 'Over Ons | Bouwbedrijf Zoersel, Antwerpen & Mechelen | Yannova',
@@ -207,7 +165,6 @@ const App: React.FC = () => {
                     path="/diensten"
                     element={
                       <Layout
-                        onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{
                           title: 'Diensten | Ramen, Deuren, Renovatie & Gevelwerken | Yannova',
@@ -223,7 +180,6 @@ const App: React.FC = () => {
                     path="/crepi-info"
                     element={
                       <Layout
-                        onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{
                           title: 'Crepi Info | Gevelbepleistering Zoersel, Antwerpen | Yannova',
@@ -239,7 +195,6 @@ const App: React.FC = () => {
                     path="/aanpak"
                     element={
                       <Layout
-                        onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{
                           title: 'Onze Aanpak | Van Offerte tot Oplevering | Yannova',
@@ -255,7 +210,6 @@ const App: React.FC = () => {
                     path="/partners"
                     element={
                       <Layout
-                        onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{
                           title: 'Partners - Kwaliteitsleveranciers Ramen en Materialen',
@@ -271,7 +225,6 @@ const App: React.FC = () => {
                     path="/contact"
                     element={
                       <Layout
-                        onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         showContactCTA={false}
                         seo={{
@@ -290,7 +243,6 @@ const App: React.FC = () => {
                     path="/portfolio"
                     element={
                       <Layout
-                        onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{
                           title: 'Portfolio - Projecten Ramen, Renovatie, Crepi',
@@ -308,7 +260,6 @@ const App: React.FC = () => {
                     path="/showroom"
                     element={
                       <Layout
-                        onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{
                           title: '3D Deuren Configurator & Showroom | Yannova',
@@ -336,7 +287,6 @@ const App: React.FC = () => {
                     path="/seo"
                     element={
                       <Layout
-                        onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{ title: 'SEO Dashboard', description: 'AI-powered SEO optimalisatie voor uw website.' }}
                       >
@@ -350,7 +300,6 @@ const App: React.FC = () => {
                     path="/seo/rankings"
                     element={
                       <Layout
-                        onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{ title: 'SEO Rankings Monitor | Yannova', description: 'Monitor je Google rankings voor belangrijke keywords. Track je positie en verbeter je SEO.' }}
                       >
@@ -364,7 +313,6 @@ const App: React.FC = () => {
                     path="/posts"
                     element={
                       <Layout
-                        onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{ title: 'Posts', description: 'Blog posts and articles.' }}
                       >
@@ -376,7 +324,6 @@ const App: React.FC = () => {
                     path="/posts/:slug"
                     element={
                       <Layout
-                        onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{ title: 'Post', description: 'Blog post.' }}
                       >
@@ -390,7 +337,6 @@ const App: React.FC = () => {
                     path="/gevel"
                     element={
                       <Layout
-                        onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{
                           title: 'Gevelrenovatie & Crepi Antwerpen | Met Premiegarantie',
@@ -406,7 +352,6 @@ const App: React.FC = () => {
                     path="/gevel/gevelbepleistering"
                     element={
                       <Layout
-                        onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{
                           title: 'Gevelbepleistering & Crepi Zoersel, Antwerpen | Yannova',
@@ -422,7 +367,6 @@ const App: React.FC = () => {
                     path="/gevel/gevelbescherming"
                     element={
                       <Layout
-                        onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{
                           title: 'Gevelbescherming Keerbergen, Mechelen - Vochtwerend',
@@ -438,7 +382,6 @@ const App: React.FC = () => {
                     path="/gevel/gevelisolatie"
                     element={
                       <Layout
-                        onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{
                           title: 'Gevelisolatie Zoersel, Antwerpen & Mechelen | Tot €5.000 Premie | Yannova',
@@ -454,7 +397,6 @@ const App: React.FC = () => {
                     path="/gevel/steenstrips"
                     element={
                       <Layout
-                        onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{
                           title: 'Steenstrips Zoersel, Antwerpen & Mechelen | Baksteenlook | Yannova',
@@ -470,7 +412,6 @@ const App: React.FC = () => {
                     path="/gevel/gevelrenovatie"
                     element={
                       <Layout
-                        onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{
                           title: 'Gevelrenovatie Zoersel, Antwerpen & Mechelen | Yannova',
@@ -488,7 +429,6 @@ const App: React.FC = () => {
                     path="/kies-product"
                     element={
                       <Layout
-                        onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{
                           title: 'Kies uw Product - Yannova Bouw',
@@ -506,7 +446,6 @@ const App: React.FC = () => {
                     path="/ramen-deuren"
                     element={
                       <Layout
-                        onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{
                           title: 'Ramen en Deuren Kopen Zoersel? PVC & Alu | Yannova',
@@ -522,7 +461,6 @@ const App: React.FC = () => {
                     path="/schilderwerken"
                     element={
                       <Layout
-                        onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{
                           title: 'Schilderwerken Binnen & Buiten Zoersel, Antwerpen | Yannova',
@@ -538,7 +476,6 @@ const App: React.FC = () => {
                     path="/tuinaanleg"
                     element={
                       <Layout
-                        onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{
                           title: 'Tuinaanleg & Opritten Zoersel, Antwerpen, Mechelen | Yannova',
@@ -554,7 +491,6 @@ const App: React.FC = () => {
                     path="/renovatie"
                     element={
                       <Layout
-                        onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{
                           title: 'Totaalrenovatie & Aannemer Zoersel / Antwerpen | Yannova',
@@ -572,7 +508,6 @@ const App: React.FC = () => {
                     path="/regio/:city"
                     element={
                       <Layout
-                        onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                         // SEO wordt hier dynamisch maar we geven een fallback
                         seo={{
@@ -610,7 +545,6 @@ const App: React.FC = () => {
                     path="/p/:slug"
                     element={
                       <Layout
-                        onSubmitLead={handleAddLead}
                         onAdminClick={() => window.location.href = '/admin'}
                       >
                         <DynamicPageRenderer />

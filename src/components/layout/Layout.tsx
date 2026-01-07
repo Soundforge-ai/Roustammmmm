@@ -7,13 +7,11 @@ import CookieConsent from './CookieConsent';
 import Chatbot from '../chat/Chatbot';
 import StructuredData from '../seo/StructuredData';
 import SEO from '../seo/SEO';
-import { Lead } from '../../types';
 import AdminEditButton from '../admin/AdminEditButton';
 import MobileStickyBar from '../ui/MobileStickyBar';
 
 interface LayoutProps {
   children: React.ReactNode;
-  onSubmitLead: (lead: Omit<Lead, 'id' | 'date' | 'status'>) => void;
   onAdminClick: () => void;
   showContactCTA?: boolean;
   seo?: {
@@ -37,7 +35,6 @@ const ScrollToTop: React.FC = () => {
 
 const Layout: React.FC<LayoutProps> = ({
   children,
-  onSubmitLead,
   onAdminClick,
   showContactCTA = true,
   seo
@@ -59,7 +56,7 @@ const Layout: React.FC<LayoutProps> = ({
       </a>
       <Navbar />
       <main role="main" id="main-content">{children}</main>
-      {showContactCTA && <ContactCTA onSubmitLead={onSubmitLead} />}
+      {showContactCTA && <ContactCTA />}
       <Footer onAdminClick={onAdminClick} />
       <Chatbot />
       <AdminEditButton />
