@@ -35,7 +35,56 @@ export const CITIES: Record<string, CityData> = {
                     question: "Hebben jullie ervaring met oudere woningen in Zoersel?",
                     answer: "Ja, wij hebben al tientallen woningen uit de jaren '60-'80 in Zoersel gerenoveerd. Van dakisolatie tot nieuwe ramen en volledige gevelrenovatie — we kennen de typische uitdagingen en oplossingen."
                 }
-            ]
+            ],
+            richContent: `
+                <div class="prose prose-lg max-w-none text-gray-600">
+                    <h2 class="text-3xl font-bold text-brand-dark mb-6">Expert in Renovatie in Zoersel en Omgeving</h2>
+                    <p class="mb-4">
+                        Bent u op zoek naar een betrouwbare partner voor uw <strong>renovatie in Zoersel</strong>? Yannova Bouw is uw lokale specialist. 
+                        Met ons kantoor aan <em>De Beemdekens</em> - midden in het groene hart van Zoersel - kennen wij de gemeente als onze broekzak. 
+                        Of u nu een klassieke villa in de bosrijke omgeving van <strong>Sint-Antonius</strong> wilt moderniseren, of een rijwoning in <strong>Halle-Dorp</strong> 
+                        energiezuinig wilt maken: wij leveren maatwerk dat past bij de Kempense bouwstijl.
+                    </p>
+
+                    <h3 class="text-2xl font-semibold text-brand-dark mt-8 mb-4">Waarom kiezen voor renovatie in Zoersel met Yannova?</h3>
+                    <p class="mb-4">
+                        Zoersel is een unieke gemeente met een diverse mix van woningen. Van de statige huizen langs de <strong>Handelslei</strong> tot de gezellige gezinswoningen 
+                        in de nieuwe verkavelingen. Een renovatie hier vraagt om kennis van zaken. Wij begrijpen dat u het karakter van uw woning wilt behouden, 
+                        maar wél wilt genieten van modern comfort en lagere energiekosten.
+                    </p>
+                    <p class="mb-4">
+                        Onze diensten voor <strong>renovatie in Zoersel</strong> omvatten:
+                    </p>
+                    <ul class="list-disc pl-6 mb-6 space-y-2">
+                        <li><strong>Totaalrenovatie:</strong> Van sloop tot afwerking, wij coördineren uw volledige verbouwing.</li>
+                        <li><strong>Gevelwerken:</strong> Geef uw woning in <em>Malle</em> of <em>Sint-Antonius</em> een nieuwe look met crepi of steenstrips.</li>
+                        <li><strong>Ramen en Deuren:</strong> Hoogwaardige profielen die passen bij zowel moderne als landelijke woningen.</li>
+                        <li><strong>Isolatiewerken:</strong> Profiteer van premies door uw dak of muren te isoleren.</li>
+                    </ul>
+
+                    <h3 class="text-2xl font-semibold text-brand-dark mt-8 mb-4">Actief in alle wijken: Van Halle tot Sint-Antonius</h3>
+                    <p class="mb-4">
+                        Wij zijn niet zomaar een aannemer; wij zijn uw buren. We rijden dagelijks over de <strong>Rodendijk</strong> en de <strong>Antwerpsedreef</strong> naar onze klanten. 
+                        Doordat we lokaal verankerd zijn, kunnen we snel schakelen. Een offertegesprek in de avonduren of op zaterdag? Voor klanten in Zoersel is dat geen enkel probleem.
+                    </p>
+                    <p class="mb-4">
+                        Veel woningen in wijken zoals <em>De Gagel</em> of rondom het <em>Zoerselbos</em> zijn gebouwd in de jaren '70 en '80. Deze huizen hebben een solide basis, 
+                        maar voldoen vaak niet meer aan de huidige energienormen (EPC). Met een gerichte <strong>renovatie in Zoersel</strong> kunnen we uw woning 
+                        opwaarderen van label E of F naar label B of zelfs A. Dit verhoogt niet alleen uw wooncomfort, maar ook de verkoopwaarde van uw pand aanzienlijk.
+                    </p>
+
+                    <h3 class="text-2xl font-semibold text-brand-dark mt-8 mb-4">Uw Renovatie, Onze Zorg</h3>
+                    <p class="mb-4">
+                        Een verbouwing brengt vaak stress met zich mee. Bij Yannova Bouw nemen we die zorgen weg. Wij regelen alles: van de stedenbouwkundige vergunning 
+                        (indien nodig bij de gemeente Zoersel) tot de premie-aanvragen via <em>Mijn VerbouwPremie</em>. Omdat we de lokale regels kennen, 
+                        vermijdt u vertragingen en onnodig papierwerk.
+                    </p>
+                    <p>
+                        Klaar om uw woondroom in Zoersel te realiseren? Neem contact op voor een vrijblijvend adviesgesprek. Wij komen graag langs om de mogelijkheden van uw 
+                        <strong>renovatie in Zoersel</strong> te bespreken.
+                    </p>
+                </div>
+            `
         }
     },
     antwerpen: {

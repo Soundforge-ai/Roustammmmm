@@ -100,6 +100,9 @@ export interface CityContent {
 
     // Specifieke SEO description (indien afwijkend van standaard)
     seoDescription?: string;
+
+    // Uitgebreide SEO tekst (HTML)
+    richContent?: string;
 }
 
 /**

@@ -198,11 +198,13 @@ const RegioPage: React.FC = () => {
         document.head.appendChild(lbScript);
 
         // Update page title and meta description
-        document.title = `Ramen en Deuren ${cityData.name} | Renovatie, Crepi & Isolatie | Yannova Bouw`;
+        // Geoptimaliseerd voor: "Renovatie Zoersel", "Ramen en Deuren Zoersel"
+        document.title = `Renovatie, Ramen en Deuren in ${cityData.name} | Yannova Bouw`;
 
         const metaDesc = document.querySelector('meta[name="description"]');
         if (metaDesc) {
-            metaDesc.setAttribute('content', `Specialist in ramen en deuren, renovatie, crepi en isolatie werken in ${cityData.name} (${cityData.zip}). ${cityData.description} ✓ Gratis offerte ✓ Lokale vakmannen ✓ 10 jaar garantie`);
+            // Geoptimaliseerd meta description met focus keywords vooraan
+            metaDesc.setAttribute('content', `Zoekt u renovatie in ${cityData.name}? Yannova Bouw is specialist in totaalrenovatie, ramen, deuren en gevelwerken in ${cityData.name} (${cityData.zip}). Vraag uw gratis offerte.`);
         }
 
         // Update keywords for this specific city
@@ -404,6 +406,18 @@ const RegioPage: React.FC = () => {
                     </div>
                 </div>
             </section>
+
+            {/* Rich Content SEO Section */}
+            {cityData.content?.richContent && (
+                <section className="py-16 bg-white border-t border-gray-100">
+                    <div className="container mx-auto px-6 max-w-4xl">
+                        <div
+                            className="space-y-6 text-lg text-gray-600 leading-relaxed [&_h2]:text-3xl [&_h2]:font-bold [&_h2]:text-brand-dark [&_h2]:mb-6 [&_h2]:mt-10 [&_h3]:text-2xl [&_h3]:font-semibold [&_h3]:text-brand-dark [&_h3]:mb-4 [&_h3]:mt-8 [&_ul]:list-disc [&_ul]:pl-6 [&_strong]:text-brand-dark [&_strong]:font-semibold"
+                            dangerouslySetInnerHTML={{ __html: cityData.content.richContent }}
+                        />
+                    </div>
+                </section>
+            )}
 
             {/* Why Choose Us Local */}
             <section className="bg-brand-dark text-white py-20">
