@@ -96,8 +96,8 @@ const App: React.FC = () => {
       setLeads([newLead, ...leads]);
     } catch (error) {
       console.error('Error creating lead:', error);
-      // Toon foutmelding aan gebruiker (kan later worden toegevoegd)
-      alert('Er is een fout opgetreden bij het opslaan van de lead. Probeer het opnieuw.');
+      // We throwen de error zodat de calling component (ContactCTA) weet dat het mislukte
+      throw error;
     }
   };
 
