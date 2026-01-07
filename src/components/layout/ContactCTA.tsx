@@ -65,10 +65,18 @@ const ContactCTA: React.FC<ContactCTAProps> = ({ onSubmitLead }) => {
     setIsSubmitting(true);
 
     try {
+      console.log('🚀 Start verzenden offerte aanvraag...');
+
       // 1. Verstuur email via EmailJS
       const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'service_yannova';
       const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'template_contact';
       const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+      console.log('📧 EmailJS Config:', {
+        serviceId,
+        templateId,
+        hasPublicKey: !!publicKey
+      });
 
       const templateParams = {
         from_name: formData.name,
@@ -80,21 +88,44 @@ const ContactCTA: React.FC<ContactCTAProps> = ({ onSubmitLead }) => {
         reply_to: formData.email,
       };
 
+      let emailSuccess = false;
+      let dbSuccess = false;
+
       if (publicKey) {
-        await emailjs.send(serviceId, templateId, templateParams, publicKey);
+        console.log('📨 Versturen naar EmailJS...');
+        try {
+          const response = await emailjs.send(serviceId, templateId, templateParams, publicKey);
+          console.log('✅ EmailJS Response:', response);
+          emailSuccess = true;
+        } catch (emailError) {
+          console.error('❌ EmailJS Fout:', emailError);
+        }
       } else {
-        console.warn('EmailJS Public Key ontbreekt, email wordt niet verzonden.');
+        console.warn('⚠️ EmailJS Public Key ontbreekt, email wordt niet verzonden.');
       }
 
       // 2. Sla op in database (Supabase) via prop
-      await onSubmitLead(formData);
+      console.log('💾 Opslaan in database...');
+      try {
+        await onSubmitLead(formData);
+        console.log('✅ Opgeslagen in database');
+        dbSuccess = true;
+      } catch (dbError) {
+        console.error('❌ Database Fout (Supabase):', dbError);
+        // Supabase kan soms 503 geven als het project gepauzeerd is.
+      }
 
-      setSubmitted(true);
-      setFormData({ name: '', phone: '', email: '', project: '' });
-      setTimeout(() => setSubmitted(false), 5000);
+      // Als minstens één van beide is gelukt, beschouwen we het als succes
+      if (emailSuccess || dbSuccess) {
+        setSubmitted(true);
+        setFormData({ name: '', phone: '', email: '', project: '' });
+        setTimeout(() => setSubmitted(false), 5000);
+      } else {
+        throw new Error('Zowel email als database opslag mislukt');
+      }
 
     } catch (error) {
-      console.error('Fout bij versturen formulier:', error);
+      console.error('❌ Kritieke fout bij versturen formulier:', error);
       // We tonen de gebruiker toch een succesbericht als de DB save wel gelukt is, 
       // of we kunnen een foutmelding tonen. Voor nu, als email faalt maar DB niet, is het 'ok'
       // Als onSubmitLead faalt, gooit die ook een error.
