@@ -6,6 +6,7 @@ import PortfolioGrid from '../components/features/portfolio/PortfolioGrid';
 import ProjectDetail from '../components/features/portfolio/ProjectDetail';
 import Lightbox from '../components/features/portfolio/Lightbox';
 import ImageSlideshow from '../components/ui/ImageSlideshow';
+import ReviewSection from '../components/sections/ReviewSection';
 import { projectStorage } from '../lib/projectStorage';
 
 const Portfolio: React.FC = () => {
@@ -94,6 +95,8 @@ const Portfolio: React.FC = () => {
           />
         </div>
       </section>
+
+      <ReviewSection />
 
       {/* Project Detail Modal */}
       {selectedProject && (

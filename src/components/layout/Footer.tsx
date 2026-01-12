@@ -16,8 +16,15 @@ const Footer: React.FC<FooterProps> = ({ onAdminClick }) => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 sm:gap-12 mb-8 sm:mb-12">
           {/* Column 1: Brand */}
           <div className="md:col-span-1">
-            <Link to="/" className="text-2xl font-bold text-white mb-4 inline-block">
-              {COMPANY_NAME}<span className="text-brand-accent">.</span>
+            <Link to="/" className="flex items-center gap-3 mb-4">
+              <img 
+                src="/images/logo-yannova.jpg" 
+                alt="Yannova Bouw Logo" 
+                className="h-12 w-auto rounded-lg"
+              />
+              <span className="text-2xl font-bold text-white">
+                {COMPANY_NAME}<span className="text-brand-accent">.</span>
+              </span>
             </Link>
             <p className="text-sm leading-relaxed mb-4">
               Uw lokale bouwpartner in België. Gespecialiseerd in ramen en deuren, totaalrenovaties, isolatiewerken en crepi gevelafwerking.
@@ -108,14 +115,7 @@ const Footer: React.FC<FooterProps> = ({ onAdminClick }) => {
           <div className="flex items-center gap-4 flex-wrap justify-center">
             <a href="/privacy" className="hover:text-brand-accent transition-colors">Privacybeleid</a>
             <a href="/cookies" className="hover:text-brand-accent transition-colors">Cookiebeleid</a>
-            <button
-              onClick={onAdminClick}
-              className="flex items-center gap-1 opacity-50 hover:opacity-100 hover:text-brand-accent transition-all"
-              aria-label="Admin login"
-            >
-              <Lock size={12} />
-              Admin
-            </button>
+            {/* Admin link removed as requested */}
           </div>
         </div>
       </div>

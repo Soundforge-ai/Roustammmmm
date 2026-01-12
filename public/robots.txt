@@ -1,4 +1,47 @@
+# robots.txt voor Yannova.be
+
 User-agent: *
 Allow: /
 
+# Sitemap
 Sitemap: https://www.yannova.be/sitemap.xml
+
+# Disallow specifieke routes
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /api/*
+Disallow: /dashboard/*
+Disallow: /auth/*
+
+# Disallow test en ontwikkel routes
+Disallow: /test
+Disallow: /dev
+
+# Disallow tijdelijke bestanden
+Disallow: /temp
+Disallow: /tmp
+
+# Crawl-delay (optioneel, voor respectvolle crawling)
+Crawl-delay: 1
+
+# Specifieke toegang voor populaire crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: YandexBot
+Allow: /

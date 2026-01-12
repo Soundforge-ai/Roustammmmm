@@ -12,7 +12,7 @@ const About: React.FC = () => {
             <div className="relative rounded-xl overflow-hidden shadow-2xl">
               <img
                 src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200&auto=format&fit=crop"
-                alt="Modern gerenoveerde woning met nieuwe ramen en gevelbekleding"
+                alt="Gerenoveerde woning met nieuwe PVC ramen en crepi gevel in Zoersel"
                 className="w-full h-full object-cover min-h-[300px] sm:min-h-[400px] lg:min-h-[500px]"
                 loading="lazy"
               />
@@ -26,22 +26,23 @@ const About: React.FC = () => {
 
           {/* Text Side */}
           <div className="w-full lg:w-1/2">
-            <h2 className="text-brand-accent font-semibold tracking-wider uppercase text-sm mb-3">OVER YANNOVA</h2>
+            <h2 className="text-brand-accent font-semibold tracking-wider uppercase text-sm mb-3">BOUWBEDRIJF ZOERSEL & ANTWERPEN</h2>
             <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-brand-dark mb-4 sm:mb-6">
-              Vakmanschap en vertrouwen in elk project
+              Uw specialist voor ramen, deuren en renovatie
             </h3>
             <p className="text-gray-600 text-base sm:text-lg leading-relaxed mb-4 sm:mb-6">
-              Bij Yannova geloven we dat bouwen en renoveren vooral gaat om één ding: een plek waar u zich écht thuis voelt. Daarom nemen we de tijd om te luisteren, helder advies te geven en u van begin tot eind te begeleiden.
+              <strong>Yannova Bouw</strong> is uw betrouwbare aannemer voor <strong>ramen en deuren</strong>, <strong>gevelisolatie</strong>, <strong>crepi</strong> en <strong>totaalrenovatie</strong> in <strong>Zoersel</strong>, <strong>Antwerpen</strong>, <strong>Mechelen</strong> en omgeving. Met meer dan 15 jaar ervaring leveren wij vakmanschap waar u op kunt rekenen.
             </p>
             <p className="text-gray-600 text-base sm:text-lg leading-relaxed mb-6 sm:mb-8">
-              Of het nu gaat om nieuwe ramen, gevelisolatie of een totaalrenovatie: we werken netjes, met oog voor detail en respect voor uw woning. Zo weet u precies waar u aan toe bent — en geniet u straks van een prachtig resultaat.
+              Of u nu <strong>nieuwe ramen wilt plaatsen</strong>, uw <strong>gevel wilt isoleren met EPS en crepi</strong>, of een <strong>volledige renovatie</strong> plant: wij begeleiden u van offerte tot oplevering. Profiteer van <strong>energiepremies tot €5.000</strong> via Mijn VerbouwPremie.
             </p>
 
             <ul className="space-y-4">
               {[
-                "Persoonlijke begeleiding van A tot Z",
-                "Eén aanspreekpunt voor uw project",
-                "Focus op energiezuinige oplossingen"
+                "Gratis advies en opmeting aan huis",
+                "Eén aanspreekpunt voor uw volledige project",
+                "Energiezuinige PVC en aluminium ramen",
+                "Hulp bij premie-aanvraag Mijn VerbouwPremie"
               ].map((item, idx) => (
                 <li key={idx} className="flex items-center gap-3">
                   <CheckCircle className="text-brand-accent flex-shrink-0" size={20} />

@@ -10,6 +10,8 @@ import {
   ThermometerSun,
   LayoutDashboard
 } from 'lucide-react';
+import SEO from '@/components/seo/SEO';
+import LazyImage from '@/components/ui/LazyImage';
 
 const Diensten: React.FC = () => {
   const allServices = [
@@ -71,6 +73,10 @@ const Diensten: React.FC = () => {
 
   return (
     <div className="bg-white">
+      <SEO
+        title="Onze Diensten | Totaalaannemer Renovatie & Schrijnwerk"
+        description="Ontdek onze diensten: Ramen & Deuren plaatsen, Gevelrenovatie, Crepi, Isolatiewerken, Schilderwerken en Tuinaanleg. Alles onder één dak."
+      />
       {/* Hero */}
       <section className="relative py-24 bg-slate-900 overflow-hidden">
         <div className="absolute inset-0 opacity-30">
@@ -102,7 +108,7 @@ const Diensten: React.FC = () => {
               <div key={service.id} className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col group border border-gray-100">
                 {/* Image Header */}
                 <div className="relative h-56 overflow-hidden">
-                  <img
+                  <LazyImage
                     src={service.image}
                     alt={service.title}
                     className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"

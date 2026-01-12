@@ -1,5 +1,4 @@
 import { Data } from '@measured/puck';
-import * as supabasePages from './supabase/pages';
 
 export interface PageData {
     id: string;
@@ -18,9 +17,8 @@ export interface PageData {
 }
 
 const PAGES_KEY = 'yannova_pages';
-let useSupabase = true; // Try Supabase first
 
-// Fallback naar localStorage
+// localStorage opslag
 const localStorageFallback = {
     getPages: (): PageData[] => {
         try {
@@ -62,56 +60,18 @@ const localStorageFallback = {
 
 export const pageStorage = {
     getPages: async (): Promise<PageData[]> => {
-        if (useSupabase) {
-            try {
-                return await supabasePages.getPages();
-            } catch (e) {
-                console.warn('Supabase not available, falling back to localStorage', e);
-                useSupabase = false;
-                return localStorageFallback.getPages();
-            }
-        }
         return localStorageFallback.getPages();
     },
 
     getPage: async (idOrSlug: string): Promise<PageData | null> => {
-        if (useSupabase) {
-            try {
-                return await supabasePages.getPage(idOrSlug);
-            } catch (e) {
-                console.warn('Supabase not available, falling back to localStorage', e);
-                useSupabase = false;
-                return localStorageFallback.getPage(idOrSlug);
-            }
-        }
         return localStorageFallback.getPage(idOrSlug);
     },
 
     savePage: async (page: PageData): Promise<void> => {
-        if (useSupabase) {
-            try {
-                await supabasePages.savePage(page);
-                window.dispatchEvent(new Event('pages-updated'));
-                return;
-            } catch (e) {
-                console.warn('Supabase not available, falling back to localStorage', e);
-                useSupabase = false;
-            }
-        }
         localStorageFallback.savePage(page);
     },
 
     deletePage: async (id: string): Promise<void> => {
-        if (useSupabase) {
-            try {
-                await supabasePages.deletePage(id);
-                window.dispatchEvent(new Event('pages-updated'));
-                return;
-            } catch (e) {
-                console.warn('Supabase not available, falling back to localStorage', e);
-                useSupabase = false;
-            }
-        }
         localStorageFallback.deletePage(id);
     }
 };

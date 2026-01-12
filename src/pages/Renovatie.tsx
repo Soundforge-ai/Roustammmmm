@@ -35,6 +35,8 @@ const FAQ_ITEMS = [
     }
 ];
 
+import SEO from '@/components/seo/SEO';
+
 const Renovatie: React.FC = () => {
     const services = [
         {
@@ -87,6 +89,12 @@ const Renovatie: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-white text-slate-900">
+            <SEO
+                title="Totaalrenovatie & Badkamerrenovatie"
+                description="Specialist in totaalrenovatie, badkamerrenovatie en zolderinrichting in Zoersel, Antwerpen & Mechelen. Vakkundige renovatiewerken van a tot z."
+                keywords="totaalrenovatie, badkamerrenovatie, zolderinrichting, renovatiewerken, verbouwingen, Zoersel, Antwerpen, Mechelen, aannemer renovatie"
+            />
+            {/* FAQ Schema for SEO */}\
             {/* FAQ Schema for SEO */}
             <script
                 type="application/ld+json"

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Phone, Mail, MapPin, Clock, CheckCircle, AlertCircle, Send } from 'lucide-react';
-import emailjs from '@emailjs/browser';
+// import emailjs from '@emailjs/browser'; // Removed in favor of FormSubmit
 import GoogleMap from '../components/ui/GoogleMap';
+import SEO from '@/components/seo/SEO';
 
 // Company location
 const COMPANY_ADDRESS = 'De Beemdekens 39, 2980 Zoersel, België';
@@ -22,13 +23,16 @@ const Contact: React.FC = () => {
     email: '',
     subject: '',
     message: '',
+    houseType: '',
+    budget: '',
+    profileType: '',
   });
-  const [errors, setErrors] = useState<FormErrors>({});
+  const [errors, setErrors] = useState<FormErrors & { houseType?: string; budget?: string; profileType?: string }>({});
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validateForm = (): boolean => {
-    const newErrors: FormErrors = {};
+    const newErrors: any = {};
     if (!formData.name.trim() || formData.name.trim().length < 2) {
       newErrors.name = 'Vul een geldige naam in';
     }
@@ -44,9 +48,15 @@ const Contact: React.FC = () => {
     if (!formData.subject.trim()) {
       newErrors.subject = 'Selecteer een onderwerp';
     }
-    if (!formData.message.trim() || formData.message.trim().length < 10) {
-      newErrors.message = 'Beschrijf uw vraag in minimaal 10 karakters';
+    if (formData.subject !== 'andere' && !formData.houseType) {
+      // newErrors.houseType = 'Selecteer type woning'; // Optional to make strictly required
     }
+
+    // Message validation less strict if other fields are filled
+    if (!formData.message.trim() || formData.message.trim().length < 5) {
+      newErrors.message = 'Vul een kort bericht in';
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -57,31 +67,39 @@ const Contact: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      // EmailJS configuratie - vervang met jouw eigen service ID en template ID
-      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'service_yannova';
-      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'template_contact';
-      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'YOUR_PUBLIC_KEY';
+      // FormSubmit implementatie (geen API keys nodig)
+      const response = await fetch("https://formsubmit.co/ajax/info@yannova.be", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          subject: formData.subject,
+          houseType: formData.houseType, // NEW
+          budget: formData.budget,       // NEW
+          profileType: formData.profileType, // NEW
+          message: formData.message,
+          _subject: `Nieuwe aanvraag: ${formData.subject} - ${formData.name}`,
+          _template: 'table',
+          _captcha: 'false'
+        })
+      });
 
-      // Voorbereid de template parameters
-      const templateParams = {
-        from_name: formData.name,
-        from_email: formData.email,
-        phone: formData.phone,
-        subject: formData.subject,
-        message: formData.message,
-        to_email: 'info@yannova.be',
-        reply_to: formData.email,
-      };
+      const result = await response.json();
 
-      // Verstuur de email
-      await emailjs.send(serviceId, templateId, templateParams, publicKey);
-
-      // Succesvol verzonden
-      setSubmitted(true);
-      setFormData({ name: '', phone: '', email: '', subject: '', message: '' });
+      if (response.ok) {
+        setSubmitted(true);
+        setFormData({ name: '', phone: '', email: '', subject: '', message: '', houseType: '', budget: '', profileType: '' });
+      } else {
+        throw new Error(result.message || 'Verzenden mislukt');
+      }
 
     } catch (error) {
-      console.error('EmailJS Error:', error);
+      console.error('FormSubmit Error:', error);
       alert('Er is een fout opgetreden bij het versturen van uw bericht. Probeer het later opnieuw of contacteer ons telefonisch.');
     } finally {
       setIsSubmitting(false);
@@ -102,8 +120,13 @@ const Contact: React.FC = () => {
       : 'border-gray-300 focus:ring-2 focus:ring-brand-accent/50 focus:border-brand-accent'
     }`;
 
+
   return (
     <div className="min-h-screen bg-white">
+      <SEO
+        title="Contacteer Ons | Offerte Aanvragen"
+        description="Neem contact op met Yannova Bouw voor een vrijblijvende offerte voor ramen, deuren, renovatie of gevelwerken in regio Zoersel, Antwerpen & Mechelen."
+      />
       {/* Hero Section */}
       <section className="relative py-24 md:py-32 bg-gradient-to-br from-brand-dark via-slate-800 to-brand-dark">
         <div className="container mx-auto px-6 relative z-10">
@@ -274,8 +297,67 @@ const Contact: React.FC = () => {
                         )}
                       </div>
 
+                      <div className="grid md:grid-cols-2 gap-6">
+                        <div>
+                          <label htmlFor="houseType" className="block text-sm font-medium text-gray-700 mb-2">Type Woning</label>
+                          <select
+                            id="houseType"
+                            name="houseType"
+                            value={formData.houseType}
+                            onChange={handleChange}
+                            className={inputClasses('houseType' as keyof FormErrors)}
+                          >
+                            <option value="">Selecteer type</option>
+                            <option value="vrijstaand">Vrijstaande woning</option>
+                            <option value="halfopen">Halfopen bebouwing</option>
+                            <option value="rijwoning">Rijwoning</option>
+                            <option value="appartement">Appartement</option>
+                            <option value="handelspand">Handelspand</option>
+                            <option value="andere">Andere</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label htmlFor="budget" className="block text-sm font-medium text-gray-700 mb-2">Geschat Budget</label>
+                          <select
+                            id="budget"
+                            name="budget"
+                            value={formData.budget}
+                            onChange={handleChange}
+                            className={inputClasses('budget' as keyof FormErrors)}
+                          >
+                            <option value="">Selecteer budget</option>
+                            <option value="<5000">Minder dan €5.000</option>
+                            <option value="5000-10000">€5.000 - €10.000</option>
+                            <option value="10000-25000">€10.000 - €25.000</option>
+                            <option value="25000-50000">€25.000 - €50.000</option>
+                            <option value=">50000">Meer dan €50.000</option>
+                            <option value="onbekend">Nog niet bepaald</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      {/* Profielsoort - Alleen zichtbaar bij Ramen & Deuren */}
+                      {(formData.subject === 'ramen-deuren' || formData.subject === 'offerte') && (
+                        <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                          <label htmlFor="profileType" className="block text-sm font-medium text-blue-900 mb-2">Welk materiaal verkiest u?</label>
+                          <select
+                            id="profileType"
+                            name="profileType"
+                            value={formData.profileType}
+                            onChange={handleChange}
+                            className={`${inputClasses('profileType' as keyof FormErrors)} border-blue-200 focus:ring-blue-500`}
+                          >
+                            <option value="">Selecteer materiaal</option>
+                            <option value="pvc">PVC (Onderhoudsvriendelijk & Isolerend)</option>
+                            <option value="aluminium">Aluminium (Strak & Modern)</option>
+                            <option value="hout">Hout (Authentiek)</option>
+                            <option value="combinatie">Combinatie / Advies nodig</option>
+                          </select>
+                        </div>
+                      )}
+
                       <div>
-                        <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">Bericht *</label>
+                        <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">Extra opmerkingen</label>
                         <textarea
                           id="message"
                           name="message"
@@ -283,7 +365,7 @@ const Contact: React.FC = () => {
                           value={formData.message}
                           onChange={handleChange}
                           className={inputClasses('message')}
-                          placeholder="Beschrijf uw vraag of project..."
+                          placeholder="Beschrijf uw project in detail..."
                         />
                         {errors.message && (
                           <p className="mt-1 text-sm text-red-500 flex items-center gap-1">

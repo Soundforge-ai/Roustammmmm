@@ -6,7 +6,7 @@ const Gevelisolatie: React.FC = () => {
     <div className="min-h-screen bg-white text-slate-900">
       {/* Hero Section */}
       <section className="relative py-32 bg-gradient-to-br from-brand-dark via-slate-800 to-brand-dark">
-        <div className="absolute inset-0 bg-[url('/images/crepi-patterns.png')] opacity-10 bg-cover bg-center"></div>
+        <div className="absolute inset-0 bg-[url('/images/crepi-patterns.jpg')] opacity-10 bg-cover bg-center"></div>
         <div className="container mx-auto px-6 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">

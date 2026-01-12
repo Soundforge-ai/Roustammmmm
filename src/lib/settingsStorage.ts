@@ -114,7 +114,6 @@ Onthoud: Je doel is om de klant te helpen EN een afspraak of offerteverzoek te k
 
 // Helper for deep merging defaults
 export const mergeDefaults = (saved: any): AppSettings => {
-    // If old format (no providers object), migrate
     const base = { ...defaultSettings };
 
     // Check if it's the old format with top-level apiKey
@@ -146,11 +145,7 @@ export const mergeDefaults = (saved: any): AppSettings => {
     return base;
 };
 
-import * as supabaseSettings from './supabase/settings';
-
-let useSupabase = true; // Try Supabase first
-
-// Fallback naar localStorage
+// localStorage opslag
 const localStorageFallback = {
     getSettings: (): AppSettings => {
         try {
@@ -217,31 +212,6 @@ const localStorageFallback = {
 
 export const settingsStorage = {
     getSettings: async (): Promise<AppSettings> => {
-        console.log('settingsStorage.getSettings - Starting...', { useSupabase });
-
-        if (useSupabase) {
-            try {
-                const settings = await supabaseSettings.getSettings();
-                console.log('settingsStorage.getSettings - Supabase settings loaded:', {
-                    activeProvider: settings.activeProvider,
-                    hasNagaApiKey: !!settings.providers.naga?.apiKey,
-                    nagaApiKeyLength: settings.providers.naga?.apiKey?.length || 0,
-                    nagaApiKeyPreview: settings.providers.naga?.apiKey ? `${settings.providers.naga.apiKey.substring(0, 10)}...${settings.providers.naga.apiKey.substring(settings.providers.naga.apiKey.length - 5)}` : 'empty'
-                });
-                return settings;
-            } catch (e) {
-                console.warn('Supabase not available, falling back to localStorage', e);
-                useSupabase = false;
-                const localSettings = localStorageFallback.getSettings();
-                console.log('settingsStorage.getSettings - LocalStorage settings loaded:', {
-                    activeProvider: localSettings.activeProvider,
-                    hasNagaApiKey: !!localSettings.providers.naga?.apiKey,
-                    nagaApiKeyLength: localSettings.providers.naga?.apiKey?.length || 0
-                });
-                return localSettings;
-            }
-        }
-
         const localSettings = localStorageFallback.getSettings();
         console.log('settingsStorage.getSettings - LocalStorage settings loaded:', {
             activeProvider: localSettings.activeProvider,
@@ -253,32 +223,10 @@ export const settingsStorage = {
 
     saveSettings: async (settings: AppSettings): Promise<void> => {
         console.log('settingsStorage.saveSettings - Starting save...', {
-            useSupabase,
             activeProvider: settings.activeProvider,
             hasApiKey: !!settings.providers[settings.activeProvider]?.apiKey
         });
 
-        if (useSupabase) {
-            try {
-                console.log('settingsStorage.saveSettings - Attempting Supabase save...');
-                await supabaseSettings.saveSettings(settings);
-                console.log('settingsStorage.saveSettings - Supabase save successful!');
-                window.dispatchEvent(new Event('settings-updated'));
-                return;
-            } catch (e: any) {
-                console.error('settingsStorage.saveSettings - Supabase save failed:', {
-                    message: e.message,
-                    code: e.code,
-                    details: e.details,
-                    hint: e.hint,
-                    fullError: e
-                });
-                console.warn('Supabase not available, falling back to localStorage', e);
-                useSupabase = false;
-            }
-        }
-
-        console.log('settingsStorage.saveSettings - Using localStorage fallback...');
         try {
             localStorageFallback.saveSettings(settings);
             console.log('settingsStorage.saveSettings - localStorage save successful!');

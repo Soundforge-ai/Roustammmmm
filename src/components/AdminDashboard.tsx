@@ -61,7 +61,6 @@ import { pageStorage, PageData } from '../lib/pageStorage';
 import { mediaStorage, MediaItem } from '../lib/mediaStorage';
 import { analyzeConversation, generateSEO, generateAdCopy } from '../lib/ai';
 import { chatService } from '../lib/chatService';
-import { migrateAll } from '../lib/migrateToSupabase';
 
 import { SEOManager } from './admin/SEOManager';
 import { Lead } from '../types';
@@ -165,36 +164,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [imagePrompt, setImagePrompt] = useState('');
   const [generatedImagePrompt, setGeneratedImagePrompt] = useState('');
   const [isGeneratingImage, setIsGeneratingImage] = useState(false);
-
-  // Auto-migrate localStorage data to Supabase on first load
-  useEffect(() => {
-    const attemptMigration = async () => {
-      const migrationKey = 'yannova_migration_completed';
-      const hasMigrated = localStorage.getItem(migrationKey);
-
-      if (!hasMigrated) {
-        try {
-          console.log('🔄 Starting automatic migration to Supabase...');
-          const results = await migrateAll();
-
-          if (results.chats > 0 || results.pages > 0 || results.settings) {
-            console.log('✅ Migration completed:', results);
-            localStorage.setItem(migrationKey, 'true');
-            // Reload data after migration
-            window.location.reload();
-          } else {
-            console.log('ℹ️ No data to migrate or Supabase not available');
-            localStorage.setItem(migrationKey, 'true'); // Mark as attempted
-          }
-        } catch (error) {
-          console.warn('⚠️ Migration failed (Supabase may not be configured yet):', error);
-          // Don't mark as completed if it failed - allow retry
-        }
-      }
-    };
-
-    attemptMigration();
-  }, []);
 
   // Load data
   useEffect(() => {

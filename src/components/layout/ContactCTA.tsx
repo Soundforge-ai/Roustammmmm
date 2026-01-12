@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Phone, Mail, MapPin, CheckCircle, AlertCircle } from 'lucide-react';
-import emailjs from '@emailjs/browser';
+// import emailjs from '@emailjs/browser'; // Removed in favor of FormSubmit
 
 interface FormErrors {
   name?: string;
@@ -60,58 +60,37 @@ const ContactCTA: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      console.log('🚀 Start verzenden offerte aanvraag...');
+      console.log('🚀 Start verzenden offerte aanvraag via FormSubmit...');
 
-      // 1. Verstuur email via EmailJS
-      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'service_yannova';
-      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'template_contact';
-      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
-
-      console.log('📧 EmailJS Config:', {
-        serviceId,
-        templateId,
-        hasPublicKey: !!publicKey
+      const response = await fetch("https://formsubmit.co/ajax/info@yannova.be", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          message: formData.project,
+          _subject: `Nieuwe Offerte Aanvraag: ${formData.name}`,
+          _template: 'table',
+          _captcha: 'false'
+        })
       });
 
-      const templateParams = {
-        from_name: formData.name,
-        from_email: formData.email,
-        phone: formData.phone,
-        subject: 'Offerte aanvraag via website (CTA)',
-        message: formData.project,
-        to_email: 'info@yannova.be',
-        reply_to: formData.email,
-      };
+      const result = await response.json();
 
-      let emailSuccess = false;
-
-      if (publicKey) {
-        console.log('📨 Versturen naar EmailJS...');
-        try {
-          const response = await emailjs.send(serviceId, templateId, templateParams, publicKey);
-          console.log('✅ EmailJS Response:', response);
-          emailSuccess = true;
-        } catch (emailError) {
-          console.error('❌ EmailJS Fout:', emailError);
-        }
-      } else {
-        console.warn('⚠️ EmailJS Public Key ontbreekt, email wordt niet verzonden.');
-      }
-
-      // 2. Sla op in database (Supabase) via prop
-      if (emailSuccess) {
+      if (response.ok) {
         setSubmitted(true);
         setFormData({ name: '', phone: '', email: '', project: '' });
         setTimeout(() => setSubmitted(false), 5000);
       } else {
-        throw new Error('Email verzenden is mislukt');
+        throw new Error(result.message || 'Verzenden mislukt');
       }
 
     } catch (error) {
-      console.error('❌ Kritieke fout bij versturen formulier:', error);
-      // We tonen de gebruiker toch een succesbericht als de DB save wel gelukt is, 
-      // of we kunnen een foutmelding tonen. Voor nu, als email faalt maar DB niet, is het 'ok'
-      // Als onSubmitLead faalt, gooit die ook een error.
+      console.error('❌ Fout bij versturen formulier:', error);
       alert('Er is iets misgegaan. Probeer het later opnieuw of bel ons direct.');
     } finally {
       setIsSubmitting(false);

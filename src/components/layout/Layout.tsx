@@ -9,6 +9,8 @@ import StructuredData from '../seo/StructuredData';
 import SEO from '../seo/SEO';
 import AdminEditButton from '../admin/AdminEditButton';
 import MobileStickyBar from '../ui/MobileStickyBar';
+import WhatsAppFloat from '../ui/WhatsAppFloat';
+import GoogleReviewsWidget from '../ui/GoogleReviewsWidget';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -62,6 +64,7 @@ const Layout: React.FC<LayoutProps> = ({
       <AdminEditButton />
       <CookieConsent />
       <MobileStickyBar />
+      <WhatsAppFloat position="bottom-left" />
     </>
   );
 };

@@ -36,6 +36,8 @@ const FAQ_ITEMS = [
     }
 ];
 
+import SEO from '@/components/seo/SEO';
+
 const RamenDeuren: React.FC = () => {
     const services = [
         {
@@ -92,6 +94,11 @@ const RamenDeuren: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-white text-slate-900">
+            <SEO
+                title="Ramen en Deuren Kopen? PVC & Aluminium"
+                description="Hoogwaardige PVC en Aluminium ramen en deuren in Zoersel, Antwerpen & Mechelen. 10 jaar garantie, vakkundige plaatsing en premieadvies."
+                keywords="ramen en deuren, PVC ramen, aluminium ramen, ramen kopen, deuren kopen, Zoersel, Antwerpen, Mechelen, ramen plaatser"
+            />
             {/* FAQ Schema for SEO */}
             <script
                 type="application/ld+json"

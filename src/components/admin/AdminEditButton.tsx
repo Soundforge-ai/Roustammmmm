@@ -62,7 +62,7 @@ const AdminEditButton: React.FC = () => {
     if (location.pathname.startsWith('/admin') || location.pathname.startsWith('/dashboard')) return null;
 
     return (
-        <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
+        <div className="fixed bottom-24 right-6 z-50 flex flex-col gap-3">
             {pageId ? (
                 <button
                     onClick={() => window.location.href = `/dashboard/editor/${pageId}`}

@@ -23,9 +23,10 @@ export const SERVICE_AREAS = [
 export const NAV_ITEMS: NavItem[] = [
   { label: 'Home', href: '/' },
   { label: 'Onze Diensten', href: '/diensten' },
-  { label: 'Werkregio', href: '/#werkgebied' },
-  { label: '3D Showroom (in opbouw)', href: '/showroom' },
-  { label: 'Projecten', href: '/portfolio' },
+  { label: 'Projecten', href: '/projecten' },
+  { label: 'Budget Tool', href: '/budget-tool' },
+  { label: 'Premie Gids', href: '/verbouwpremie-gids' },
+  { label: '3D Showroom', href: '/showroom' },
   { label: 'Contact', href: '/contact' },
 ];
 
@@ -47,32 +48,32 @@ export const ALLOWED_ADMIN_EMAILS = [
 ];
 
 export const HERO_CONTENT = {
-  title: 'Ramen, Deuren, Renovatie & Crepi in Zoersel en omgeving',
-  subtitle: 'Lokale vakmannen uit Zoersel die uw woning in Halle, Sint-Antonius en de ruime regio Antwerpen en Mechelen energiezuiniger en mooier maken.',
-  cta: 'Vraag uw vrijblijvende offerte aan',
-  image: '/images/c67c2ffe-a42b-477f-a67d-10100999c4f0.png',
+  title: 'Ramen, Deuren, Renovatie, Crepi & Tuin',
+  subtitle: 'Uw totaalpartner in Zoersel en omgeving. Van nieuwe ramen en deuren tot gevelrenovatie, schilderwerken en tuinaanleg. Eén aannemer voor uw volledige project.',
+  cta: 'Bereken uw prijs of vraag offerte',
+  image: '/images/c67c2ffe-a42b-477f-a67d-10100999c4f0.jpg',
 };
 
 export const SERVICES: ServiceItem[] = [
   {
     id: 'ramen-deuren',
-    title: 'Ramen en Deuren',
+    title: 'PVC & Aluminium Ramen',
     description:
       'Hoogwaardige PVC en aluminium profielen. Isolerend, duurzaam en onderhoudsvriendelijk voor maximale energiebesparing.',
-    image: '/images/c042e299-3e07-4212-b6a2-5c6297e61d69.png',
+    image: '/images/c042e299-3e07-4212-b6a2-5c6297e61d69.jpg',
     icon: Maximize2,
   },
   {
     id: 'renovatie',
-    title: 'Renovatie',
+    title: 'Totaalrenovatie',
     description:
       'Totaalrenovaties van ruwbouw tot afwerking. Wij zijn uw enige aanspreekpunt voor een zorgeloos traject.',
-    image: '/images/16676485-bd4d-49a4-a5a6-89e07254fa23.png',
+    image: '/images/16676485-bd4d-49a4-a5a6-89e07254fa23.jpg',
     icon: Hammer,
   },
   {
     id: 'isolatie',
-    title: 'Isolatiewerken',
+    title: 'Gevel- & Dakisolatie',
     description:
       'Dak-, muur- en gevelisolatie. Verlaag uw energiekosten en verhoog uw wooncomfort direct.',
     image: '/images/downloads/isolatie-1.jpg',
@@ -80,7 +81,7 @@ export const SERVICES: ServiceItem[] = [
   },
   {
     id: 'crepi',
-    title: 'Crepi Gevelafwerking',
+    title: 'Crepi & Gevelbepleistering',
     description:
       'Strakke en duurzame gevelafwerking die uw woning beschermt en verfraait. Ideaal voor nieuwbouw en renovatie.',
     image: '/images/downloads/crepi-1.jpg',
@@ -146,7 +147,7 @@ export const PROJECTS: Project[] = [
     description: 'Complete renovatie van een rijwoning inclusief nieuwe ramen, isolatie en gevelwerken. Van ruwbouw tot afwerking in één traject.',
     type: 'renovatie',
     images: [
-      '/images/16676485-bd4d-49a4-a5a6-89e07254fa23.png',
+      '/images/16676485-bd4d-49a4-a5a6-89e07254fa23.jpg',
     ],
     completedDate: '2024-07',
     location: 'Antwerpen',
@@ -170,7 +171,7 @@ export const PROJECTS: Project[] = [
     description: 'Plaatsing van hoogwaardige PVC ramen en deuren met drievoudige beglazing voor optimale isolatie.',
     type: 'ramen-deuren',
     images: [
-      '/images/c042e299-3e07-4212-b6a2-5c6297e61d69.png',
+      '/images/c042e299-3e07-4212-b6a2-5c6297e61d69.jpg',
     ],
     completedDate: '2024-03',
     location: 'Mechelen',
@@ -192,21 +193,21 @@ export const PROJECTS: Project[] = [
     description: 'Een selectie van onze meest recente projecten in de regio, waaronder diverse gevelrenovaties en isolatiewerken.',
     type: 'renovatie',
     images: [
-      "/images/foto's/Gemini_Generated_Image_12huit12huit12hu.png",
-      "/images/foto's/Gemini_Generated_Image_16tc0t16tc0t16tc.png",
-      "/images/foto's/Gemini_Generated_Image_4f1lyg4f1lyg4f1l.png",
-      "/images/foto's/Gemini_Generated_Image_4jf3fd4jf3fd4jf3.png",
-      "/images/foto's/Gemini_Generated_Image_4xh3am4xh3am4xh3.png",
-      "/images/foto's/Gemini_Generated_Image_73yqjc73yqjc73yq.png",
-      "/images/foto's/Gemini_Generated_Image_7stbs27stbs27stb.png",
-      "/images/foto's/Gemini_Generated_Image_a0290xa0290xa029.png",
-      "/images/foto's/Gemini_Generated_Image_bf8tm8bf8tm8bf8t.png",
-      "/images/foto's/Gemini_Generated_Image_evuy78evuy78evuy.png",
-      "/images/foto's/Gemini_Generated_Image_gv2xcygv2xcygv2x.png",
-      "/images/foto's/Gemini_Generated_Image_m9y450m9y450m9y4.png",
-      "/images/foto's/Gemini_Generated_Image_n7s3q7n7s3q7n7s3.png",
-      "/images/foto's/Gemini_Generated_Image_pqrnmbpqrnmbpqrn.png",
-      "/images/foto's/Gemini_Generated_Image_tn45ittn45ittn45.png"
+      "/images/foto's/Gemini_Generated_Image_12huit12huit12hu.jpg",
+      "/images/foto's/Gemini_Generated_Image_16tc0t16tc0t16tc.jpg",
+      "/images/foto's/Gemini_Generated_Image_4f1lyg4f1lyg4f1l.jpg",
+      "/images/foto's/Gemini_Generated_Image_4jf3fd4jf3fd4jf3.jpg",
+      "/images/foto's/Gemini_Generated_Image_4xh3am4xh3am4xh3.jpg",
+      "/images/foto's/Gemini_Generated_Image_73yqjc73yqjc73yq.jpg",
+      "/images/foto's/Gemini_Generated_Image_7stbs27stbs27stb.jpg",
+      "/images/foto's/Gemini_Generated_Image_a0290xa0290xa029.jpg",
+      "/images/foto's/Gemini_Generated_Image_bf8tm8bf8tm8bf8t.jpg",
+      "/images/foto's/Gemini_Generated_Image_evuy78evuy78evuy.jpg",
+      "/images/foto's/Gemini_Generated_Image_gv2xcygv2xcygv2x.jpg",
+      "/images/foto's/Gemini_Generated_Image_m9y450m9y450m9y4.jpg",
+      "/images/foto's/Gemini_Generated_Image_n7s3q7n7s3q7n7s3.jpg",
+      "/images/foto's/Gemini_Generated_Image_pqrnmbpqrnmbpqrn.jpg",
+      "/images/foto's/Gemini_Generated_Image_tn45ittn45ittn45.jpg"
     ],
     completedDate: '2024-01',
     location: 'Diverse Locaties',

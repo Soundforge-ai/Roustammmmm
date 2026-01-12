@@ -3,49 +3,50 @@ import { Check } from 'lucide-react';
 import { WHY_US_BENEFITS } from '@/constants';
 
 const WhyUs: React.FC = () => {
-  return (
-    <section className="py-12 sm:py-20 bg-brand-dark text-white relative overflow-hidden">
-        {/* Abstract Background Decoration */}
-        <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 sm:w-96 h-64 sm:h-96 bg-brand-accent/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-56 sm:w-80 h-56 sm:h-80 bg-blue-500/10 rounded-full blur-3xl"></div>
+    return (
+        <section className="py-12 sm:py-20 bg-brand-dark text-white relative overflow-hidden">
+            {/* Abstract Background Decoration */}
+            <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 sm:w-96 h-64 sm:h-96 bg-brand-accent/10 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-56 sm:w-80 h-56 sm:h-80 bg-blue-500/10 rounded-full blur-3xl"></div>
 
-      <div className="container mx-auto px-4 sm:px-6 relative z-10">
-        <div className="flex flex-col lg:flex-row gap-8 sm:gap-12 lg:items-center">
-            <div className="lg:w-1/3">
-                <h2 className="text-brand-accent font-semibold tracking-wider uppercase text-sm mb-3">Waarom Yannova?</h2>
-                <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 leading-tight">
-                    Zorgeloos bouwen begint met vertrouwen.
-                </h3>
-                <p className="text-gray-400 text-base sm:text-lg mb-6 sm:mb-8">
-                    U verdient een team dat luistert, meedenkt en afspraken nakomt. Wij communiceren helder, werken proper en leveren een afwerking waar u jarenlang plezier van heeft.
-                </p>
-                <div className="hidden lg:block">
-                    <img 
-                        src="/images/16676485-bd4d-49a4-a5a6-89e07254fa23.png" 
-                        alt="Detail afwerking" 
-                        className="rounded-lg shadow-lg border border-gray-700 opacity-80"
-                    />
-                </div>
-            </div>
-
-            <div className="lg:w-2/3">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                    {WHY_US_BENEFITS.map((benefit) => (
-                        <div key={benefit.id} className="flex items-start gap-4 p-4 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
-                            <div className="mt-1 bg-brand-accent/20 p-2 rounded-full text-brand-accent">
-                                <Check size={20} />
-                            </div>
-                            <div>
-                                <h4 className="font-semibold text-lg text-gray-100">{benefit.text}</h4>
-                            </div>
+            <div className="container mx-auto px-4 sm:px-6 relative z-10">
+                <div className="flex flex-col lg:flex-row gap-8 sm:gap-12 lg:items-center">
+                    <div className="lg:w-1/3">
+                        <h2 className="text-brand-accent font-semibold tracking-wider uppercase text-sm mb-3">Waarom kiezen voor Yannova Bouw?</h2>
+                        <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 leading-tight">
+                            Uw betrouwbare aannemer voor ramen en renovatie
+                        </h3>
+                        <p className="text-gray-400 text-base sm:text-lg mb-6 sm:mb-8">
+                            Al meer dan 15 jaar plaatsen wij <strong className="text-white">ramen en deuren</strong> in Zoersel, Antwerpen en Mechelen.
+                            Van <strong className="text-white">PVC ramen</strong> tot <strong className="text-white">gevelisolatie</strong>: wij leveren vakmanschap met 10 jaar garantie.
+                        </p>
+                        <div className="hidden lg:block">
+                            <img
+                                src="/images/16676485-bd4d-49a4-a5a6-89e07254fa23.jpg"
+                                alt="Vakkundige afwerking ramen en deuren door Yannova Bouw"
+                                className="rounded-lg shadow-lg border border-gray-700 opacity-80"
+                            />
                         </div>
-                    ))}
+                    </div>
+
+                    <div className="lg:w-2/3">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                            {WHY_US_BENEFITS.map((benefit) => (
+                                <div key={benefit.id} className="flex items-start gap-4 p-4 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+                                    <div className="mt-1 bg-brand-accent/20 p-2 rounded-full text-brand-accent">
+                                        <Check size={20} />
+                                    </div>
+                                    <div>
+                                        <h4 className="font-semibold text-lg text-gray-100">{benefit.text}</h4>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-      </div>
-    </section>
-  );
+        </section>
+    );
 };
 
 export default WhyUs;

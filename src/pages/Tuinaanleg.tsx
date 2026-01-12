@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Trees, Flower2, Construction, Waves, CheckCircle, Shield } from 'lucide-react';
+import SEO from '@/components/seo/SEO';
 
 const Tuinaanleg: React.FC = () => {
     const services = [
@@ -40,6 +41,11 @@ const Tuinaanleg: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-white text-slate-900">
+            <SEO
+                title="Tuinaanleg & Opritten"
+                description="Specialist in tuinaanleg, opritten en terrassen in Zoersel en omstreken. Van 3D-ontwerp tot volledige realisatie van uw droomtuin."
+                keywords="tuinaanleg, tuinarchitect, opritten, terrassen, tuinaannemer Zoersel, klinkers leggen, tuinonderhoud Antwerpen"
+            />
             {/* Hero Section */}
             <section className="relative py-24 md:py-32 bg-green-900">
                 <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&q=80')] opacity-30 bg-cover bg-center mix-blend-overlay"></div>

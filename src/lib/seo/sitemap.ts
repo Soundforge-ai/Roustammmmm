@@ -3,6 +3,13 @@
  */
 
 import { CITIES } from '../../constants/regions';
+import { PROJECTS } from '../../constants';
+
+// Helper om slugs te genereren
+const slugify = (text: string) =>
+  text.toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)+/g, '');
 
 export interface SitemapEntry {
   url: string;
@@ -13,22 +20,61 @@ export interface SitemapEntry {
 
 const BASE_URL = 'https://www.yannova.be';
 
-// Standaard pagina's
+// Standaard pagina's met geoptimaliseerde SEO waarden
 const DEFAULT_PAGES: SitemapEntry[] = [
+  // Homepage - Hoogste prioriteit
   { url: '/', changefreq: 'weekly', priority: 1.0 },
+
+  // Core pagina's
   { url: '/over-ons', changefreq: 'monthly', priority: 0.8 },
-  { url: '/diensten', changefreq: 'monthly', priority: 0.9 },
+  { url: '/diensten', changefreq: 'weekly', priority: 0.9 },
   { url: '/contact', changefreq: 'monthly', priority: 0.8 },
   { url: '/aanpak', changefreq: 'monthly', priority: 0.7 },
   { url: '/partners', changefreq: 'monthly', priority: 0.6 },
-  // Gevel pagina's
-  { url: '/gevel', changefreq: 'monthly', priority: 0.9 },
-  { url: '/gevel/gevelbepleistering', changefreq: 'monthly', priority: 0.8 },
-  { url: '/gevel/gevelbescherming', changefreq: 'monthly', priority: 0.8 },
-  { url: '/gevel/gevelisolatie', changefreq: 'monthly', priority: 0.8 },
-  { url: '/gevel/steenstrips', changefreq: 'monthly', priority: 0.8 },
-  { url: '/gevel/gevelrenovatie', changefreq: 'monthly', priority: 0.8 },
+  { url: '/portfolio', changefreq: 'weekly', priority: 0.85 },
+  { url: '/showroom', changefreq: 'weekly', priority: 0.85 },
+
+  // Hoofd diensten - Hoge prioriteit voor lead generation
+  { url: '/ramen-deuren', changefreq: 'weekly', priority: 0.95 },
+  { url: '/renovatie', changefreq: 'weekly', priority: 0.95 },
+  { url: '/gevel', changefreq: 'weekly', priority: 0.95 },
+  { url: '/tuinaanleg', changefreq: 'weekly', priority: 0.85 },
+  { url: '/schilderwerken', changefreq: 'weekly', priority: 0.85 },
+  { url: '/kies-product', changefreq: 'weekly', priority: 0.85 },
+
+  // Nieuwe feature pagina's - Hoge prioriteit voor conversie
+  { url: '/projecten', changefreq: 'weekly', priority: 0.9 },
+  { url: '/budget-tool', changefreq: 'monthly', priority: 0.85 },
+  { url: '/verbouwpremie-gids', changefreq: 'monthly', priority: 0.9 },
+
+  // Project detail pagina's (Dynamisch gegenereerd)
+  ...PROJECTS.map(project => ({
+    url: `/projecten/${slugify(project.title)}`,
+    changefreq: 'monthly' as const,
+    priority: 0.75,
+    lastmod: project.completedDate ? `${project.completedDate}-01` : undefined
+  })),
+
+  // Regionale landing pagina's - Hoge prioriteit voor lokale SEO
+  { url: '/gevelrenovatie-mechelen', changefreq: 'monthly', priority: 0.85 },
+  { url: '/ramen-en-deuren-keerbergen', changefreq: 'monthly', priority: 0.85 },
+  { url: '/crepi-werken-leuven', changefreq: 'monthly', priority: 0.85 },
+
+  // Gevel subpagina's
+  { url: '/gevel/gevelbepleistering', changefreq: 'weekly', priority: 0.85 },
+  { url: '/gevel/gevelbescherming', changefreq: 'weekly', priority: 0.8 },
+  { url: '/gevel/gevelisolatie', changefreq: 'weekly', priority: 0.85 },
+  { url: '/gevel/steenstrips', changefreq: 'weekly', priority: 0.8 },
+  { url: '/gevel/gevelrenovatie', changefreq: 'weekly', priority: 0.85 },
+
+  // Informatieve pagina's
   { url: '/crepi-info', changefreq: 'monthly', priority: 0.7 },
+
+  // Blog posts - Regelmatig bijgewerkt
+  { url: '/posts', changefreq: 'weekly', priority: 0.7 },
+  { url: '/posts/ramen-prijzen-2025', changefreq: 'monthly', priority: 0.8 },
+  { url: '/posts/pvc-vs-aluminium', changefreq: 'monthly', priority: 0.8 },
+  { url: '/posts/onderhoudstips', changefreq: 'monthly', priority: 0.8 },
 ];
 
 // Regio pagina's genereren uit CITIES configuratie
@@ -45,7 +91,7 @@ const ALL_PAGES = [...DEFAULT_PAGES, ...REGION_PAGES];
  */
 export function generateSitemapXML(entries: SitemapEntry[] = ALL_PAGES): string {
   const today = new Date().toISOString().split('T')[0];
-  
+
   const urlEntries = entries.map(entry => {
     const fullUrl = entry.url.startsWith('http') ? entry.url : `${BASE_URL}${entry.url}`;
     return `  <url>

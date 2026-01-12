@@ -6,7 +6,7 @@ const Steenstrips: React.FC = () => {
     <div className="min-h-screen bg-white text-slate-900">
       {/* Hero Section */}
       <section className="relative py-24 md:py-32 bg-gradient-to-br from-brand-dark via-slate-800 to-brand-dark">
-        <div className="absolute inset-0 bg-[url('/images/crepi-patterns.png')] opacity-10 bg-cover bg-center"></div>
+        <div className="absolute inset-0 bg-[url('/images/crepi-patterns.jpg')] opacity-10 bg-cover bg-center"></div>
         <div className="container mx-auto px-6 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
@@ -53,7 +53,7 @@ const Steenstrips: React.FC = () => {
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div>
                 <img
-                  src="/images/16676485-bd4d-49a4-a5a6-89e07254fa23.png"
+                  src="/images/16676485-bd4d-49a4-a5a6-89e07254fa23.jpg"
                   alt="Steenstrips gevelafwerking met authentieke baksteenlook door Yannova"
                   className="w-full h-auto rounded-lg shadow-lg"
                   loading="lazy"

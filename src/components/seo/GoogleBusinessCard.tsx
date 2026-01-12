@@ -26,7 +26,8 @@ const GoogleBusinessCard: React.FC<GoogleBusinessCardProps> = ({ cityName, class
             sunday: 'Zo: Gesloten'
         },
         googleMapsUrl: 'https://maps.google.com/?q=Yannova+Bouw+Zoersel',
-        googleBusinessUrl: 'https://g.page/yannova-bouw', // Aanpassen naar echte URL
+        googleBusinessUrl: 'https://g.page/yannova-bouw',
+        reviewUrl: 'https://search.google.com/local/writereview?placeid=ChIJo-X_Z-_Aw0cRMLZNmZxNbZ0', // Gebruik de unieke place_id van Yannova
         rating: 4.9,
         reviewCount: 47
     };
@@ -92,24 +93,35 @@ const GoogleBusinessCard: React.FC<GoogleBusinessCardProps> = ({ cityName, class
             </div>
 
             {/* CTA's */}
-            <div className="px-6 pb-6 grid grid-cols-2 gap-3">
+            <div className="px-6 pb-6 space-y-3">
+                <div className="grid grid-cols-2 gap-3">
+                    <a
+                        href={businessInfo.googleMapsUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-2 py-3 px-4 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-700 font-medium text-sm transition-colors"
+                    >
+                        <MapPin size={16} />
+                        Route
+                    </a>
+                    <a
+                        href={businessInfo.googleBusinessUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-2 py-3 px-4 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-700 font-medium text-sm transition-colors"
+                    >
+                        <Star size={16} />
+                        Reviews
+                    </a>
+                </div>
                 <a
-                    href={businessInfo.googleMapsUrl}
+                    href={businessInfo.reviewUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 py-3 px-4 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-700 font-medium text-sm transition-colors"
+                    className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-brand-accent hover:bg-orange-700 rounded-lg text-white font-bold text-sm transition-all shadow-md hover:shadow-lg"
                 >
-                    <MapPin size={16} />
-                    Route
-                </a>
-                <a
-                    href={businessInfo.googleBusinessUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 py-3 px-4 bg-brand-accent hover:bg-orange-700 rounded-lg text-white font-medium text-sm transition-colors"
-                >
-                    <Star size={16} />
-                    Reviews
+                    <Star size={16} className="fill-white" />
+                    Schrijf een review op Google
                 </a>
             </div>
 

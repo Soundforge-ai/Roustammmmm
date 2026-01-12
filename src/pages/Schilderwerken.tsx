@@ -2,15 +2,27 @@ import React from 'react';
 import { PaintBucket, CheckCircle2, ArrowRight, ShieldCheck, Home } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+import SEO from '@/components/seo/SEO';
+import OptimizedImage from '@/components/ui/OptimizedImage';
+
 const Schilderwerken: React.FC = () => {
     return (
         <div className="bg-white">
+            <SEO
+                title="Schilderwerken Binnen & Buiten"
+                description="Professionele schilderwerken in Zoersel en Antwerpen. Voor binnen- en buitenschilderwerk, muren, plafonds en gevels. Vraag uw gratis offerte."
+                keywords="schilderwerken, binnenhuis schilder, buitenschilder, schilder Zoersel, schilder Antwerpen, gevel schilderen, muren schilderen"
+            />
             {/* Hero Section */}
             <section className="relative py-20 bg-brand-dark overflow-hidden">
                 <div className="absolute inset-0 opacity-20">
                     <div className="absolute inset-0 bg-gradient-to-r from-brand-dark to-transparent z-10"></div>
                     {/* Note: In a real implementation, you'd want a specific image for painting here */}
-                    <img src="/images/c67c2ffe-a42b-477f-a67d-10100999c4f0.png" alt="Schilderwerken" className="w-full h-full object-cover" />
+                    <OptimizedImage
+                        src="/images/c67c2ffe-a42b-477f-a67d-10100999c4f0.jpg"
+                        alt="Schilderwerken"
+                        className="w-full h-full object-cover absolute inset-0"
+                    />
                 </div>
 
                 <div className="container mx-auto px-6 relative z-20">
@@ -66,7 +78,7 @@ const Schilderwerken: React.FC = () => {
                             </ul>
                         </div>
                         <div className="relative h-96 rounded-2xl overflow-hidden shadow-xl group">
-                            <img
+                            <OptimizedImage
                                 src="https://images.unsplash.com/photo-1562259949-e8e7689d7828?auto=format&fit=crop&q=80"
                                 alt="Binnenschilderwerken interieur"
                                 className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
@@ -78,7 +90,7 @@ const Schilderwerken: React.FC = () => {
 
                     <div className="grid md:grid-cols-2 gap-12 items-center">
                         <div className="order-2 md:order-1 relative h-96 rounded-2xl overflow-hidden shadow-xl group">
-                            <img
+                            <OptimizedImage
                                 src="https://images.unsplash.com/photo-1604014237800-1c9102c219da?auto=format&fit=crop&q=80"
                                 alt="Buitenschilderwerken gevel"
                                 className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"

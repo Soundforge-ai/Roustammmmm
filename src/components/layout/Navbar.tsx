@@ -14,9 +14,21 @@ const Navbar: React.FC = () => {
 
   const [isServicesOpen, setIsServicesOpen] = useState(false);
   const [isRegionOpen, setIsRegionOpen] = useState(false);
+  const [logoAnimated, setLogoAnimated] = useState(false);
 
   const location = useLocation();
   const { user, isLoggedIn } = useAuth();
+  const isHomePage = location.pathname === '/';
+
+  // Logo drop animation on homepage load
+  useEffect(() => {
+    if (isHomePage) {
+      // Start animation immediately
+      requestAnimationFrame(() => {
+        setLogoAnimated(true);
+      });
+    }
+  }, [isHomePage]);
 
   // Check of de ingelogde gebruiker een admin is
   const isAdmin = isLoggedIn && user?.email && ALLOWED_ADMIN_EMAILS.includes(user.email);
@@ -86,19 +98,36 @@ const Navbar: React.FC = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const isHomePage = location.pathname === '/';
-  const textColor = isScrolled || !isHomePage ? 'text-gray-700' : 'text-gray-200';
+  const textColor = 'text-gray-700';
 
   return (
-    <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled || !isHomePage ? 'bg-white shadow-md py-2' : 'bg-transparent py-4'}`}>
+    <nav className={`fixed w-full z-50 transition-all duration-300 bg-white shadow-md ${isScrolled ? 'py-2' : 'py-3'}`}>
       <div className="container mx-auto px-4 flex justify-between items-center">
         {/* Logo */}
-        <Link to="/" className={`text-xl font-bold tracking-tight flex-shrink-0 ${isScrolled || !isHomePage ? 'text-brand-dark' : 'text-white'}`}>
-          {COMPANY_NAME}<span className="text-brand-accent">.</span>
+        <Link to="/" className="flex items-center gap-3 flex-shrink-0">
+          <img
+            src="/images/logo-yannova-new-optimized.png"
+            alt="Yannova Bouw Logo"
+            loading="eager"
+            fetchPriority="high"
+            className={`w-auto rounded-lg transition-all duration-500 ${isScrolled ? 'h-16' : 'h-20'} ${isHomePage
+                ? logoAnimated
+                  ? 'translate-y-0 opacity-100 scale-100'
+                  : '-translate-y-24 opacity-0 scale-[2]'
+                : ''
+              }`}
+            style={{
+              transitionTimingFunction: isHomePage && logoAnimated ? 'cubic-bezier(0.34, 1.56, 0.64, 1)' : 'ease',
+              transformOrigin: 'center center'
+            }}
+          />
+          <span className="text-xl font-bold tracking-tight text-brand-dark">
+            {COMPANY_NAME}<span className="text-brand-accent">.</span>
+          </span>
         </Link>
 
         {/* Desktop Menu */}
-        <div className="hidden lg:flex items-center space-x-1 xl:space-x-3 flex-1 justify-center max-w-4xl">
+        <div className="hidden lg:flex items-center gap-6 flex-1 justify-center">
           {NAV_ITEMS.map((item) => {
             const isActive = location.pathname === item.href || (item.href.startsWith('/#') && location.pathname === '/');
 
@@ -113,7 +142,7 @@ const Navbar: React.FC = () => {
               return (
                 <div
                   key={item.label}
-                  className="relative"
+                  className="relative flex items-center"
                   ref={servicesRef}
                   onMouseEnter={() => {
                     if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -127,12 +156,12 @@ const Navbar: React.FC = () => {
                 >
                   <Link
                     to={item.href}
-                    className={`text-xs font-medium hover:text-brand-accent transition-colors flex items-center gap-0.5 whitespace-nowrap px-2 py-1 rounded ${isScrolled || !isHomePage ? 'text-gray-700' : 'text-gray-200'} ${isServicesActive ? 'text-brand-accent' : ''}`}
+                    className={`text-sm font-medium hover:text-brand-accent transition-colors flex items-center gap-1 whitespace-nowrap px-2 py-1 rounded text-gray-700 ${isServicesActive ? 'text-brand-accent' : ''}`}
                     onClick={() => setIsServicesOpen(!isServicesOpen)}
                   >
                     {item.label}
                     <ChevronDown
-                      size={14}
+                      size={16}
                       className={`transition-transform duration-200 ${isServicesOpen ? 'rotate-180' : ''}`}
                       aria-hidden="true"
                     />
@@ -199,7 +228,7 @@ const Navbar: React.FC = () => {
               return (
                 <div
                   key={item.label}
-                  className="relative"
+                  className="relative flex items-center"
                   ref={regionRef}
                   onMouseEnter={() => {
                     if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -213,7 +242,7 @@ const Navbar: React.FC = () => {
                 >
                   <a
                     href={item.href}
-                    className={`text-xs font-medium hover:text-brand-accent transition-colors flex items-center gap-0.5 whitespace-nowrap px-2 py-1 rounded ${isScrolled || !isHomePage ? 'text-gray-700' : 'text-gray-200'}`}
+                    className={`text-sm font-medium hover:text-brand-accent transition-colors flex items-center gap-1 whitespace-nowrap px-2 py-1 rounded text-gray-700`}
                     onClick={(e) => {
                       e.preventDefault();
                       setIsRegionOpen(!isRegionOpen);
@@ -221,7 +250,7 @@ const Navbar: React.FC = () => {
                   >
                     {item.label}
                     <ChevronDown
-                      size={14}
+                      size={16}
                       className={`transition-transform duration-200 ${isRegionOpen ? 'rotate-180' : ''}`}
                       aria-hidden="true"
                     />
@@ -280,7 +309,7 @@ const Navbar: React.FC = () => {
                   <a
                     key={item.label}
                     href={anchorId}
-                    className={`text-xs font-medium hover:text-brand-accent transition-colors whitespace-nowrap px-2 py-1 ${textColor}`}
+                    className={`text-sm font-medium hover:text-brand-accent transition-colors whitespace-nowrap px-2 py-1 flex items-center ${textColor}`}
                   >
                     {item.label}
                   </a>
@@ -290,7 +319,7 @@ const Navbar: React.FC = () => {
                 return (
                   <Link
                     to={item.href}
-                    className="px-2 py-1 text-xs text-gray-700 hover:text-brand-accent font-medium whitespace-nowrap transition-colors duration-200"
+                    className="px-2 py-1 text-sm text-gray-700 hover:text-brand-accent font-medium whitespace-nowrap transition-colors duration-200"
                     onClick={() => setIsOpen(false)}
                   >
                     {item.label}
@@ -304,7 +333,7 @@ const Navbar: React.FC = () => {
               <Link
                 key={item.label}
                 to={item.href}
-                className={`text-xs font-medium hover:text-brand-accent transition-colors whitespace-nowrap px-2 py-1 ${textColor} ${isActive ? 'text-brand-accent' : ''}`}
+                className={`text-sm font-medium hover:text-brand-accent transition-colors whitespace-nowrap px-2 py-1 flex items-center ${textColor} ${isActive ? 'text-brand-accent' : ''}`}
               >
                 {item.label}
               </Link>
@@ -324,7 +353,7 @@ const Navbar: React.FC = () => {
               onMouseLeave={() => setIsAdminOpen(false)}
             >
               <button
-                className={`p-1.5 rounded-lg hover:bg-gray-100 transition-colors ${isScrolled || !isHomePage ? 'text-gray-700' : 'text-gray-200 hover:text-white'}`}
+                className={`p-1.5 rounded-lg hover:bg-gray-100 transition-colors text-gray-700`}
                 aria-label="Admin Tools"
               >
                 <Settings size={18} />
@@ -348,13 +377,20 @@ const Navbar: React.FC = () => {
             </div>
           )}
 
+          {/* Quick contact buttons */}
           <a
-            href={isHomePage ? "#contact" : "/#contact"}
+            href="tel:+32489960001"
+            className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-colors flex items-center gap-1.5 whitespace-nowrap border text-gray-700 border-gray-200 hover:bg-gray-50`}
+            aria-label="Bel ons"
+          >
+            <Phone size={14} /> Bel
+          </a>
+          <Link
+            to="/contact"
             className="bg-brand-accent hover:bg-orange-700 text-white px-3 py-1.5 rounded-md text-xs font-semibold transition-colors flex items-center gap-1.5 whitespace-nowrap"
           >
-            <Phone size={14} />
             Offerte
-          </a>
+          </Link>
         </div>
 
         {/* Mobile Menu Button */}
@@ -366,9 +402,9 @@ const Navbar: React.FC = () => {
           aria-label={isOpen ? 'Menu sluiten' : 'Menu openen'}
         >
           {isOpen ? (
-            <X className={isScrolled || !isHomePage ? 'text-gray-900' : 'text-white'} />
+            <X className="text-gray-900" />
           ) : (
-            <Menu className={isScrolled || !isHomePage ? 'text-gray-900' : 'text-white'} />
+            <Menu className="text-gray-900" />
           )}
         </button>
       </div>

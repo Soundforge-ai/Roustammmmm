@@ -65,7 +65,7 @@ const Gevel: React.FC = () => {
       description: 'Authentieke baksteenlook met uitstekende isolatie-eigenschappen. Perfect voor renovatie en nieuwbouw.',
       icon: Layers,
       href: '/gevel/steenstrips',
-      image: '/images/16676485-bd4d-49a4-a5a6-89e07254fa23.png',
+      image: '/images/16676485-bd4d-49a4-a5a6-89e07254fa23.jpg',
       subcategories: ['Renovatie gevels', 'Nieuwbouw', 'Combinatie met isolatie', 'Verschillende steensoorten']
     },
     {
@@ -74,7 +74,7 @@ const Gevel: React.FC = () => {
       description: 'Complete gevelrenovatie van ruwbouw tot afwerking. Uw gevel wordt weer als nieuw met garantie.',
       icon: Home,
       href: '/gevel/gevelrenovatie',
-      image: '/images/c042e299-3e07-4212-b6a2-5c6297e61d69.png',
+      image: '/images/c042e299-3e07-4212-b6a2-5c6297e61d69.jpg',
       subcategories: ['Herstel van schade', 'Isolatie toevoegen', 'Nieuwe afwerking', 'Complete transformatie']
     }
   ];
@@ -103,7 +103,7 @@ const Gevel: React.FC = () => {
 
       {/* Hero Section */}
       <section className="relative py-24 md:py-32 bg-gradient-to-br from-brand-dark via-slate-800 to-brand-dark">
-        <div className="absolute inset-0 bg-[url('/images/crepi-patterns.png')] opacity-10 bg-cover bg-center"></div>
+        <div className="absolute inset-0 bg-[url('/images/crepi-patterns.jpg')] opacity-10 bg-cover bg-center"></div>
         <div className="container mx-auto px-6 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">

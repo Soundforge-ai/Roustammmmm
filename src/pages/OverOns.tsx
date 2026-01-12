@@ -1,5 +1,7 @@
 import React from 'react';
 import { CheckCircle, Users, Award, Clock, Target, Heart } from 'lucide-react';
+import SEO from '@/components/seo/SEO';
+import LazyImage from '@/components/ui/LazyImage';
 
 const OverOns: React.FC = () => {
   const teamValues = [
@@ -32,56 +34,80 @@ const OverOns: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      <SEO
+        title="Over Ons | Het Team van Yannova Bouw"
+        description="Maak kennis met Yannick en het ervaren team achter Yannova Bouw. Uw partner voor renovatie en schrijnwerk in de Kempen en Antwerpen. 15+ jaar ervaring."
+      />
       {/* Hero Section */}
       <section className="relative py-24 md:py-32 bg-gradient-to-br from-brand-dark via-slate-800 to-brand-dark">
         <div className="absolute inset-0 opacity-10 bg-[url('https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&q=80')] bg-cover bg-center" />
         <div className="container mx-auto px-6 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-              Over Yannova Bouw
-              <span className="block text-brand-accent mt-2 text-2xl md:text-3xl">Uw aannemer in Zoersel, Antwerpen & Mechelen</span>
+              Wij zijn Yannick en het team van Yannova
+              <span className="block text-brand-accent mt-2 text-2xl md:text-3xl">De mensen achter uw renovatie</span>
             </h1>
             <p className="text-lg md:text-xl text-gray-200 leading-relaxed">
-              Al meer dan 15 jaar helpen we klanten in Zoersel, Antwerpen, Mechelen en omgeving met renovatie- en bouwprojecten — met oog voor detail, duidelijke communicatie en een proper resultaat.
+              <strong>Wij werken niet met onderaannemers van onderaannemers.</strong> De persoon die de offerte maakt, staat ook mee op de werf.
+              Zo weet u precies met wie u zaken doet — en krijgt u de kwaliteit die u verdient.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Intro Section */}
+      {/* Team Photo & Promise */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
             <div>
-              <img
-                src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200&auto=format&fit=crop"
-                alt="Modern gerenoveerde woning met nieuwe ramen en gevelbekleding"
+              <LazyImage
+                src="/images/16676485-bd4d-49a4-a5a6-89e07254fa23.jpg"
+                alt="Het team van Yannova Bouw op de werf - vakmannen in werkkledij"
                 className="rounded-xl shadow-2xl w-full"
-                loading="lazy"
               />
+              <div className="mt-6 bg-brand-accent/10 border border-brand-accent/20 rounded-xl p-6">
+                <h3 className="font-bold text-brand-dark mb-2">Onze Belofte</h3>
+                <p className="text-gray-700">
+                  <strong>"Wij verlaten de werf pas als alles bezemschoon is en jij 100% tevreden bent."</strong>
+                </p>
+              </div>
             </div>
             <div>
               <h2 className="text-3xl md:text-4xl font-bold text-brand-dark mb-6">
-                Vakmanschap en vertrouwen in elk project
+                Wie komt er over uw vloer?
               </h2>
               <p className="text-gray-600 text-lg leading-relaxed mb-6">
-                Bij Yannova geloven we dat bouwen en renoveren vooral gaat om één ding: een plek waar u zich écht thuis voelt.
-                Daarom luisteren we naar uw wensen, denken we praktisch mee en communiceren we helder — van de eerste opmeting tot de laatste afwerking.
+                In de bouw is vertrouwen alles. Daarom stellen we ons graag voor: <strong>wij zijn Yannick en het vaste team van Yannova Bouw</strong>.
+                Al meer dan 15 jaar werken we samen aan projecten in Zoersel, Antwerpen, Mechelen en omgeving.
               </p>
               <p className="text-gray-600 text-lg leading-relaxed mb-8">
-                Of het nu gaat om nieuwe ramen, gevelisolatie of een totaalrenovatie: we werken netjes, met respect voor uw woning.
-                Zo blijft het traject overzichtelijk — en geniet u straks van een resultaat waar u trots op bent.
+                Wat ons anders maakt? <strong>Wij werken uitsluitend met ons eigen team</strong>. Geen onderaannemers die u niet kent,
+                geen verrassingen. De vakman die uw offerte bespreekt, is dezelfde die uw ramen plaatst of uw gevel afwerkt.
               </p>
-              <ul className="space-y-3">
-                {['Persoonlijke begeleiding van A tot Z', 'Eén aanspreekpunt voor uw project', 'Focus op energiezuinige oplossingen'].map(
-                  (item, idx) => (
-                    <li key={idx} className="flex items-center gap-3">
-                      <CheckCircle className="text-brand-accent flex-shrink-0" size={20} />
-                      <span className="text-brand-primary font-medium">{item}</span>
-                    </li>
-                  )
-                )}
-              </ul>
+
+              <div className="space-y-4">
+                <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
+                  <CheckCircle className="text-brand-accent flex-shrink-0 mt-1" size={20} />
+                  <div>
+                    <h4 className="font-semibold text-brand-dark">Eigen team, geen onderaannemers</h4>
+                    <p className="text-gray-600 text-sm">U weet precies wie er komt en wat u kunt verwachten</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
+                  <CheckCircle className="text-brand-accent flex-shrink-0 mt-1" size={20} />
+                  <div>
+                    <h4 className="font-semibold text-brand-dark">15+ jaar ervaring per vakman</h4>
+                    <p className="text-gray-600 text-sm">Geen leerschool op uw project, maar bewezen vakmanschap</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
+                  <CheckCircle className="text-brand-accent flex-shrink-0 mt-1" size={20} />
+                  <div>
+                    <h4 className="font-semibold text-brand-dark">Bezemschoon opleveren</h4>
+                    <p className="text-gray-600 text-sm">Wij ruimen alles netjes op en controleren samen met u het resultaat</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

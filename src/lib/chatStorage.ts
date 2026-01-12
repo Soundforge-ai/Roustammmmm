@@ -1,5 +1,4 @@
 import { Message } from '../components/chat/Chatbot';
-import * as supabaseChats from './supabase/chats';
 
 export interface ChatSession {
     id: string;
@@ -12,9 +11,8 @@ export interface ChatSession {
 }
 
 const STORAGE_KEY = 'yannova_chat_sessions';
-let useSupabase = true; // Try Supabase first
 
-// Fallback naar localStorage
+// localStorage opslag
 const localStorageFallback = {
     getSessions: (): ChatSession[] => {
         try {
@@ -59,43 +57,16 @@ const localStorageFallback = {
 export const chatStorage = {
     // Get all sessions
     getSessions: async (): Promise<ChatSession[]> => {
-        if (useSupabase) {
-            try {
-                return await supabaseChats.getChatSessions();
-            } catch (e) {
-                console.warn('Supabase not available, falling back to localStorage', e);
-                useSupabase = false;
-                return localStorageFallback.getSessions();
-            }
-        }
         return localStorageFallback.getSessions();
     },
 
     // Save or update a session
     saveSession: async (session: ChatSession): Promise<void> => {
-        if (useSupabase) {
-            try {
-                await supabaseChats.saveChatSession(session);
-                window.dispatchEvent(new Event('chat-storage-updated'));
-                return;
-            } catch (e) {
-                console.warn('Supabase not available, falling back to localStorage', e);
-                useSupabase = false;
-            }
-        }
         localStorageFallback.saveSession(session);
     },
 
     // Helper to create a new session
     createSession: async (): Promise<ChatSession> => {
-        if (useSupabase) {
-            try {
-                return await supabaseChats.createChatSession();
-            } catch (e) {
-                console.warn('Supabase not available, falling back to localStorage', e);
-                useSupabase = false;
-            }
-        }
         const id = Date.now().toString();
         const session: ChatSession = {
             id,
@@ -112,16 +83,6 @@ export const chatStorage = {
 
     // Clear all sessions (for debug/admin)
     clearAll: async (): Promise<void> => {
-        if (useSupabase) {
-            try {
-                await supabaseChats.clearAllChatSessions();
-                window.dispatchEvent(new Event('chat-storage-updated'));
-                return;
-            } catch (e) {
-                console.warn('Supabase not available, falling back to localStorage', e);
-                useSupabase = false;
-            }
-        }
         localStorageFallback.clearAll();
     }
 };

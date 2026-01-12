@@ -2,6 +2,7 @@ import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import ErrorBoundary from './components/ui/ErrorBoundary';
+import SocialProofWidget from './components/ui/SocialProofWidget';
 import { I18nProvider } from './contexts/I18nContext';
 import { AuthProvider } from './contexts/AuthContext';
 import { Lead } from './types';
@@ -11,10 +12,14 @@ import { TESTIMONIALS } from './constants';
 const Hero = lazy(() => import('./components/sections/Hero'));
 const About = lazy(() => import('./components/sections/About'));
 const Services = lazy(() => import('./components/sections/Services'));
+const ShowcaseSection = lazy(() => import('./components/sections/ShowcaseSection'));
+const EPCAdviceSection = lazy(() => import('./components/sections/EPCAdviceSection'));
 const Approach = lazy(() => import('./components/sections/Approach'));
 const WhyUs = lazy(() => import('./components/sections/WhyUs'));
 const TestimonialsCarousel = lazy(() => import('./components/sections/TestimonialsCarousel'));
 const QuoteCalculator = lazy(() => import('./components/sections/QuoteCalculator'));
+const LocalSEO = lazy(() => import('./components/sections/LocalSEO'));
+const BeforeAfter = lazy(() => import('./components/sections/BeforeAfter'));
 const AdminDashboard = lazy(() => import('./components/AdminDashboard'));
 const NotFound = lazy(() => import('./components/layout/NotFound'));
 
@@ -38,7 +43,18 @@ const Gevelisolatie = lazy(() => import('./components/features/gevel/Gevelisolat
 const Steenstrips = lazy(() => import('./components/features/gevel/Steenstrips'));
 const Gevelrenovatie = lazy(() => import('./components/features/gevel/Gevelrenovatie'));
 
-// Nieuwe hoofdpagina's
+// Lazy load blog pages
+const RamenPrijzen2025 = lazy(() => import('./pages/blog/RamenPrijzen2025'));
+const PvcVsAluminium = lazy(() => import('./pages/blog/PvcVsAluminium'));
+const MaintenanceTips = lazy(() => import('./pages/blog/MaintenanceTips'));
+
+// Lazy load new feature pages
+const ProjectCases = lazy(() => import('./pages/ProjectCases'));
+const ProjectDetail = lazy(() => import('./pages/ProjectDetail'));
+const VerbouwpremieGids = lazy(() => import('./pages/VerbouwpremieGids'));
+const RegionalLanding = lazy(() => import('./pages/RegionalLanding'));
+const BudgetTool = lazy(() => import('./pages/BudgetTool'));
+
 // Nieuwe hoofdpagina's
 const RamenDeuren = lazy(() => import('./pages/RamenDeuren'));
 const Tuinaanleg = lazy(() => import('./pages/Tuinaanleg'));
@@ -81,6 +97,16 @@ const App: React.FC = () => {
     setLeads((currentLeads) => currentLeads.filter((lead) => lead.id !== id));
   };
 
+  const handleAddLead = async (lead: Omit<Lead, 'id' | 'createdAt'>) => {
+    const newLead: Lead = {
+      ...lead,
+      id: crypto.randomUUID(),
+      date: new Date().toISOString(),
+      status: 'Nieuw'
+    };
+    setLeads(prev => [newLead, ...prev]);
+  };
+
   // Admin route component wrapper
   const AdminRoute: React.FC = () => (
     <AdminDashboard leads={leads} onUpdateStatus={handleUpdateStatus} onDeleteLead={handleDeleteLead} onLogout={() => window.location.href = '/'} />
@@ -100,6 +126,7 @@ const App: React.FC = () => {
         <I18nProvider>
           <Router>
             <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-orange-200 selection:text-orange-900">
+              <SocialProofWidget />
               <Suspense fallback={<PageLoader />}>
                 <Routes>
                   {/* Admin Route - Direct URL access */}
@@ -129,17 +156,72 @@ const App: React.FC = () => {
                       <Layout
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{
-                          title: 'Ramen, Deuren & Renovatie Antwerpen - Yannova Bouw',
-                          description: 'Specialist in ramen, deuren en totaalrenovaties in regio Antwerpen & Zoersel. Vraag uw gratis offerte in 2 min. 15+ jaar ervaring.',
+                          title: 'Ramen, Renovatie & Crepi Expert | Yannova Bouw Keerbergen & Zoersel',
+                          description: 'Zoekt u een betrouwbare partner voor ramen, deuren, crepi of totaalrenovatie? Yannova Bouw in regio Keerbergen & Zoersel levert vakwerk. Vraag nu uw gratis offerte!',
                           keywords: 'Yannova, Yannova Bouw, ramen en deuren Keerbergen, ramen en deuren Mechelen, ramen en deuren Zoersel, ramen en deuren Putte, PVC ramen, aluminium ramen, renovatie Keerbergen, renovatie Mechelen, renovatie Zoersel, bouwbedrijf Keerbergen, bouwbedrijf Mechelen, crepi gevel, gevelisolatie, gevelbepleistering, isolatiewerken, ramen plaatsen Antwerpen, deuren plaatsen, gevelrenovatie, energiezuinige ramen, ramen Heist-op-den-Berg, ramen Bonheiden, ramen Lier, ramen Nijlen, renovatie Putte, renovatie Heist-op-den-Berg, bouwbedrijf Antwerpen provincie, ramen Tremelo, ramen Haacht, renovatie Bonheiden, crepi Keerbergen, crepi Mechelen, gevel Zoersel'
                         }}
                       >
                         <Hero />
+                        {/* Compact offerteblok direct op de homepagina zodat bezoekers meteen kunnen starten */}
+                        <section id="contact" className="bg-gray-50 border-t border-gray-100">
+                          <div className="container mx-auto px-4 sm:px-6 py-10 sm:py-14">
+                            <div className="grid md:grid-cols-3 gap-10 items-start">
+                              <div className="md:col-span-1 space-y-4">
+                                <h2 className="text-2xl sm:text-3xl font-bold text-brand-dark">
+                                  Snel offerte aanvragen
+                                </h2>
+                                <p className="text-gray-600 text-sm sm:text-base">
+                                  Laat hieronder uw gegevens achter en omschrijf kort uw project.
+                                  We contacteren u binnen <span className="font-semibold">24 uur</span> met een vrijblijvende inschatting.
+                                </p>
+                                <ul className="space-y-2 text-sm text-gray-700">
+                                  <li>• Ramen &amp; deuren, gevel en renovatie</li>
+                                  <li>• Regio: Zoersel, Antwerpen, Mechelen</li>
+                                  <li>• Geen verplichtingen, duidelijke prijzen</li>
+                                </ul>
+                              </div>
+                              <div className="md:col-span-2 space-y-4">
+                                <div className="bg-white rounded-xl border border-gray-200 p-5 sm:p-6 flex flex-col sm:flex-row gap-4 sm:items-center justify-between">
+                                  <div>
+                                    <h3 className="text-lg font-semibold text-brand-dark">
+                                      Start uw offerte in 1 minuut
+                                    </h3>
+                                    <p className="text-sm text-gray-600">
+                                      Beantwoord enkele korte vragen op onze contactpagina. Zo kunnen we snel en gericht een voorstel uitwerken.
+                                    </p>
+                                  </div>
+                                  <a
+                                    href="/contact"
+                                    className="inline-flex items-center justify-center px-5 py-3 rounded-lg bg-brand-accent hover:bg-orange-700 text-white font-semibold text-sm sm:text-base whitespace-nowrap transition-colors"
+                                  >
+                                    Naar het offerteformulier
+                                  </a>
+                                </div>
+                                <p className="text-xs text-gray-500">
+                                  Liever rechtstreeks contact? Bel
+                                  {' '}
+                                  <a href="tel:+32489960001" className="font-semibold text-brand-accent">
+                                    +32 489 96 00 01
+                                  </a>
+                                  {' '}of mail naar
+                                  {' '}
+                                  <a href="mailto:info@yannova.be" className="font-semibold text-brand-accent">
+                                    info@yannova.be
+                                  </a>
+                                  .
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </section>
                         <About />
                         <Services />
+                        <ShowcaseSection />
                         <QuoteCalculator />
+                        <EPCAdviceSection />
                         <Approach />
                         <WhyUs />
+                        <LocalSEO />
                         <TestimonialsCarousel testimonials={TESTIMONIALS} />
                       </Layout>
                     }
@@ -182,7 +264,7 @@ const App: React.FC = () => {
                       <Layout
                         onAdminClick={() => window.location.href = '/admin'}
                         seo={{
-                          title: 'Crepi Info | Gevelbepleistering Zoersel, Antwerpen | Yannova',
+                          title: 'Crepi Gevelafwerking & Isolatie | Yannova Bouw',
                           description: 'Alles over crepi en gevelbepleistering: soorten, kleuren, prijzen en onderhoud. Professionele crepi afwerking in Zoersel, Antwerpen en Mechelen. Gratis advies.',
                           keywords: 'crepi Zoersel, crepi Antwerpen, gevelbepleistering Mechelen, crepi info, crepi patronen, crepi prijs per m2'
                         }}
@@ -320,6 +402,42 @@ const App: React.FC = () => {
                       </Layout>
                     }
                   />
+                  <Route
+                    path="/posts/ramen-prijzen-2025"
+                    element={
+                      <Layout
+                        onAdminClick={() => window.location.href = '/admin'}
+                      >
+                        <RamenPrijzen2025 />
+                      </Layout>
+                    }
+                  />
+                  <Route
+                    path="/posts/pvc-vs-aluminium"
+                    element={
+                      <Layout
+                        onAdminClick={() => window.location.href = '/admin'}
+                      >
+                        <PvcVsAluminium />
+                      </Layout>
+                    }
+                  />
+                  <Route
+                    path="/posts/onderhoudstips"
+                    element={
+                      <Layout
+                        onAdminClick={() => window.location.href = '/admin'}
+                        seo={{
+                          title: 'Onderhoudstips Ramen, Deuren & Gevel | Yannova',
+                          description: 'Praktische onderhoudstips voor ramen, deuren en gevelwerken. Houd uw investering in topconditie met advies van de professionals.',
+                          keywords: 'onderhoud ramen, onderhoud deuren, gevel onderhoud, onderhoudstips, raam onderhoud, crepi onderhoud'
+                        }}
+                      >
+                        <MaintenanceTips />
+                      </Layout>
+                    }
+                  />
+                  {/* Fallback voor oude posts route structuur indien nodig */}
                   <Route
                     path="/posts/:slug"
                     element={
@@ -519,6 +637,121 @@ const App: React.FC = () => {
                       </Layout>
                     }
                   />
+
+                  {/* New Feature Pages */}
+                  <Route
+                    path="/budget-tool"
+                    element={
+                      <Layout
+                        onAdminClick={() => window.location.href = '/admin'}
+                        seo={{
+                          title: 'Budget Indicatie Tool | Ramen, Deuren & Renovatie | Yannova',
+                          description: 'Krijg in 2 minuten een realistische prijsindicatie voor uw ramen, deuren of renovatieproject. Gratis budget calculator met premie-advies.',
+                          keywords: 'budget tool, prijsindicatie ramen, kosten renovatie, budget calculator, offerte tool'
+                        }}
+                      >
+                        <BudgetTool />
+                      </Layout>
+                    }
+                  />
+
+                  <Route
+                    path="/projecten"
+                    element={
+                      <Layout
+                        onAdminClick={() => window.location.href = '/admin'}
+                        seo={{
+                          title: 'Onze Projecten | Cases Ramen, Deuren & Renovatie | Yannova',
+                          description: 'Bekijk onze afgeronde projecten in detail. Van EPC-label F naar B, van vochtproblemen naar droge muren. Echte resultaten, tevreden klanten.',
+                          keywords: 'projecten Yannova, cases renovatie, voor en na, EPC verbetering, gevelrenovatie voorbeelden'
+                        }}
+                      >
+                        <ProjectCases />
+                      </Layout>
+                    }
+                  />
+
+                  <Route
+                    path="/projecten/:id"
+                    element={
+                      <Layout
+                        onAdminClick={() => window.location.href = '/admin'}
+                        seo={{
+                          title: 'Project Detail | Yannova Bouw',
+                          description: 'Bekijk dit project in detail: uitdaging, oplossing en resultaat.',
+                        }}
+                      >
+                        <ProjectDetail />
+                      </Layout>
+                    }
+                  />
+
+                  <Route
+                    path="/verbouwpremie-gids"
+                    element={
+                      <Layout
+                        onAdminClick={() => window.location.href = '/admin'}
+                        seo={{
+                          title: 'Mijn VerbouwPremie Gids 2026 | Tot €5.000 Premie | Yannova',
+                          description: 'Ontdek hoeveel premie u kunt krijgen voor ramen, deuren, gevelisolatie en renovatie in 2026. Actuele bedragen en voorwaarden voor Vlaanderen.',
+                          keywords: 'verbouwpremie 2026, premie ramen deuren, gevelisolatie premie, renovatiepremie Vlaanderen, mijn verbouwpremie'
+                        }}
+                      >
+                        <VerbouwpremieGids />
+                      </Layout>
+                    }
+                  />
+
+                  {/* Regional Landing Pages */}
+                  <Route
+                    path="/gevelrenovatie-mechelen"
+                    element={
+                      <Layout
+                        onAdminClick={() => window.location.href = '/admin'}
+                        seo={{
+                          title: 'Gevelrenovatie Mechelen | Crepi & Isolatie | Yannova',
+                          description: 'Professionele gevelrenovatie in Mechelen. Crepi, isolatie en gevelbepleistering. Lokale service, 15+ jaar ervaring. Gratis offerte.',
+                          keywords: 'gevelrenovatie Mechelen, crepi Mechelen, gevelisolatie Mechelen, bouwbedrijf Mechelen'
+                        }}
+                      >
+                        <RegionalLanding />
+                      </Layout>
+                    }
+                  />
+
+                  <Route
+                    path="/ramen-en-deuren-keerbergen"
+                    element={
+                      <Layout
+                        onAdminClick={() => window.location.href = '/admin'}
+                        seo={{
+                          title: 'Ramen en Deuren Keerbergen | PVC & Aluminium | Yannova',
+                          description: 'Ramen en deuren in Keerbergen. PVC en aluminium, HR+++ glas, inbraakbeveiliging. Lokaal bouwbedrijf, persoonlijke service.',
+                          keywords: 'ramen Keerbergen, deuren Keerbergen, PVC ramen, aluminium ramen, bouwbedrijf Keerbergen'
+                        }}
+                      >
+                        <RegionalLanding />
+                      </Layout>
+                    }
+                  />
+
+                  <Route
+                    path="/crepi-werken-leuven"
+                    element={
+                      <Layout
+                        onAdminClick={() => window.location.href = '/admin'}
+                        seo={{
+                          title: 'Crepi Werken Leuven | Gevelbepleistering | Yannova',
+                          description: 'Crepi werken en gevelbepleistering in Leuven. Diverse structuren en kleuren. Professionele uitvoering, 10 jaar garantie.',
+                          keywords: 'crepi Leuven, gevelbepleistering Leuven, crepi werken, gevelwerken Leuven'
+                        }}
+                      >
+                        <RegionalLanding />
+                      </Layout>
+                    }
+                  />
+
+
 
                   {/* Dashboard & Editor Routes */}
                   <Route

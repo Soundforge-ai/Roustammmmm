@@ -30,7 +30,7 @@ const KiesProduct: React.FC = () => {
       description: 'PVC en Aluminium ramen en deuren',
       href: '/ramen-deuren',
       icon: Maximize2,
-      image: '/images/c042e299-3e07-4212-b6a2-5c6297e61d69.png',
+      image: '/images/c042e299-3e07-4212-b6a2-5c6297e61d69.jpg',
       featured: true,
     },
     {
@@ -39,7 +39,7 @@ const KiesProduct: React.FC = () => {
       description: 'Bekijk onze voordeuren in 3D',
       href: '/showroom',
       icon: Home,
-      image: '/images/c67c2ffe-a42b-477f-a67d-10100999c4f0.png',
+      image: '/images/c67c2ffe-a42b-477f-a67d-10100999c4f0.jpg',
       featured: true,
     },
     {
@@ -56,7 +56,7 @@ const KiesProduct: React.FC = () => {
       description: 'Totaalrenovaties en badkamers',
       href: '/renovatie',
       icon: Hammer,
-      image: '/images/16676485-bd4d-49a4-a5a6-89e07254fa23.png',
+      image: '/images/16676485-bd4d-49a4-a5a6-89e07254fa23.jpg',
     },
     {
       id: 'tuinaanleg',

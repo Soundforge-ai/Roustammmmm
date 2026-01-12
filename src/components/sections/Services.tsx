@@ -7,12 +7,12 @@ const Services: React.FC = () => {
     <section id="services" className="py-12 sm:py-20 bg-brand-light">
       <div className="container mx-auto px-4 sm:px-6">
         <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-16">
-          <span className="block text-brand-accent font-semibold tracking-wider uppercase text-sm mb-3">Onze Diensten</span>
+          <span className="block text-brand-accent font-semibold tracking-wider uppercase text-sm mb-3">Onze diensten: Van Crepi Gevels tot Ramen Plaatsen</span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-brand-dark mb-4">
-            Alles voor uw woning onder één dak
+            Ramen, Deuren, Gevelisolatie & Renovatie
           </h2>
           <p className="text-gray-600 text-sm sm:text-base">
-            Van een kleine verbetering tot een complete renovatie: wij begeleiden u stap voor stap en zorgen voor een resultaat waar u elke dag van geniet.
+            Van <strong>nieuwe ramen en deuren</strong> tot <strong>gevelisolatie met crepi</strong> en <strong>totaalrenovatie</strong>: Yannova Bouw is uw aannemer voor alle bouwwerken in de provincie Antwerpen. Vraag vandaag nog uw gratis offerte aan.
           </p>
         </div>
 

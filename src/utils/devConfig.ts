@@ -16,24 +16,6 @@ export interface ConfigStatus {
 export function checkConfig(): ConfigStatus[] {
   const checks: ConfigStatus[] = [];
 
-  // Supabase configuratie
-  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-  const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-  
-  checks.push({
-    name: 'Supabase URL',
-    status: supabaseUrl ? 'ok' : 'error',
-    message: supabaseUrl ? 'Geconfigureerd' : 'Niet geconfigureerd - database functionaliteit werkt niet',
-    value: supabaseUrl ? `${supabaseUrl.substring(0, 20)}...` : undefined
-  });
-
-  checks.push({
-    name: 'Supabase Anon Key',
-    status: supabaseKey ? 'ok' : 'warning',
-    message: supabaseKey ? 'Geconfigureerd' : 'Niet geconfigureerd',
-    value: supabaseKey ? `${supabaseKey.substring(0, 10)}...` : undefined
-  });
-
   // API Keys
   const glmKey = import.meta.env.VITE_GLM_API_KEY;
   checks.push({
@@ -98,4 +80,3 @@ export function getMissingConfig(): string[] {
     .filter(check => check.status === 'error')
     .map(check => check.name);
 }
-

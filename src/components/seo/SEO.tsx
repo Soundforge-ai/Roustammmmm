@@ -1,4 +1,5 @@
-import { useEffect } from 'react';
+import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router-dom';
 
 interface SEOProps {
@@ -44,83 +45,53 @@ const SEO: React.FC<SEOProps> = ({
   noindex = false
 }) => {
   const location = useLocation();
-  const fullTitle = title ? `${title} | Yannova` : DEFAULT_TITLE;
+  const fullTitle = title ? (title.toLowerCase().includes('yannova') ? title : `${title} | Yannova`) : DEFAULT_TITLE;
   const currentUrl = canonicalUrl || `${BASE_URL}${location.pathname}`;
   const fullOgImage = ogImage.startsWith('http') ? ogImage : `${BASE_URL}${ogImage}`;
 
-  useEffect(() => {
-    // Update document title
-    document.title = fullTitle;
+  return (
+    <Helmet>
+      {/* Basic Meta Tags */}
+      <title>{fullTitle}</title>
+      <meta name="description" content={description} />
+      <meta name="keywords" content={keywords} />
+      <meta name="author" content="Yannova Bouw" />
+      <meta name="language" content="Dutch" />
 
-    // Update meta tags helper
-    const updateMeta = (name: string, content: string, isProperty = false) => {
-      const attr = isProperty ? 'property' : 'name';
-      let element = document.querySelector(`meta[${attr}="${name}"]`);
-      if (!element) {
-        element = document.createElement('meta');
-        element.setAttribute(attr, name);
-        document.head.appendChild(element);
-      }
-      element.setAttribute('content', content);
-    };
+      {/* Robots */}
+      <meta
+        name="robots"
+        content={noindex ? "noindex, nofollow" : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"}
+      />
 
-    // Remove meta tag helper
-    const removeMeta = (name: string, isProperty = false) => {
-      const attr = isProperty ? 'property' : 'name';
-      const element = document.querySelector(`meta[${attr}="${name}"]`);
-      if (element) element.remove();
-    };
+      {/* Geo Tags */}
+      <meta name="geo.region" content="BE-VAN" />
+      <meta name="geo.placename" content="Zoersel, Antwerpen, België" />
+      <meta name="geo.position" content="51.2667;4.6167" />
+      <meta name="ICBM" content="51.2667, 4.6167" />
 
-    // Robots meta tag
-    if (noindex) {
-      updateMeta('robots', 'noindex, nofollow');
-    } else {
-      updateMeta('robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
-    }
+      {/* Open Graph Tags */}
+      <meta property="og:title" content={fullTitle} />
+      <meta property="og:description" content={description} />
+      <meta property="og:type" content="website" />
+      <meta property="og:url" content={currentUrl} />
+      <meta property="og:image" content={fullOgImage} />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
+      <meta property="og:image:alt" content={fullTitle} />
+      <meta property="og:locale" content="nl_BE" />
+      <meta property="og:site_name" content="Yannova" />
 
-    // Basic meta tags
-    updateMeta('description', description);
-    updateMeta('keywords', keywords);
-    updateMeta('author', 'Yannova Bouw');
-    updateMeta('language', 'Dutch');
-    updateMeta('geo.region', 'BE-VAN');
-    updateMeta('geo.placename', 'Zoersel, Antwerpen, België');
-    updateMeta('geo.position', '51.2667;4.6167');
-    updateMeta('ICBM', '51.2667, 4.6167');
+      {/* Twitter Card Tags */}
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content={fullTitle} />
+      <meta name="twitter:description" content={description} />
+      <meta name="twitter:image" content={fullOgImage} />
 
-    // Open Graph tags
-    updateMeta('og:title', fullTitle, true);
-    updateMeta('og:description', description, true);
-    updateMeta('og:type', 'website', true);
-    updateMeta('og:url', currentUrl, true);
-    updateMeta('og:image', fullOgImage, true);
-    updateMeta('og:image:width', '1200', true);
-    updateMeta('og:image:height', '630', true);
-    updateMeta('og:image:alt', fullTitle, true);
-    updateMeta('og:locale', 'nl_BE', true);
-    updateMeta('og:site_name', 'Yannova', true);
-
-    // Twitter Card tags
-    updateMeta('twitter:card', 'summary_large_image');
-    updateMeta('twitter:title', fullTitle);
-    updateMeta('twitter:description', description);
-    updateMeta('twitter:image', fullOgImage);
-
-    // Canonical URL
-    let canonicalLink = document.querySelector('link[rel="canonical"]') as HTMLLinkElement;
-    if (!canonicalLink) {
-      canonicalLink = document.createElement('link');
-      canonicalLink.rel = 'canonical';
-      document.head.appendChild(canonicalLink);
-    }
-    canonicalLink.href = currentUrl;
-
-    // Alternate language links (if needed in future)
-    // updateMeta('alternate', 'fr', true, 'hreflang');
-
-  }, [fullTitle, description, keywords, currentUrl, fullOgImage, noindex]);
-
-  return null;
+      {/* Canonical URL */}
+      <link rel="canonical" href={currentUrl} />
+    </Helmet>
+  );
 };
 
 export default SEO;
